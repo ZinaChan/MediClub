@@ -22,7 +22,7 @@ CREATE TABLE [dbo].[Doctors] (
     [Specialization] nvarchar(100) NOT NULL
 )
 
-CREATE TABLE [dbo].[Doctors] (   
+CREATE TABLE [dbo].[Patients] (   
     [Id] int IDENTITY(1,1) NOT NULL,
     [Name] nvarchar(50) NOT NULL,
     [Surname] nvarchar(50) NOT NULL,

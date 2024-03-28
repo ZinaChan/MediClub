@@ -7,7 +7,7 @@ public class HomeController : ControllerBase
 {
     public async Task Home(HttpListenerContext context)
     {
-       await base.WriteViewAsync(context.Response, "index");
+        await base.WriteViewAsync(context.Response, "index");
     }
 
 }

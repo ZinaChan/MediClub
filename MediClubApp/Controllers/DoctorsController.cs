@@ -20,7 +20,7 @@ public class DoctorsController : ControllerBase
         if (doctors is not null && doctors.Any())
         {
             var html = doctors.AsHtml();
-            await  base.LayoutAsync(context.Response, html);
+            await base.LayoutAsync(context.Response, html);
         }
         else
         {

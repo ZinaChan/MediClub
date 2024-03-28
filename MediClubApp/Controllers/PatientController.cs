@@ -23,7 +23,7 @@ public class PatientController : ControllerBase
         }
         else
         {
-            new ErrorController().NotFound(context,nameof(patients));
+            new ErrorController().NotFound(context, nameof(patients));
         }
     }
 }
