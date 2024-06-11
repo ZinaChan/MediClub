@@ -3,7 +3,7 @@
         "Id": 1,
         "FirstName": "Marlin",
         "LastName": "Proudman",
-        "DateOfBirth": "20-05-01T11:10:00Z",
+        "DateOfBirth": "2000-05-01T11:10:00Z",
         "Gender": "Male",
         "Email": "mproudman0@marketwatch.com",
         "MedicalHistory": "Flu"
@@ -21,7 +21,7 @@
         "Id": 3,
         "FirstName": "Lilyan",
         "LastName": "Pipworth",
-        "DateOfBirth": "19787-12-01T11:10:00Z",
+        "DateOfBirth": "1987-12-01T11:10:00Z",
         "Gender": "Female",
         "Email": "lpipworth2@last.fm",
         "MedicalHistory": "Allergies"
