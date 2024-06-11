@@ -19,8 +19,7 @@ namespace MediClubApp.Controllers
         {
             if (string.IsNullOrWhiteSpace(newDoctor.FirstName) || string.IsNullOrWhiteSpace(newDoctor.LastName)) {return this.BadRequest();}
 
-            newDoctor.DateOfBirth = DateTime.Now;
-
+            
             var doctorsJson = await System.IO.File.ReadAllTextAsync("Assets/doctors.json");
 
             var doctors = JsonSerializer.Deserialize<List<Doctor>>(doctorsJson, new JsonSerializerOptions
@@ -28,7 +27,9 @@ namespace MediClubApp.Controllers
                 PropertyNameCaseInsensitive = true,
             });
 
+            
             doctors ??= new List<Doctor>();
+            newDoctor.Id = doctors.Count() == 0 ? 1 : doctors.LastOrDefault()!.Id;
             doctors.Add(newDoctor);
             var newDoctorsJson = JsonSerializer.Serialize(doctors, new JsonSerializerOptions{
                 PropertyNameCaseInsensitive = true,
