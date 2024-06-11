@@ -1,10 +1,6 @@
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Threading.Tasks;
+using System.Text.Json;
+using MediClubApp.Models;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 
 namespace MediClubApp.Controllers
 {
@@ -14,6 +10,33 @@ namespace MediClubApp.Controllers
         public IActionResult Index()
         {
             return View();
+        }
+
+
+        [HttpPost]
+        [Route("[controller]")]
+        public async Task<IActionResult> CreateDoctor(Doctor newDoctor)
+        {
+            if (string.IsNullOrWhiteSpace(newDoctor.FirstName) || string.IsNullOrWhiteSpace(newDoctor.LastName)) {return this.BadRequest();}
+
+            newDoctor.DateOfBirth = DateTime.Now;
+
+            var doctorsJson = await System.IO.File.ReadAllTextAsync("Assets/doctors.json");
+
+            var doctors = JsonSerializer.Deserialize<List<Doctor>>(doctorsJson, new JsonSerializerOptions
+            {
+                PropertyNameCaseInsensitive = true,
+            });
+
+            doctors ??= new List<Doctor>();
+            doctors.Add(newDoctor);
+            var newDoctorsJson = JsonSerializer.Serialize(doctors, new JsonSerializerOptions{
+                PropertyNameCaseInsensitive = true,
+            }); 
+
+            await System.IO.File.WriteAllTextAsync("Assets/doctors.json", newDoctorsJson);
+            
+            return base.RedirectToAction(actionName: "Index");
         }
     }
 }
