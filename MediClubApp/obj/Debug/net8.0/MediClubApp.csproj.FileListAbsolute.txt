@@ -29,3 +29,5 @@ C:\Users\1\OneDrive\Рабочий стол\New folder\MediClub\MediClubApp\obj\
 C:\Users\1\OneDrive\Рабочий стол\New folder\MediClub\MediClubApp\obj\Debug\net8.0\MediClubApp.pdb
 C:\Users\1\OneDrive\Рабочий стол\New folder\MediClub\MediClubApp\obj\Debug\net8.0\MediClubApp.genruntimeconfig.cache
 C:\Users\1\OneDrive\Рабочий стол\New folder\MediClub\MediClubApp\obj\Debug\net8.0\ref\MediClubApp.dll
+C:\Users\1\OneDrive\Рабочий стол\New folder\MediClub\MediClubApp\bin\Debug\net8.0\Assets\doctors.json
+C:\Users\1\OneDrive\Рабочий стол\New folder\MediClub\MediClubApp\bin\Debug\net8.0\Assets\patients.json
