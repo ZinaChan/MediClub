@@ -1,5 +1,28 @@
-﻿@{
+﻿@using System.Text.Json
+@{
     ViewData["Title"] = "Patient Page";
+
+    var patientsJson = await System.IO.File.ReadAllTextAsync("Assets/patients.json");
+   
+    var patients = JsonSerializer.Deserialize<IEnumerable<Patient>>(patientsJson, new JsonSerializerOptions
+            {
+                PropertyNameCaseInsensitive = true,
+            });
 }
 
- 
+<h1> Patients List</h1>
+<hr/>
+
+<ol>
+    @foreach (var patient in patients)
+    {
+        <li>
+            <p>FirstName: @(patient?.FirstName ?? "UNKNOWN")</p>
+            <p>LastName: @(patient?.LastName ?? "UNKNOWN")</p>
+            <p>DateOfBirth: @patient?.DateOfBirth </p>
+            <p>Email: @(patient?.Email ?? "UNKNOWN")</p>
+            <p>MedicalHistory: @(patient?.MedicalHistory ?? "UNKNOWN")</p>
+        </li>
+        <hr/>
+    }
+</ol>

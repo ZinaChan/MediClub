@@ -1,23 +1,23 @@
 [
     {
-        "id": 1,
+        "Id": 1,
         "FirstName": "Fairleigh",
         "LastName": "Ingle",
-        "DateOfBirth": "2/4/2007",
+        "DateOfBirth": "1977-12-01T11:10:00Z",
         "Email": "fingle0@tmall.com"
     },
     {
-        "id": 2,
+        "Id": 2,
         "FirstName": "Davide",
         "LastName": "Ruffles",
-        "DateOfBirth": "3/14/1989",
+        "DateOfBirth": "1990-01-01T10:00:00Z",
         "Email": "druffles1@prnewswire.com"
     },
     {
-        "id": 3,
+        "Id": 3,
         "FirstName": "Libbi",
         "LastName": "von Grollmann",
-        "DateOfBirth": "5/16/2007",
+        "DateOfBirth": "1970-02-01T10:00:00Z",
         "Email": "lvongrollmann2@wikispaces.com"
     }
 ]
