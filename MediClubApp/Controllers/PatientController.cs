@@ -34,6 +34,8 @@ namespace MediClubApp.Controllers
                 PropertyNameCaseInsensitive = true,
             });
 
+            await System.IO.File.WriteAllTextAsync("Assets/patients.json", newPatientsJson);
+
             return base.RedirectToAction(actionName: "Index"); 
         }
     }
