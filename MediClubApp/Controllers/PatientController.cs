@@ -1,5 +1,6 @@
 using System.Text.Json;
 using MediClubApp.Models;
+using MediClubApp.Services.Base;
 using Microsoft.AspNetCore.Mvc;
 
 namespace MediClubApp.Controllers
@@ -7,6 +8,12 @@ namespace MediClubApp.Controllers
     [Route("[controller]")]
     public class PatientController : Controller
     {
+        private readonly IPatientService _patientService;
+
+        public PatientController(IPatientService patientService)
+        {
+            this._patientService = patientService;
+        }
         public IActionResult Index()
         {
             return View();
