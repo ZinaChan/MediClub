@@ -21,21 +21,46 @@
         <select id="Gender" name="Gender" required>
             <option value="">Select Gender</option>
 
-                @foreach (Gender gender in Enum.GetValues(typeof(Gender)))
-                {
-                    <option value="@gender">@gender</option>
-                }
-            </select>
+            @foreach (Gender gender in Enum.GetValues(typeof(Gender)))
+            {
+                <option value="@gender">@gender</option>
+            }
+        </select>
     </div>
     <div>
         <label for="Email">Email:</label>
         <input type="email" id="Email" name="Email" required />
-    </div> 
+    </div>
+    <div>
+        <label for="PhoneNumber">Phone Number:</label>
+        <input type="tel" id="PhoneNumber" name="PhoneNumber" required />
+    </div>
+    <div>
+        <label for="Specialization">Specialization:</label>
+        <select id="Specialization" name="Specialization" required>
+            <option value="">Select Specialization</option>
+            @foreach (Specialization specialization in Enum.GetValues(typeof(Specialization)))
+            {
+                <option value="@specialization">@specialization</option>
+            }
+        </select>
+    </div>
+    <div>
+        <label for="Department">Department:</label>
+        <select id="Department" name="Department" required>
+            <option value="">Select Department</option>
+
+            @foreach (Department department in Enum.GetValues(typeof(Department)))
+            {
+                <option value="@department">@department</option>
+            }
+        </select>
+    </div>
     <button type="submit">Add Doctor</button>
 </form>
 
 <h1> Doctors List</h1>
-<hr/>
+<hr />
 <ol class="card-list">
     @foreach (var doctor in Model)
     {
@@ -43,12 +68,15 @@
             <p>FirstName: @(doctor?.FirstName ?? "UNKNOWN")</p>
             <p>LastName: @(doctor?.LastName ?? "UNKNOWN")</p>
             <p>DateOfBirth: @doctor?.DateOfBirth </p>
+            <p>Gender: @(doctor?.Gender ?? "UNKNOWN")</p>
             <p>Email: @(doctor?.Email ?? "UNKNOWN")</p>
+            <p>PhoneNumber: @(doctor?.PhoneNumber ?? "UNKNOWN")</p>
+            <p>Specialization: @(doctor?.Specialization ?? "UNKNOWN")</p>
+            <p>Department: @(doctor?.Department ?? "UNKNOWN")</p>
         </li>
-        <hr/>
+        <hr />
     }
 </ol>
-
 
 <style>
     h1 {

@@ -6,38 +6,46 @@
 }
 
 <form asp-action="CreatePatient" method="post">
-      <div>
-            <label for="FirstName">First Name:</label>
-            <input type="text" id="FirstName" name="FirstName" required />
-        </div>
-        <div>
-            <label for="LastName">Last Name:</label>
-            <input type="text" id="LastName" name="LastName" required />
-        </div>
-        <div>
-            <label for="DateOfBirth">Date of Birth:</label>
-            <input type="date" id="DateOfBirth" name="DateOfBirth" required />
-        </div>
-        <div>
-            <label for="Email">Email:</label>
-            <input type="email" id="Email" name="Email" required />
-        </div>
-        <div>
-            <label for="Gender">Gender:</label>
-            <select id="Gender" name="Gender" required>
-                <option value="">Select Gender</option>
+    <div>
+        <label for="FirstName">First Name:</label>
+        <input type="text" id="FirstName" name="FirstName" required />
+    </div>
+    <div>
+        <label for="LastName">Last Name:</label>
+        <input type="text" id="LastName" name="LastName" required />
+    </div>
+    <div>
+        <label for="DateOfBirth">Date of Birth:</label>
+        <input type="date" id="DateOfBirth" name="DateOfBirth" required />
+    </div>
+    <div>
+        <label for="Email">Email:</label>
+        <input type="email" id="Email" name="Email" required />
+    </div>
+    <div>
+        <label for="PhoneNumber">Phone Number:</label>
+        <input type="tel" id="PhoneNumber" name="PhoneNumber" required />
+    </div>
+    <div>
+        <label for="Address">Address:</label>
+        <input type="text" id="Address" name="Address" required />
+    </div>
+    <div>
+        <label for="Gender">Gender:</label>
+        <select id="Gender" name="Gender" required>
+            <option value="">Select Gender</option>
 
-                @foreach (Gender gender in Enum.GetValues(typeof(Gender)))
-                {
-                    <option value="@gender">@gender</option>
-                }
-            </select>
-        </div>
-        <div>
-            <label for="MedicalHistory">Medical History:</label>
-            <textarea id="MedicalHistory" name="MedicalHistory" rows="4"></textarea>
-        </div>
-        <button type="submit">Add Patient</button>
+            @foreach (Gender gender in Enum.GetValues(typeof(Gender)))
+            {
+                <option value="@gender">@gender</option>
+            }
+        </select>
+    </div>
+    <div>
+        <label for="MedicalHistory">Medical History:</label>
+        <textarea id="MedicalHistory" name="MedicalHistory" rows="4"></textarea>
+    </div>
+    <button type="submit">Add Patient</button>
 </form>
 
 <h1> Patients List</h1>
@@ -50,6 +58,9 @@
             <p>FirstName: @(patient?.FirstName ?? "UNKNOWN")</p>
             <p>LastName: @(patient?.LastName ?? "UNKNOWN")</p>
             <p>DateOfBirth: @patient?.DateOfBirth </p>
+            <p>Gender: @(patient?.Gender ?? "UNKNOWN")</p>
+            <p>Address: @(patient?.Address ?? "UNKNOWN")</p>
+            <p>PhoneNumber: @(patient?.PhoneNumber ?? "UNKNOWN")</p>
             <p>Email: @(patient?.Email ?? "UNKNOWN")</p>
             <p>MedicalHistory: @(patient?.MedicalHistory ?? "UNKNOWN")</p>
         </li>
