@@ -1,13 +1,8 @@
-﻿@using System.Text.Json
+﻿@model IEnumerable<Patient>;
 @{
     ViewData["Title"] = "Patient Page";
 
-    var patientsJson = await System.IO.File.ReadAllTextAsync("Assets/patients.json");
-
-    var patients = JsonSerializer.Deserialize<IEnumerable<Patient>>(patientsJson, new JsonSerializerOptions
-            {
-                PropertyNameCaseInsensitive = true,
-            });
+    var gender = Gender.Male;
 }
 
 <form asp-action="CreatePatient" method="post">
@@ -31,14 +26,16 @@
             <label for="Gender">Gender:</label>
             <select id="Gender" name="Gender" required>
                 <option value="">Select Gender</option>
-                <option value="Male">Male</option>
-                <option value="Female">Female</option>
-                <option value="Other">Other</option>
+
+                @foreach (Gender gender in Enum.GetValues(typeof(Gender)))
+                {
+                    <option value="@gender">@gender</option>
+                }
             </select>
         </div>
         <div>
             <label for="MedicalHistory">Medical History:</label>
-            <textarea id="MedicalHistory" name="MedicalHistory" rows="4" required></textarea>
+            <textarea id="MedicalHistory" name="MedicalHistory" rows="4"></textarea>
         </div>
         <button type="submit">Add Patient</button>
 </form>
@@ -47,7 +44,7 @@
 <hr />
 
 <ol class="card-list">
-    @foreach (var patient in patients)
+    @foreach (var patient in Model)
     {
         <li>
             <p>FirstName: @(patient?.FirstName ?? "UNKNOWN")</p>

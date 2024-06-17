@@ -13,14 +13,14 @@ public class PatientService : IPatientService
     {
        this._patientRepository = patientRepository ?? throw new ArgumentNullException(nameof(patientRepository)); 
     }
-    public async Task CreatePatientAsync(Patient patient)
+    public async Task CreatePatientAsync(Patient newPatient)
     {
-        if (patient is null)
+        if (newPatient is null)
         {
-            throw new ArgumentNullException(nameof(patient));
+            throw new ArgumentNullException(nameof(newPatient));
         }
 
-        await this._patientRepository.CreatePatientAsync(patient);
+        await this._patientRepository.CreatePatientAsync(newPatient);
     }
 
     public Task<IEnumerable<Patient>> GetAllPatientsAsync()

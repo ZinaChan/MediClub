@@ -14,36 +14,25 @@ namespace MediClubApp.Controllers
         {
             this._patientService = patientService;
         }
-        public IActionResult Index()
+
+        [HttpGet]
+        public async Task<IActionResult> Index()
         {
-            return View();
+            var patients = await this._patientService.GetAllPatientsAsync();
+            return View(patients);
         }
 
-        [HttpPost]
-        [Route("[controller]")]
+        [HttpPost] 
         public async Task<IActionResult> CreatePatient(Patient newPatient)
         {
-           if(string.IsNullOrWhiteSpace(newPatient.FirstName) & string.IsNullOrWhiteSpace(newPatient.LastName))
+           try{
+                await this._patientService.CreatePatientAsync(newPatient);
+                return base.RedirectToAction(actionName: "Index");
+           }
+           catch (System.Exception ex)
            {
-            return this.BadRequest();
-           } 
-
-            var patientsJson = await System.IO.File.ReadAllTextAsync("Assets/patients.json");
-            var patients = JsonSerializer.Deserialize<List<Patient>>(patientsJson, new JsonSerializerOptions {
-                PropertyNameCaseInsensitive = true, 
-            });
-
-            patients ??=  new List<Patient>();
-            newPatient.Id = patients.Count() == 0 ? 1 : patients.LastOrDefault()!.Id;
-            patients.Add(newPatient);
-
-            var newPatientsJson = JsonSerializer.Serialize(patients, new JsonSerializerOptions{
-                PropertyNameCaseInsensitive = true,
-            });
-
-            await System.IO.File.WriteAllTextAsync("Assets/patients.json", newPatientsJson);
-
-            return base.RedirectToAction(actionName: "Index"); 
+                return base.BadRequest(ex.Message);
+           }
         }
     }
 }

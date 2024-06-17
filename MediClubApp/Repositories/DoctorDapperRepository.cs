@@ -12,22 +12,22 @@ public class DoctorDapperRepository : IDoctorRepository
     {
         using var connection = new SqlConnection(connectionString);
 
-        return await connection.QueryAsync<Doctor>("SELECT * FROM Doctors");
+        return await connection.QueryAsync<Doctor>("SELECT * FROM Doctor");
     }
 
-    public async Task CreateDoctorAsync(Doctor doctor)
+    public async Task CreateDoctorAsync(Doctor newDoctor)
     {
-        if (doctor is null)
+        if (newDoctor is null)
         {
-            throw new ArgumentNullException(nameof(doctor));
+            throw new ArgumentNullException(nameof(newDoctor));
         }
 
         using var connection = new SqlConnection(connectionString);
 
         var numberOfRows = await connection.ExecuteAsync(
-            sql: $@"INSERT INTO Doctor (FirstName, LastName, DateOfBirth, Email)
-                        VALUES(@FirstName, @LastName, @DateOfBirth, @Email)",
-            param:  doctor
+            sql: $@"INSERT INTO Doctor (FirstName, LastName, DateOfBirth, Gender, Email)
+                        VALUES(@FirstName, @LastName, @DateOfBirth, @Gender, @Email)",
+            param:  newDoctor
         );
 
         if (numberOfRows <= 0) throw new ArgumentException("Unsuccsess insert!");

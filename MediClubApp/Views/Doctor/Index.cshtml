@@ -1,13 +1,6 @@
-﻿@using System.Text.Json
+﻿@model IEnumerable<Doctor>;
 @{
     ViewData["Title"] = "Doctor Page";
-
-    var doctorsJson = await System.IO.File.ReadAllTextAsync("Assets/doctors.json");
-
-    var doctors = JsonSerializer.Deserialize<IEnumerable<Doctor>>(doctorsJson, new JsonSerializerOptions
-            {
-                PropertyNameCaseInsensitive = true,
-            });
 }
 
 <form asp-action="CreateDoctor" method="post">
@@ -24,6 +17,17 @@
         <input type="date" id="DateOfBirth" name="DateOfBirth" required />
     </div>
     <div>
+        <label for="Gender">Gender:</label>
+        <select id="Gender" name="Gender" required>
+            <option value="">Select Gender</option>
+
+                @foreach (Gender gender in Enum.GetValues(typeof(Gender)))
+                {
+                    <option value="@gender">@gender</option>
+                }
+            </select>
+    </div>
+    <div>
         <label for="Email">Email:</label>
         <input type="email" id="Email" name="Email" required />
     </div> 
@@ -32,8 +36,8 @@
 
 <h1> Doctors List</h1>
 <hr/>
-<ol>
-    @foreach (var doctor in doctors)
+<ol class="card-list">
+    @foreach (var doctor in Model)
     {
         <li>
             <p>FirstName: @(doctor?.FirstName ?? "UNKNOWN")</p>
@@ -46,51 +50,53 @@
 </ol>
 
 
-<style> 
+<style>
     h1 {
-            color: #333;
-        }
+        color: #333;
+    }
 
-        form {
-            background-color: #fff;
-            padding: 20px;
-            border-radius: 5px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            margin-bottom: 20px;
-        }
+    form {
+        background-color: #fff;
+        padding: 20px;
+        border-radius: 5px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        margin-bottom: 20px;
+    }
 
-        form div {
-            margin-bottom: 15px;
-        }
+    form div {
+        margin-bottom: 15px;
+    }
 
-        label {
-            display: block;
-            margin-bottom: 5px;
-            font-weight: bold;
-        }
+    label {
+        display: block;
+        margin-bottom: 5px;
+        font-weight: bold;
+    }
 
-        input[type="text"],
-        input[type="date"],
-        input[type="email"] {
-            width: 100%;
-            padding: 8px;
-            box-sizing: border-box;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-        }
+    input[type="text"],
+    input[type="date"],
+    input[type="email"],
+    select,
+    textarea {
+        width: 100%;
+        padding: 8px;
+        box-sizing: border-box;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+    }
 
-        button {
-            background-color: #5cb85c;
-            color: white;
-            border: none;
-            padding: 10px 15px;
-            border-radius: 4px;
-            cursor: pointer;
-        }
+    button {
+        background-color: #5cb85c;
+        color: white;
+        border: none;
+        padding: 10px 15px;
+        border-radius: 4px;
+        cursor: pointer;
+    }
 
-        button:hover {
-            background-color: #4cae4c;
-        }
+    button:hover {
+        background-color: #4cae4c;
+    }
 
     .card-list {
         list-style-type: none;
@@ -98,7 +104,7 @@
     }
 
     .card-list li {
-        background-color: #cfe2f3; 
+        background-color: #cfe2f3;
         border-radius: 10px;
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         margin-bottom: 20px;
@@ -114,12 +120,12 @@
         margin: 0;
         font-size: 16px;
         line-height: 1.6;
-        color: #333; 
+        color: #333;
     }
 
     .card-list li p strong {
         font-weight: bold;
-        color: #666; 
+        color: #666;
     }
 
     .card-list li hr {

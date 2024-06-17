@@ -14,37 +14,25 @@ namespace MediClubApp.Controllers
         {
             this._doctorService = doctorService;
         }
-        public IActionResult Index()
+
+        [HttpGet]
+        public async Task<IActionResult> Index()
         {
-            return View();
+            var doctors = await this._doctorService.GetAllDoctorsAsync();
+            return View(doctors);
         }
 
-
-        [HttpPost]
-        [Route("[controller]")]
+        [HttpPost] 
         public async Task<IActionResult> CreateDoctor(Doctor newDoctor)
         {
-            if (string.IsNullOrWhiteSpace(newDoctor.FirstName) || string.IsNullOrWhiteSpace(newDoctor.LastName)) {return this.BadRequest();}
-
-            
-            var doctorsJson = await System.IO.File.ReadAllTextAsync("Assets/doctors.json");
-
-            var doctors = JsonSerializer.Deserialize<List<Doctor>>(doctorsJson, new JsonSerializerOptions
-            {
-                PropertyNameCaseInsensitive = true,
-            });
-
-            
-            doctors ??= new List<Doctor>();
-            newDoctor.Id = doctors.Count() == 0 ? 1 : doctors.LastOrDefault()!.Id;
-            doctors.Add(newDoctor);
-            var newDoctorsJson = JsonSerializer.Serialize(doctors, new JsonSerializerOptions{
-                PropertyNameCaseInsensitive = true,
-            }); 
-
-            await System.IO.File.WriteAllTextAsync("Assets/doctors.json", newDoctorsJson);
-            
-            return base.RedirectToAction(actionName: "Index");
+           try{
+                await this._doctorService.CreateDoctorAsync(newDoctor);
+                return base.RedirectToAction(actionName: "Index");
+           }
+           catch (System.Exception ex)
+           {
+                return base.BadRequest(ex.Message);
+           }
         }
     }
 }

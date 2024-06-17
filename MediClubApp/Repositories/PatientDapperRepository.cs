@@ -12,22 +12,22 @@ public class PatientDapperRepository : IPatientRepository
     {
         using var connection = new SqlConnection(connectionString);
 
-        return await connection.QueryAsync<Patient>("SELECT * FROM Patients");
+        return await connection.QueryAsync<Patient>("SELECT * FROM Patient");
     }
 
-    public async Task CreatePatientAsync(Patient patient)
+    public async Task CreatePatientAsync(Patient newPatient)
     {
-        if (patient is null)
+        if (newPatient is null)
         {
-            throw new ArgumentNullException(nameof(patient));
+            throw new ArgumentNullException(nameof(newPatient));
         }
 
         using var connection = new SqlConnection(connectionString);
 
         var numberOfRows = await connection.ExecuteAsync(
-            sql: $@"INSERT INTO Doctor (FirstName, LastName, DateOfBirth, Gender, Email, MedicalHistory)
+            sql: $@"INSERT INTO Patient (FirstName, LastName, DateOfBirth, Gender, Email, MedicalHistory)
                         VALUES(@FirstName, @LastName, @DateOfBirth, @Gender, @Email, @MedicalHistory)",
-            param:  patient
+            param:  newPatient
         );
 
         if (numberOfRows <= 0) throw new ArgumentException("Unsuccsess insert!");

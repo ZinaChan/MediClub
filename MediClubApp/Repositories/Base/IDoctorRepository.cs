@@ -6,5 +6,5 @@ public interface IDoctorRepository
 {
     Task<IEnumerable<Doctor>> GetAllDoctorsAsync();
 
-    Task CreateDoctorAsync(Doctor doctor);
+    Task CreateDoctorAsync(Doctor newDoctor);
 }
