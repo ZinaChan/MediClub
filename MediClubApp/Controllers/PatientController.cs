@@ -3,36 +3,79 @@ using MediClubApp.Models;
 using MediClubApp.Services.Base;
 using Microsoft.AspNetCore.Mvc;
 
-namespace MediClubApp.Controllers
+namespace MediClubApp.Controllers;
+
+[Route("[controller]")]
+public class PatientController : Controller
 {
-    [Route("[controller]")]
-    public class PatientController : Controller
+    private readonly IPatientService _patientService;
+
+    public PatientController(IPatientService patientService)
     {
-        private readonly IPatientService _patientService;
+        this._patientService = patientService;
+    }
 
-        public PatientController(IPatientService patientService)
+    [HttpGet]
+    public async Task<IActionResult> Index()
+    {
+        var patients = await this._patientService.GetAllPatientsAsync();
+        return View(patients);
+    }
+
+    [HttpGet("{patientId}")]
+    public async Task<IActionResult> PatientInfo(int patientId)
+    {
+        try
         {
-            this._patientService = patientService;
+            var patient = await _patientService.GetPatientAsync(patientId);
+            return View(patient);
         }
-
-        [HttpGet]
-        public async Task<IActionResult> Index()
+        catch (System.Exception ex)
         {
-            var patients = await this._patientService.GetAllPatientsAsync();
-            return View(patients);
-        }
-
-        [HttpPost] 
-        public async Task<IActionResult> CreatePatient(Patient newPatient)
-        {
-           try{
-                await this._patientService.CreatePatientAsync(newPatient);
-                return base.RedirectToAction(actionName: "Index");
-           }
-           catch (System.Exception ex)
-           {
-                return base.BadRequest(ex.Message);
-           }
+            return base.StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
         }
     }
+
+    [HttpPost]
+    public async Task<IActionResult> CreatePatient(Patient newPatient)
+    {
+        try
+        {
+            await this._patientService.CreatePatientAsync(newPatient);
+            return base.RedirectToAction(actionName: "Index");
+        }
+        catch (System.Exception ex)
+        {
+            return base.StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+        }
+    }
+
+    // [HttpPut]
+    // public IActionResult UpdatePatient([FromBody] int id, Patient patient)
+    // {
+    //     try
+    //     {
+    //         this._patientService.UpdatePatientAsync(id, patient);
+    //         return Ok();
+    //     }
+    //     catch (System.Exception ex)
+    //     {
+    //         return base.StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+    //     }
+    // }
+    
+    // [HttpDelete]
+    // public IActionResult DeletePatient([FromBody] Patient patient)
+    // {
+    //     try
+    //     {
+    //         this._patientService.DeletePatientAsync(patient);
+    //         return Ok();
+    //     }
+    //     catch (System.Exception ex)
+    //     {
+    //         return base.StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+    //     }
+    // }
+    
 }

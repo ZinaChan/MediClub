@@ -5,7 +5,7 @@ using MediClubApp.Services.Base;
 
 namespace MediClubApp.Services;
 
-public class DoctorService :  IDoctorService
+public class DoctorService : IDoctorService
 {
     private readonly IDoctorRepository _doctorRepository;
 
@@ -22,24 +22,15 @@ public class DoctorService :  IDoctorService
 
         await _doctorRepository.CreateAsync(newDoctor);
     }
-    public async Task DeleteAsync(Doctor oldDoctor)
-    {
-        if (oldDoctor is null)
-        {
-            throw new ArgumentNullException(nameof(oldDoctor));
-        }
-
-        await _doctorRepository.DeleteAsync(oldDoctor);
-    }
     public Task<IEnumerable<Doctor>> GetAllDoctorsAsync()
     {
         return _doctorRepository.GetAllAsync();
-    } 
+    }
     public Task<Doctor?> GetDoctorAsync(int id)
     {
         return this._doctorRepository.GetAsync(id);
     }
-    public async Task UpdateAsync(int id, Doctor newDoctor)
+    public async Task UpdateDoctorAsync(int id, Doctor newDoctor)
     {
 
         if (newDoctor is null || this._doctorRepository.GetAsync(id) is null)
@@ -48,5 +39,14 @@ public class DoctorService :  IDoctorService
         }
 
         await _doctorRepository.UpdateAsync(id, newDoctor);
+    }
+    public async Task DeleteDoctorAsync(Doctor oldDoctor)
+    {
+        if (oldDoctor is null)
+        {
+            throw new ArgumentNullException(nameof(oldDoctor));
+        }
+
+        await _doctorRepository.DeleteAsync(oldDoctor);
     }
 }

@@ -12,7 +12,7 @@ public class DoctorDapperRepository : IDoctorRepository
     {
         using var connection = new SqlConnection(connectionString);
 
-        return await connection.QueryFirstOrDefaultAsync<Doctor>(sql: "SELECT * FROM Doctor WHERE Id = @Id", param: new { Id = id });
+        return await connection.QueryFirstOrDefaultAsync<Doctor>(sql: "SELECT * FROM Doctors WHERE Id = @Id", param: new { Id = id });
     }
     public async Task<IEnumerable<Doctor>> GetAllAsync()
     {

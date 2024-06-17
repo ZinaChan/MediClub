@@ -13,6 +13,18 @@
       "PackagePath": "staticwebassets\\favicon.ico"
     },
     {
+      "Id": "C:\\Users\\1\\OneDrive\\Рабочий стол\\New folder\\MediClub\\MediClubApp\\wwwroot\\images\\anonymous-man.png",
+      "PackagePath": "staticwebassets\\images\\anonymous-man.png"
+    },
+    {
+      "Id": "C:\\Users\\1\\OneDrive\\Рабочий стол\\New folder\\MediClub\\MediClubApp\\wwwroot\\images\\anonymous-woman.png",
+      "PackagePath": "staticwebassets\\images\\anonymous-woman.png"
+    },
+    {
+      "Id": "C:\\Users\\1\\OneDrive\\Рабочий стол\\New folder\\MediClub\\MediClubApp\\wwwroot\\images\\anonymous.png",
+      "PackagePath": "staticwebassets\\images\\anonymous.png"
+    },
+    {
       "Id": "C:\\Users\\1\\OneDrive\\Рабочий стол\\New folder\\MediClub\\MediClubApp\\wwwroot\\js\\site.js",
       "PackagePath": "staticwebassets\\js\\site.js"
     },

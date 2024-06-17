@@ -1,0 +1,70 @@
+﻿@model Patient;
+@{
+    ViewData["Title"] = "Patient Info Page"; 
+}
+
+
+<div class="infoContainer">
+    @if ( @Model.Gender == nameof(Gender.Male))
+    {
+        <img src="/images/anonymous-man.png" alt="User Logo" class="logo">
+    }
+    else if(@Model.Gender == nameof(Gender.Female))
+    {
+        <img src="/images/anonymous-woman.png" alt="User Logo" class="logo">
+    }   
+    else
+    {
+        <img src="/images/anonymous.png" alt="User Logo" class="logo">
+    }
+    <div class="profile-details">
+        <h2 class="accent-color">@Model.FirstName @Model.LastName</h2>
+        <p>Date of Birth: @Model.DateOfBirth.ToString("dd.MM.yyyy")</p>
+        <p>Gender: @Model.Gender</p>
+        <p>Email: @Model.Email</p>
+        <p>Phone Number: @Model.PhoneNumber</p>
+        <p>Address: @Model.Address</p>
+        <p>MedicalHistory: @Model.MedicalHistory</p>
+    </div>
+</div>
+
+<style>
+    .infoContainer {
+        width: 80%;
+        margin: auto;
+        background-color: #fff;
+        padding: 25px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        border-radius: 10px;
+        margin-top: 50px;
+        display: flex;
+    }
+
+    .logo {
+        width: 200px;
+        height: 200px;
+        border-radius: 50%;
+        object-fit: cover;
+        margin-right: 20px;
+    }
+
+    .profile-details {
+        margin-left: 30px;
+        flex-grow: 1;
+        padding-right: 20px;
+    }
+
+    .profile-details h2 {
+        margin-top: 0;
+        color: #343a40;
+    }
+
+    .profile-details p {
+        margin: 5px 0;
+        color: #6c757d;
+    }
+
+    .accent-color {
+        color: #88ff00;
+    }
+</style>
