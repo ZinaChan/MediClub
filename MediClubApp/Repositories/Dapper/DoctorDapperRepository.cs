@@ -1,22 +1,29 @@
 using System.Data.SqlClient;
 using Dapper;
 using MediClubApp.Models;
+using MediClubApp.Options;
+using MediClubApp.Options.Base;
 using MediClubApp.Repositories.Base;
+using Microsoft.Extensions.Options;
 
-namespace MediClubApp.Repositories;
+namespace MediClubApp.Repositories.Dapper;
 public class DoctorDapperRepository : IDoctorRepository
 {
-    private readonly string connectionString = "Server=localhost;Database=MediClubDb;TrustServerCertificate=True;Trusted_Connection=True;User Id=sa;Password=admin";
+    private readonly IConnectionStringOption _connectionStringOption;
+    public DoctorDapperRepository(IOptionsSnapshot<MsSqlConnectionOption> options)
+    {
+        this._connectionStringOption = options.Value;
+    }
 
     public async Task<Doctor?> GetAsync(int id)
     {
-        using var connection = new SqlConnection(connectionString);
+        using var connection = new SqlConnection(this._connectionStringOption.ConnectionString);
 
         return await connection.QueryFirstOrDefaultAsync<Doctor>(sql: "SELECT * FROM Doctors WHERE Id = @Id", param: new { Id = id });
     }
     public async Task<IEnumerable<Doctor>> GetAllAsync()
     {
-        using var connection = new SqlConnection(connectionString);
+        using var connection = new SqlConnection(this._connectionStringOption.ConnectionString);
 
         return await connection.QueryAsync<Doctor>("SELECT * FROM Doctors");
     }
@@ -27,7 +34,7 @@ public class DoctorDapperRepository : IDoctorRepository
             throw new ArgumentNullException(nameof(newDoctor));
         }
 
-        using var connection = new SqlConnection(connectionString);
+        using var connection = new SqlConnection(this._connectionStringOption.ConnectionString);
 
         var numberOfRows = await connection.ExecuteAsync(
             sql: $@"INSERT INTO Doctors (FirstName, LastName, DateOfBirth, Gender, Email, PhoneNumber, Specialization, Department )
@@ -40,7 +47,7 @@ public class DoctorDapperRepository : IDoctorRepository
     }
     public async Task UpdateAsync(int id, Doctor newDoctor)
     {
-        using var connection = new SqlConnection(connectionString);
+        using var connection = new SqlConnection(this._connectionStringOption.ConnectionString);
 
         await connection.ExecuteAsync(
             sql: "UPDATE Doctors SET FirstName = @FirstName, LastName = @LastName, DateOfBirth = @DateOfBirth, Gender = @Gender, Email = @Email, PhoneNumber = @PhoneNumber , Specialization = @Specialization, Department = @Department WHERE Id = @Id",
@@ -48,7 +55,7 @@ public class DoctorDapperRepository : IDoctorRepository
     }
     public async Task DeleteByIdAsync(int id)
     {
-        using var connection = new SqlConnection(connectionString);
+        using var connection = new SqlConnection(this._connectionStringOption.ConnectionString);
 
         await connection.ExecuteAsync(
             sql: "DELETE FROM Doctors WHERE Id = @Id",

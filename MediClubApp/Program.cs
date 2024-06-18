@@ -1,5 +1,6 @@
-using MediClubApp.Repositories;
+using MediClubApp.Options;
 using MediClubApp.Repositories.Base;
+using MediClubApp.Repositories.Dapper;
 using MediClubApp.Services;
 using MediClubApp.Services.Base;
 
@@ -10,6 +11,9 @@ builder.Services.AddScoped<IDoctorRepository,DoctorDapperRepository>();
 builder.Services.AddScoped<IDoctorService,DoctorService>();
 builder.Services.AddScoped<IPatientRepository,PatientDapperRepository>();
 builder.Services.AddScoped<IPatientService,PatientService>();
+
+var connectionStringSection = builder.Configuration.GetSection("Connections:MediClubDb");
+builder.Services.Configure<MsSqlConnectionOption>(config: connectionStringSection);
 
 var app = builder.Build();
 
