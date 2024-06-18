@@ -8,8 +8,10 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllersWithViews();
 builder.Services.AddScoped<IDoctorRepository,DoctorDapperRepository>();
-builder.Services.AddScoped<IDoctorService,DoctorService>();
 builder.Services.AddScoped<IPatientRepository,PatientDapperRepository>();
+builder.Services.AddScoped<ILogRepository,LogDapperRepository>();
+
+builder.Services.AddScoped<IDoctorService,DoctorService>();
 builder.Services.AddScoped<IPatientService,PatientService>();
 
 var connectionStringSection = builder.Configuration.GetSection("Connections:MediClubDb");

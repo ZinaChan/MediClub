@@ -7,60 +7,58 @@ using MediClubApp.Repositories.Base;
 using Microsoft.Extensions.Options;
 
 namespace MediClubApp.Repositories.Dapper;
-public class PatientDapperRepository : IPatientRepository
+public class LogDapperRepository : ILogRepository
 {
     private readonly IConnectionStringOption _connectionStringOption;
-    public PatientDapperRepository(IOptionsSnapshot<MsSqlConnectionOption> options)
+    public LogDapperRepository(IOptionsSnapshot<MsSqlConnectionOption> options)
     {
         this._connectionStringOption = options.Value;
     }
 
-    public async Task<Patient?> GetAsync(int id)
+    public async Task<Log?> GetAsync(int id)
     {
         using var connection = new SqlConnection(this._connectionStringOption.ConnectionString);
 
-        return await connection.QueryFirstOrDefaultAsync<Patient>(sql: "SELECT * FROM Patients WHERE Id = @Id", param: new { Id = id });
+        return await connection.QueryFirstOrDefaultAsync<Log>(sql: "SELECT * FROM Logs WHERE Id = @Id", param: new { Id = id });
     }
-    public async Task<IEnumerable<Patient>> GetAllAsync()
+    public async Task<IEnumerable<Log>> GetAllAsync()
     {
         using var connection = new SqlConnection(this._connectionStringOption.ConnectionString);
 
-        return await connection.QueryAsync<Patient>(sql: "SELECT * FROM Patients");
+        return await connection.QueryAsync<Log>("SELECT * FROM Logs");
     }
-    public async Task CreateAsync(Patient newPatient)
+    public async Task CreateAsync(Log newLog)
     {
-        if (newPatient is null)
+        if (newLog is null)
         {
-            throw new ArgumentNullException(nameof(newPatient));
+            throw new ArgumentNullException(nameof(newLog));
         }
 
         using var connection = new SqlConnection(this._connectionStringOption.ConnectionString);
 
         var numberOfRows = await connection.ExecuteAsync(
-            sql: $@"INSERT INTO Patients (FirstName, LastName, DateOfBirth, Gender, Email, Address, PhoneNumber, MedicalHistory)
-                        VALUES(@FirstName, @LastName, @DateOfBirth, @Gender, @Email, @Address, @PhoneNumber, @MedicalHistory)",
-            param: newPatient
+            sql: $@"INSERT INTO Logs (Url, RequestBody, ResponsetBody, CreationDate, EndDate, StatusCode, HttpMethod )
+                        VALUES(@Url, @RequestBody, @ResponsetBody, @CreationDate, @EndDate, @StatusCode, @HttpMethod)",
+            param: newLog
         );
 
         if (numberOfRows <= 0) throw new ArgumentException("Unsuccsess insert!");
     }
-    public async Task UpdateAsync(int id, Patient newPatient)
+    public async Task UpdateAsync(int id, Log newLog)
     {
         using var connection = new SqlConnection(this._connectionStringOption.ConnectionString);
 
         await connection.ExecuteAsync(
-            sql: $@"UPDATE Patients SET FirstName = @FirstName, LastName = @LastName, DateOfBirth = @DateOfBirth, Gender = @Gender, Email = @Email, Address = @Address, PhoneNumber = @PhoneNumber, MedicalHistory = @MedicalHistory
+            sql: $@"UPDATE Logs SET Url = @Url, RequestBody = @RequestBody, ResponsetBody = @ResponsetBody, CreationDate = @CreationDate, EndDate = @EndDate, StatusCode = @StatusCode , HttpMethod = @HttpMethod 
                         WHERE Id = @Id",
-            param: newPatient
-        );
+            param: newLog); 
     }
     public async Task DeleteByIdAsync(int id)
     {
         using var connection = new SqlConnection(this._connectionStringOption.ConnectionString);
 
         await connection.ExecuteAsync(
-            sql: "DELETE FROM Patients WHERE Id = @Id",
+            sql: "DELETE FROM Logs WHERE Id = @Id",
             param: new { Id = id });
     }
-
 }

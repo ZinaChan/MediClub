@@ -50,7 +50,8 @@ public class DoctorDapperRepository : IDoctorRepository
         using var connection = new SqlConnection(this._connectionStringOption.ConnectionString);
 
         await connection.ExecuteAsync(
-            sql: "UPDATE Doctors SET FirstName = @FirstName, LastName = @LastName, DateOfBirth = @DateOfBirth, Gender = @Gender, Email = @Email, PhoneNumber = @PhoneNumber , Specialization = @Specialization, Department = @Department WHERE Id = @Id",
+            sql: $@"UPDATE Doctors SET FirstName = @FirstName, LastName = @LastName, DateOfBirth = @DateOfBirth, Gender = @Gender, Email = @Email, PhoneNumber = @PhoneNumber , Specialization = @Specialization, Department = @Department 
+                        WHERE Id = @Id",
             param: newDoctor);
     }
     public async Task DeleteByIdAsync(int id)
