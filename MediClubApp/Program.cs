@@ -1,3 +1,4 @@
+using MediClubApp.Middleware;
 using MediClubApp.Options;
 using MediClubApp.Repositories.Base;
 using MediClubApp.Repositories.Dapper;
@@ -13,6 +14,9 @@ builder.Services.AddScoped<ILogRepository,LogDapperRepository>();
 
 builder.Services.AddScoped<IDoctorService,DoctorService>();
 builder.Services.AddScoped<IPatientService,PatientService>();
+builder.Services.AddScoped<ILogService,LogService>();
+
+builder.Services.AddTransient<LogMiddleware>();
 
 var connectionStringSection = builder.Configuration.GetSection("Connections:MediClubDb");
 builder.Services.Configure<MsSqlConnectionOption>(config: connectionStringSection);
@@ -31,6 +35,8 @@ app.UseStaticFiles();
 app.UseRouting();
 
 app.UseAuthorization();
+
+app.UseMiddleware<LogMiddleware>();
 
 app.MapControllerRoute(
     name: "default",
