@@ -18,6 +18,10 @@ build_property.GenerateRazorMetadataSourceChecksumAttributes =
 build_property.MSBuildProjectDirectory = C:\Users\1\OneDrive\Рабочий стол\New folder\MediClub\MediClubApp
 build_property._RazorSourceGeneratorDebug = 
 
+[C:/Users/1/OneDrive/Рабочий стол/New folder/MediClub/MediClubApp/Views/Doctor/DoctorInfo.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRG9jdG9yXERvY3RvckluZm8uY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
 [C:/Users/1/OneDrive/Рабочий стол/New folder/MediClub/MediClubApp/Views/Doctor/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRG9jdG9yXEluZGV4LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
@@ -32,6 +36,10 @@ build_metadata.AdditionalFiles.CssScope =
 
 [C:/Users/1/OneDrive/Рабочий стол/New folder/MediClub/MediClubApp/Views/Patient/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUGF0aWVudFxJbmRleC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/1/OneDrive/Рабочий стол/New folder/MediClub/MediClubApp/Views/Patient/PatientInfo.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUGF0aWVudFxQYXRpZW50SW5mby5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
 [C:/Users/1/OneDrive/Рабочий стол/New folder/MediClub/MediClubApp/Views/Shared/Error.cshtml]
