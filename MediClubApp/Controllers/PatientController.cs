@@ -1,29 +1,42 @@
-using System.Net;
-using MediClubApp.Controllers.Base;
-using MediClubApp.Repositories;
-using MediClubApp.Extensions;
+using System.Text.Json;
+using MediClubApp.Models;
+using Microsoft.AspNetCore.Mvc;
 
-namespace MediClubApp.Controllers;
-
-public class PatientController : ControllerBase
+namespace MediClubApp.Controllers
 {
-    private readonly PatientSqlRepository _sqlRepository;
-    public PatientController(PatientSqlRepository sqlRepository)
+    [Route("[controller]")]
+    public class PatientController : Controller
     {
-        _sqlRepository = sqlRepository;
-    }
-    public async Task Patients(HttpListenerContext context)
-    {
-        var patients = await _sqlRepository.GetAllPatientsAsync();
-
-        if (patients is not null && patients.Any())
+        public IActionResult Index()
         {
-            var html = patients.AsHtml();
-            await base.LayoutAsync(context.Response, html);
+            return View();
         }
-        else
+
+        [HttpPost]
+        [Route("[controller]")]
+        public async Task<IActionResult> CreatePatient(Patient newPatient)
         {
-            new ErrorController().NotFound(context, nameof(patients));
+           if(string.IsNullOrWhiteSpace(newPatient.FirstName) & string.IsNullOrWhiteSpace(newPatient.LastName))
+           {
+            return this.BadRequest();
+           } 
+
+            var patientsJson = await System.IO.File.ReadAllTextAsync("Assets/patients.json");
+            var patients = JsonSerializer.Deserialize<List<Patient>>(patientsJson, new JsonSerializerOptions {
+                PropertyNameCaseInsensitive = true, 
+            });
+
+            patients ??=  new List<Patient>();
+            newPatient.Id = patients.Count() == 0 ? 1 : patients.LastOrDefault()!.Id;
+            patients.Add(newPatient);
+
+            var newPatientsJson = JsonSerializer.Serialize(patients, new JsonSerializerOptions{
+                PropertyNameCaseInsensitive = true,
+            });
+
+            await System.IO.File.WriteAllTextAsync("Assets/patients.json", newPatientsJson);
+
+            return base.RedirectToAction(actionName: "Index"); 
         }
     }
 }

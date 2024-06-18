@@ -1,0 +1,31 @@
+[
+    {
+        "Id": 1,
+        "FirstName": "Marlin",
+        "LastName": "Proudman",
+        "DateOfBirth": "2000-05-01T11:10:00Z",
+        "Gender": "Male",
+        "Email": "mproudman0@marketwatch.com",
+        "MedicalHistory": "Flu"
+    },
+    {
+        "Id": 2,
+        "FirstName": "Hettie",
+        "LastName": "O'Crowley",
+        "DateOfBirth": "2011-02-01T11:10:00Z",
+        "Gender": "Female",
+        "Email": "hocrowley1@sbwire.com",
+        "MedicalHistory": "Diabetes"
+    },
+    {
+        "Id": 3,
+        "FirstName": "Lilyan",
+        "LastName": "Pipworth",
+        "DateOfBirth": "1987-12-01T11:10:00Z",
+        "Gender": "Female",
+        "Email": "lpipworth2@last.fm",
+        "MedicalHistory": "Allergies"
+    }
+]
+
+ 
