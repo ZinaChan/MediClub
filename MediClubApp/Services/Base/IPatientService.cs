@@ -8,5 +8,5 @@ public interface IPatientService
     Task<IEnumerable<Patient>> GetAllPatientsAsync();
     Task CreatePatientAsync(Patient newPatient);
     Task UpdatePatientAsync(int id, Patient newPatient);
-    Task DeletePatientAsync(Patient oldPatient);
+    Task DeletePatientByIdAsync(int id);
 }

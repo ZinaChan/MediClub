@@ -46,12 +46,12 @@ public class DoctorDapperRepository : IDoctorRepository
             sql: "UPDATE Doctors SET FirstName = @FirstName, LastName = @LastName, DateOfBirth = @DateOfBirth, Gender = @Gender, Email = @Email, PhoneNumber = @PhoneNumber , Specialization = @Specialization, Department = @Department WHERE Id = @Id",
             param: newDoctor);
     }
-    public async Task DeleteAsync(Doctor oldDoctor)
+    public async Task DeleteByIdAsync(int id)
     {
         using var connection = new SqlConnection(connectionString);
 
         await connection.ExecuteAsync(
             sql: "DELETE FROM Doctors WHERE Id = @Id",
-            param: new { Id = oldDoctor.Id });
+            param: new { Id = id });
     }
 }

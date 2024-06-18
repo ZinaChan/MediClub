@@ -46,13 +46,13 @@ public class PatientDapperRepository : IPatientRepository
             param: newPatient
         );
     }
-    public async Task DeleteAsync(Patient oldPatient)
+    public async Task DeleteByIdAsync(int id)
     {
         using var connection = new SqlConnection(connectionString);
 
         await connection.ExecuteAsync(
             sql: "DELETE FROM Patients WHERE Id = @Id", 
-            param: new { Id = oldPatient.Id });
+            param: new { Id = id });
     }
     
 }

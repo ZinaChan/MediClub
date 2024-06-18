@@ -8,5 +8,5 @@ public interface IDoctorService
     Task<IEnumerable<Doctor>> GetAllDoctorsAsync();
     Task CreateDoctorAsync(Doctor newDoctor);
     Task UpdateDoctorAsync(int id, Doctor newDoctor);
-    Task DeleteDoctorAsync(Doctor oldDoctor);
+    Task DeleteDoctorByIdAsync(int id);
 }
