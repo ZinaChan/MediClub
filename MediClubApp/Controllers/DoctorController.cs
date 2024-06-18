@@ -37,11 +37,26 @@ public class DoctorController : Controller
         }
     }
 
+    [HttpGet("Json/{doctorId:int}")]
+    public async Task<IActionResult> GetDoctorJson(int doctorId)
+    {
+        try
+        {
+            var doctor = await _doctorService.GetDoctorAsync(doctorId);
+            return Json(doctor);
+        }
+        catch (System.Exception ex)
+        {
+            return base.StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+        }
+    }
+
     [HttpPost]
     public async Task<IActionResult> CreateDoctor(Doctor newDoctor)
     {
         try
         {
+            System.Console.WriteLine(1);
             await this._doctorService.CreateDoctorAsync(newDoctor);
             return base.RedirectToAction(actionName: "Index");
         }
@@ -51,30 +66,31 @@ public class DoctorController : Controller
         }
     }
 
-    // [HttpPut]
-    // public IActionResult UpdateDoctor([FromBody] int id, Doctor doctor)
-    // {
-    //     try
-    //     {
-    //         this._doctorService.UpdateDoctorAsync(id, doctor);
-    //         return Ok();
-    //     }
-    //     catch (System.Exception ex)
-    //     {
-    //         return base.StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
-    //     }
-    // }
-    // [HttpDelete]
-    // public IActionResult DeleteDoctor([FromBody] Doctor doctor)
-    // {
-    //     try
-    //     {
-    //         this._doctorService.DeleteDoctorAsync(doctor);
-    //         return Ok();
-    //     }
-    //     catch (System.Exception ex)
-    //     {
-    //         return base.StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
-    //     }
-    // }
+    [HttpPut]
+    public IActionResult UpdateDoctor([FromBody] Doctor doctor)
+    {
+        try
+        {
+            this._doctorService.UpdateDoctorAsync(doctor.Id, doctor);
+            return Ok();
+        }
+        catch (System.Exception ex)
+        {
+            return base.StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+        }
+    }
+
+    [HttpDelete("{doctorId:int}")]
+    public IActionResult DeleteDoctor(int doctorId)
+    {
+        try
+        {
+            this._doctorService.DeleteDoctorByIdAsync(doctorId);
+            return Ok();
+        }
+        catch (System.Exception ex)
+        {
+            return base.StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+        }
+    }
 }

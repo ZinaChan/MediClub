@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "ArFe+qgUVB2AsFIzb5ZUxoNFg786f25tu53PJg/4Eok=",
+  "Hash": "qeJRWXMUbKMyR5fov1Mg8srGIhS0o4UvY7VJsfsVI0s=",
   "Source": "MediClubApp",
   "BasePath": "_content/MediClubApp",
   "Mode": "Default",
@@ -148,6 +148,25 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\images\\anonymous.png"
+    },
+    {
+      "Identity": "C:\\Users\\1\\OneDrive\\Рабочий стол\\New folder\\MediClub\\MediClubApp\\wwwroot\\images\\sad-star.png",
+      "SourceId": "MediClubApp",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\1\\OneDrive\\Рабочий стол\\New folder\\MediClub\\MediClubApp\\wwwroot\\",
+      "BasePath": "_content/MediClubApp",
+      "RelativePath": "images/sad-star.png",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "PreferTarget",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\images\\sad-star.png"
     },
     {
       "Identity": "C:\\Users\\1\\OneDrive\\Рабочий стол\\New folder\\MediClub\\MediClubApp\\wwwroot\\js\\site.js",
