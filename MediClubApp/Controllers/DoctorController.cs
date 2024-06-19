@@ -1,43 +1,96 @@
 using System.Text.Json;
 using MediClubApp.Models;
+using MediClubApp.Services.Base;
 using Microsoft.AspNetCore.Mvc;
 
-namespace MediClubApp.Controllers
+namespace MediClubApp.Controllers;
+
+[Route("[controller]")]
+public class DoctorController : Controller
 {
-    [Route("[controller]")]
-    public class DoctorController : Controller
+    private readonly IDoctorService _doctorService;
+
+    public DoctorController(IDoctorService doctorService)
     {
-        public IActionResult Index()
+        this._doctorService = doctorService;
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> Index()
+    {
+        var doctors = await this._doctorService.GetAllDoctorsAsync();
+        return View(doctors);
+    }
+
+
+    [HttpGet("{doctorId:int}")]
+    public async Task<IActionResult> DoctorInfo(int doctorId)
+    {
+        try
         {
-            return View();
+            var doctor = await _doctorService.GetDoctorAsync(doctorId);
+            return View(doctor);
         }
-
-
-        [HttpPost]
-        [Route("[controller]")]
-        public async Task<IActionResult> CreateDoctor(Doctor newDoctor)
+        catch (System.Exception ex)
         {
-            if (string.IsNullOrWhiteSpace(newDoctor.FirstName) || string.IsNullOrWhiteSpace(newDoctor.LastName)) {return this.BadRequest();}
+            return base.StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+        }
+    }
 
-            
-            var doctorsJson = await System.IO.File.ReadAllTextAsync("Assets/doctors.json");
+    [HttpGet("Json/{doctorId:int}")]
+    public async Task<IActionResult> GetDoctorJson(int doctorId)
+    {
+        try
+        {
+            var doctor = await _doctorService.GetDoctorAsync(doctorId);
+            return Json(doctor);
+        }
+        catch (System.Exception ex)
+        {
+            return base.StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+        }
+    }
 
-            var doctors = JsonSerializer.Deserialize<List<Doctor>>(doctorsJson, new JsonSerializerOptions
-            {
-                PropertyNameCaseInsensitive = true,
-            });
-
-            
-            doctors ??= new List<Doctor>();
-            newDoctor.Id = doctors.Count() == 0 ? 1 : doctors.LastOrDefault()!.Id;
-            doctors.Add(newDoctor);
-            var newDoctorsJson = JsonSerializer.Serialize(doctors, new JsonSerializerOptions{
-                PropertyNameCaseInsensitive = true,
-            }); 
-
-            await System.IO.File.WriteAllTextAsync("Assets/doctors.json", newDoctorsJson);
-            
+    [HttpPost]
+    public async Task<IActionResult> CreateDoctor(Doctor newDoctor)
+    {
+        try
+        {
+            System.Console.WriteLine(1);
+            await this._doctorService.CreateDoctorAsync(newDoctor);
             return base.RedirectToAction(actionName: "Index");
+        }
+        catch (System.Exception ex)
+        {
+            return base.StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+        }
+    }
+
+    [HttpPut]
+    public IActionResult UpdateDoctor([FromBody] Doctor doctor)
+    {
+        try
+        {
+            this._doctorService.UpdateDoctorAsync(doctor.Id, doctor);
+            return Ok();
+        }
+        catch (System.Exception ex)
+        {
+            return base.StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+        }
+    }
+
+    [HttpDelete("{doctorId:int}")]
+    public IActionResult DeleteDoctor(int doctorId)
+    {
+        try
+        {
+            this._doctorService.DeleteDoctorByIdAsync(doctorId);
+            return Ok();
+        }
+        catch (System.Exception ex)
+        {
+            return base.StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
         }
     }
 }
