@@ -7,12 +7,14 @@ using MediClubApp.Services.Base;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllersWithViews();
+
 builder.Services.AddScoped<IDoctorRepository,DoctorDapperRepository>();
 builder.Services.AddScoped<IPatientRepository,PatientDapperRepository>();
 builder.Services.AddScoped<ILogRepository,LogDapperRepository>();
 
 builder.Services.AddScoped<IDoctorService,DoctorService>();
 builder.Services.AddScoped<IPatientService,PatientService>();
+builder.Services.AddScoped<ILogService,LogService>();
 
 var connectionStringSection = builder.Configuration.GetSection("Connections:MediClubDb");
 builder.Services.Configure<MsSqlConnectionOption>(config: connectionStringSection);
