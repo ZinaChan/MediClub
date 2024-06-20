@@ -2,6 +2,8 @@ using MediClubApp.Middleware;
 using MediClubApp.Options;
 using MediClubApp.Repositories.Base;
 using MediClubApp.Repositories.Dapper;
+using MediClubApp.Repositories.EFCore;
+using MediClubApp.Repositories.EFCore.Dbcontext;
 using MediClubApp.Services;
 using MediClubApp.Services.Base;
 
@@ -9,9 +11,11 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllersWithViews();
 
-builder.Services.AddScoped<IDoctorRepository,DoctorDapperRepository>();
-builder.Services.AddScoped<IPatientRepository,PatientDapperRepository>();
-builder.Services.AddScoped<ILogRepository,LogDapperRepository>();
+builder.Services.AddDbContext<MyClinicDbContext>();
+
+builder.Services.AddScoped<IDoctorRepository,DoctorEFCoreRepository>();
+builder.Services.AddScoped<IPatientRepository,PatientEFCoreRRepository>();
+builder.Services.AddScoped<ILogRepository,LogEFCoreRRepository>();
 
 builder.Services.AddScoped<IDoctorService,DoctorService>();
 builder.Services.AddScoped<IPatientService,PatientService>();

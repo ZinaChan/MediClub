@@ -56,7 +56,6 @@ public class DoctorController : Controller
     {
         try
         {
-            System.Console.WriteLine(1);
             await this._doctorService.CreateDoctorAsync(newDoctor);
             return base.RedirectToAction(actionName: "Index");
         }
@@ -67,11 +66,11 @@ public class DoctorController : Controller
     }
 
     [HttpPut]
-    public IActionResult UpdateDoctor([FromBody] Doctor doctor)
+    public async Task<IActionResult> UpdateDoctor([FromBody] Doctor doctor)
     {
         try
         {
-            this._doctorService.UpdateDoctorAsync(doctor.Id, doctor);
+            await this._doctorService.UpdateDoctorAsync(doctor.Id, doctor);
             return Ok();
         }
         catch (System.Exception ex)
@@ -81,11 +80,11 @@ public class DoctorController : Controller
     }
 
     [HttpDelete("{doctorId:int}")]
-    public IActionResult DeleteDoctor(int doctorId)
+    public async Task<IActionResult> DeleteDoctor(int doctorId)
     {
         try
         {
-            this._doctorService.DeleteDoctorByIdAsync(doctorId);
+           await this._doctorService.DeleteDoctorByIdAsync(doctorId);
             return Ok();
         }
         catch (System.Exception ex)

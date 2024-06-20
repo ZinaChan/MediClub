@@ -65,11 +65,11 @@ public class PatientController : Controller
     }
 
     [HttpPut]
-    public IActionResult UpdateDoctor([FromBody] Patient patient)
+    public async Task<IActionResult> UpdateDoctor([FromBody] Patient patient)
     {
         try
         {
-            this._patientService.UpdatePatientAsync(patient.Id, patient);
+            await this._patientService.UpdatePatientAsync(patient.Id, patient);
             return Ok();
         }
         catch (System.Exception ex)
@@ -79,11 +79,11 @@ public class PatientController : Controller
     }
 
     [HttpDelete("{patientId:int}")]
-    public IActionResult DeleteDoctor(int patientId)
+    public async Task<IActionResult> DeleteDoctor(int patientId)
     {
         try
         {
-            this._patientService.DeletePatientByIdAsync(patientId);
+            await this._patientService.DeletePatientByIdAsync(patientId);
             return Ok();
         }
         catch (System.Exception ex)

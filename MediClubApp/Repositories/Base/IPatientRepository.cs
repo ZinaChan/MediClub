@@ -1,6 +1,7 @@
 #pragma warning disable CS0108
 
 using MediClubApp.Models;
+using MediClubApp.Repositories.Base.CRUD;
 
 namespace MediClubApp.Repositories.Base;
 

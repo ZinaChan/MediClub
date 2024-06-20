@@ -22,18 +22,18 @@ public class LogService : ILogService
 
         await _LogRepository.CreateAsync(newLog: newLog);
     }
-    public Task<IEnumerable<Log>> GetAllLogsAsync()
+    public async Task<IEnumerable<Log>> GetAllLogsAsync()
     {
-        return _LogRepository.GetAllAsync();
+        return await _LogRepository.GetAllAsync();
     }
-    public Task<Log?> GetLogAsync(int id)
+    public async Task<Log?> GetLogAsync(int id)
     {
-        return this._LogRepository.GetAsync(id: id);
+        return await this._LogRepository.GetAsync(id: id);
     }
     public async Task UpdateLogAsync(int id, Log newLog)
     {
 
-        if (newLog is null || this._LogRepository.GetAsync(id) is null)
+        if (newLog is null || await this._LogRepository.GetAsync(id) is null)
         {
             throw new ArgumentNullException(nameof(newLog));
         }
@@ -42,7 +42,7 @@ public class LogService : ILogService
     }
     public async Task DeleteLogByIdAsync(int id)
     {
-        if (this._LogRepository.GetAsync(id) is null)
+        if (await this._LogRepository.GetAsync(id) is null)
         {
             throw new ArgumentNullException(nameof(Log));
         }

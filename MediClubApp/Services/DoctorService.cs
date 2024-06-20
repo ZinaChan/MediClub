@@ -22,18 +22,18 @@ public class DoctorService : IDoctorService
 
         await _doctorRepository.CreateAsync(newDoctor: newDoctor);
     }
-    public Task<IEnumerable<Doctor>> GetAllDoctorsAsync()
+    public async Task<IEnumerable<Doctor>> GetAllDoctorsAsync()
     {
-        return _doctorRepository.GetAllAsync();
+        return await _doctorRepository.GetAllAsync();
     }
-    public Task<Doctor?> GetDoctorAsync(int id)
+    public async Task<Doctor?> GetDoctorAsync(int id)
     {
-        return this._doctorRepository.GetAsync(id: id);
+        return await this._doctorRepository.GetAsync(id: id);
     }
     public async Task UpdateDoctorAsync(int id, Doctor newDoctor)
     {
 
-        if (newDoctor is null || this._doctorRepository.GetAsync(id) is null)
+        if (newDoctor is null || await this._doctorRepository.GetAsync(id) is null)
         {
             throw new ArgumentNullException(nameof(newDoctor));
         }
@@ -42,7 +42,7 @@ public class DoctorService : IDoctorService
     }
     public async Task DeleteDoctorByIdAsync(int id)
     {
-        if (this._doctorRepository.GetAsync(id) is null)
+        if (await this._doctorRepository.GetAsync(id) is null)
         {
             throw new ArgumentNullException(nameof(Doctor));
         }

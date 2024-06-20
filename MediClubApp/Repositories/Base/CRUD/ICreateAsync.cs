@@ -1,4 +1,4 @@
-namespace MediClubApp.Repositories.Base;
+namespace MediClubApp.Repositories.Base.CRUD;
 
 public interface ICreateAsync<TEntity>
 {
