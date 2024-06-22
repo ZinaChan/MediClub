@@ -22,9 +22,14 @@ public class DoctorController : Controller
         return View(doctors);
     }
 
+    [Route("Create", Name = "CreateDoctorPage")]
+    public IActionResult Create()
+    {
+        return View();
+    }
 
     [HttpGet("{doctorId:int}")]
-    public async Task<IActionResult> DoctorInfo(int doctorId)
+     public async Task<IActionResult> DoctorInfo(int doctorId)
     {
         try
         {
@@ -84,7 +89,7 @@ public class DoctorController : Controller
     {
         try
         {
-           await this._doctorService.DeleteDoctorByIdAsync(doctorId);
+            await this._doctorService.DeleteDoctorByIdAsync(doctorId);
             return Ok();
         }
         catch (System.Exception ex)

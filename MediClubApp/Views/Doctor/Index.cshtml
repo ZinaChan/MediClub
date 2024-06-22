@@ -3,64 +3,13 @@
     ViewData["Title"] = "Doctor Page";
 }
 
-<form asp-action="CreateDoctor" method="post">
-    <div>
-        <label for="FirstName">First Name:</label>
-        <input type="text" id="FirstName" name="FirstName" required />
-    </div>
-    <div>
-        <label for="LastName">Last Name:</label>
-        <input type="text" id="LastName" name="LastName" required />
-    </div>
-    <div>
-        <label for="DateOfBirth">Date of Birth:</label>
-        <input type="date" id="DateOfBirth" name="DateOfBirth" required />
-    </div>
-    <div>
-        <label for="Gender">Gender:</label>
-        <select id="Gender" name="Gender" required>
-            <option value="">Select Gender</option>
-
-            @foreach (Gender gender in Enum.GetValues(typeof(Gender)))
-            {
-                <option value="@gender">@gender</option>
-            }
-        </select>
-    </div>
-    <div>
-        <label for="Email">Email:</label>
-        <input type="email" id="Email" name="Email" required />
-    </div>
-    <div>
-        <label for="PhoneNumber">Phone Number:</label>
-        <input type="tel" id="PhoneNumber" name="PhoneNumber" required />
-    </div>
-    <div>
-        <label for="Specialization">Specialization:</label>
-        <select id="Specialization" name="Specialization" required>
-            <option value="">Select Specialization</option>
-            @foreach (Specialization specialization in Enum.GetValues(typeof(Specialization)))
-            {
-                <option value="@specialization">@specialization</option>
-            }
-        </select>
-    </div>
-    <div>
-        <label for="Department">Department:</label>
-        <select id="Department" name="Department" required>
-            <option value="">Select Department</option>
-
-            @foreach (Department department in Enum.GetValues(typeof(Department)))
-            {
-                <option value="@department">@department</option>
-            }
-        </select>
-    </div>
-    <button type="submit">Add Doctor</button>
-</form>
 
 <h1> Doctors List</h1>
 <hr />
+<a asp-route="CreateDoctorPage"> <button class="btn-modern">Create new Doctor</button> </a>
+<br />
+<br />
+
 @if (!Model.Any() || Model is null)
 {
     <div class="no-doctors">
@@ -75,16 +24,18 @@ else
         @foreach (var doctor in Model)
         {
             <li class="doctor-item">
-                <div class="doctor-details">
-                    <p><strong>First Name:</strong> @(doctor?.FirstName ?? "UNKNOWN")</p>
-                    <p><strong>Last Name:</strong> @(doctor?.LastName ?? "UNKNOWN")</p>
-                    <p><strong>Date of Birth:</strong> @doctor?.DateOfBirth </p>
-                    <p><strong>Gender:</strong> @(doctor?.Gender ?? "UNKNOWN")</p>
-                    <p><strong>Email:</strong> @(doctor?.Email ?? "UNKNOWN")</p>
-                    <p><strong>Phone Number:</strong> @(doctor?.PhoneNumber ?? "UNKNOWN")</p>
-                    <p><strong>Specialization:</strong> @(doctor?.Specialization ?? "UNKNOWN")</p>
-                    <p><strong>Department:</strong> @(doctor?.Department ?? "UNKNOWN")</p>
-                </div>
+                <a class="nav-link" asp-controller="Doctor" asp-action="DoctorInfo" asp-route-doctorId="@doctor?.Id">
+                    <div class="doctor-details">
+                        <p><strong>First Name:</strong> @(doctor?.FirstName ?? "UNKNOWN")</p>
+                        <p><strong>Last Name:</strong> @(doctor?.LastName ?? "UNKNOWN")</p>
+                        <p><strong>Date of Birth:</strong> @doctor?.DateOfBirth </p>
+                        <p><strong>Gender:</strong> @(doctor?.Gender ?? "UNKNOWN")</p>
+                        <p><strong>Email:</strong> @(doctor?.Email ?? "UNKNOWN")</p>
+                        <p><strong>Phone Number:</strong> @(doctor?.PhoneNumber ?? "UNKNOWN")</p>
+                        <p><strong>Specialization:</strong> @(doctor?.Specialization ?? "UNKNOWN")</p>
+                        <p><strong>Department:</strong> @(doctor?.Department ?? "UNKNOWN")</p>
+                    </div>
+                </a>
                 <br>
                 <div class="doctor-actions">
                     <button class="update-btn" onclick="showUpdateForm('@doctor!.Id')">Update</button>
@@ -230,8 +181,6 @@ else
                     alert('Doctor updated successfully!');
                     hideUpdateForm();
                     window.location.reload();
-
-
                 } else {
                     alert('Failed to update doctor.');
                 }
@@ -264,16 +213,19 @@ else
         color: #333;
     }
 
-    form {
-        background-color: #fff;
-        padding: 20px;
-        border-radius: 5px;
-        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        margin-bottom: 20px;
+    .btn-modern {
+        padding: 10px 20px;
+        background-color: #28a745;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        font-size: 16px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
     }
 
-    form div {
-        margin-bottom: 15px;
+    .btn-modern:hover {
+        background-color: #218838;
     }
 
     label {
@@ -366,7 +318,7 @@ else
 
     .update-form {
         position: absolute;
-        top: 50%;
+        top: 40%;
         left: 50%;
         transform: translate(-40%, -40%);
         background-color: #fff;
@@ -375,7 +327,7 @@ else
         box-shadow: 0 0 20px rgba(0, 0, 0, 0.418);
         display: none;
         z-index: 1000;
-        width: 400px;
+        width: 500px;
     }
 
     .update-form label {

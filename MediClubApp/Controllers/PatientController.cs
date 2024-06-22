@@ -19,9 +19,15 @@ public class PatientController : Controller
     public async Task<IActionResult> Index()
     {
         var patients = await this._patientService.GetAllPatientsAsync();
+
         return View(patients);
     }
 
+    [Route("Create", Name = "CreatePatientPage")]
+    public IActionResult Create()
+    {
+        return View();
+    }
     [HttpGet("{patientId:int}")]
     public async Task<IActionResult> PatientInfo(int patientId)
     {
@@ -49,6 +55,8 @@ public class PatientController : Controller
             return base.StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
         }
     }
+ 
+   
 
     [HttpPost]
     public async Task<IActionResult> CreatePatient(Patient newPatient)

@@ -1,0 +1,109 @@
+@model Doctor
+@{
+    ViewData["Title"] = "Create Doctor Page";
+}
+
+<form asp-action="CreateDoctor" method="post">
+    <div>
+        <label asp-for="FirstName">First Name:</label>
+        <input asp-for="FirstName" type="text" required />
+    </div>
+    <div>
+        <label asp-for="LastName">Last Name:</label>
+        <input asp-for="LastName" type="text" required />
+    </div>
+    <div>
+        <label asp-for="DateOfBirth">Date of Birth:</label>
+        <input asp-for="DateOfBirth" type="date" required />
+    </div>
+    <div>
+        <label asp-for="Gender">Gender:</label>
+        <select asp-for="Gender" required>
+            <option value="">Select Gender</option>
+
+            @foreach (Gender gender in Enum.GetValues(typeof(Gender)))
+            {
+                <option value="@gender">@gender</option>
+            }
+        </select>
+    </div>
+    <div>
+        <label asp-for="Email">Email:</label>
+        <input asp-for="Email" type="email" required />
+    </div>
+    <div>
+        <label asp-for="PhoneNumber">Phone Number:</label>
+        <input asp-for="PhoneNumber" type="tel" required />
+    </div>
+    <div>
+        <label asp-for="Specialization">Specialization:</label>
+        <select asp-for="Specialization" required>
+            <option value="">Select Specialization</option>
+            @foreach (Specialization specialization in Enum.GetValues(typeof(Specialization)))
+            {
+                <option value="@specialization">@specialization</option>
+            }
+        </select>
+    </div>
+    <div>
+        <label asp-for="Department">Department:</label>
+        <select asp-for="Department" required>
+            <option value="">Select Department</option>
+
+            @foreach (Department department in Enum.GetValues(typeof(Department)))
+            {
+                <option value="@department">@department</option>
+            }
+        </select>
+    </div>
+    <button type="submit">Add Doctor</button>
+</form>
+
+<style>
+    h1 {
+        color: #333;
+    }
+
+    form {
+        background-color: #fff;
+        padding: 20px;
+        border-radius: 5px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        margin-bottom: 20px;
+    }
+
+    form div {
+        margin-bottom: 15px;
+    }
+
+    label {
+        display: block;
+        margin-bottom: 5px;
+        font-weight: bold;
+    }
+
+    input[type="text"],
+    input[type="date"],
+    input[type="email"],
+    select,
+    textarea {
+        width: 100%;
+        padding: 8px;
+        box-sizing: border-box;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+    }
+
+    button {
+        background-color: #5cb85c;
+        color: white;
+        border: none;
+        padding: 10px 15px;
+        border-radius: 4px;
+        cursor: pointer;
+    }
+
+    button:hover {
+        background-color: #4cae4c;
+    }
+</style>
