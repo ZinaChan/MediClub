@@ -22,8 +22,8 @@ else
         @foreach (var patient in Model)
         {
 
-                <li class="patient-item">
-            <a class="nav-link" asp-controller="Patient" asp-action="PatientInfo" asp-route-patientId="@patient?.Id">
+            <li class="patient-item">
+                <a class="nav-link" asp-controller="Patient" asp-action="PatientInfo" asp-route-patientId="@patient?.Id">
                     <div class="patient-details">
                         <p><strong>First Name:</strong> @(patient?.FirstName ?? "UNKNOWN")</p>
                         <p><strong>Last Name:</strong> @(patient?.LastName ?? "UNKNOWN")</p>
@@ -34,13 +34,13 @@ else
                         <p><strong>Address:</strong> @(patient?.Address ?? "UNKNOWN")</p>
                         <p><strong>MedicalHistory:</strong> @(patient?.MedicalHistory ?? "UNKNOWN")</p>
                     </div>
-            </a>
-                    <br>
-                    <div class="patient-actions">
-                        <button class="update-btn" onclick="showUpdateForm('@patient!.Id')">Update</button>
-                        <button class="delete-btn" onclick="deletePatient('@patient!.Id')">Delete</button>
-                    </div>
-                </li>
+                </a>
+                <br>
+                <div class="patient-actions">
+                    <button class="update-btn" onclick="showUpdateForm('@patient!.Id')">Update</button>
+                    <button class="delete-btn" onclick="deletePatient('@patient!.Id')">Delete</button>
+                </div>
+            </li>
             <hr class="divider" />
         }
     </ol>

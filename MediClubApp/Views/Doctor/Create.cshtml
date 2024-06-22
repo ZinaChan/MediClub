@@ -3,22 +3,25 @@
     ViewData["Title"] = "Create Doctor Page";
 }
 
-<form asp-action="CreateDoctor" method="post">
+<form asp-route="CreateDoctorApi" method="post">
     <div>
         <label asp-for="FirstName">First Name:</label>
-        <input asp-for="FirstName" type="text" required />
+        <input asp-for="FirstName" type="text" />
+        <span class="text-danger" asp-validation-for="FirstName"></span>
     </div>
     <div>
         <label asp-for="LastName">Last Name:</label>
-        <input asp-for="LastName" type="text" required />
+        <input asp-for="LastName" type="text" />
+        <span class="text-danger" asp-validation-for="LastName"></span>
     </div>
     <div>
         <label asp-for="DateOfBirth">Date of Birth:</label>
-        <input asp-for="DateOfBirth" type="date" required />
+        <input asp-for="DateOfBirth" type="date" />
+        <span class="text-danger" asp-validation-for="DateOfBirth"></span>
     </div>
     <div>
         <label asp-for="Gender">Gender:</label>
-        <select asp-for="Gender" required>
+        <select asp-for="Gender">
             <option value="">Select Gender</option>
 
             @foreach (Gender gender in Enum.GetValues(typeof(Gender)))
@@ -26,28 +29,33 @@
                 <option value="@gender">@gender</option>
             }
         </select>
+        <span class="text-danger" asp-validation-for="Gender"></span>
     </div>
     <div>
         <label asp-for="Email">Email:</label>
-        <input asp-for="Email" type="email" required />
+        <input asp-for="Email" type="email" />
+        <span class="text-danger" asp-validation-for="Email"></span>
     </div>
     <div>
         <label asp-for="PhoneNumber">Phone Number:</label>
-        <input asp-for="PhoneNumber" type="tel" required />
+        <input asp-for="PhoneNumber" type="tel" />
+        <br />
+        <span class="text-danger" asp-validation-for="PhoneNumber"></span>
     </div>
     <div>
         <label asp-for="Specialization">Specialization:</label>
-        <select asp-for="Specialization" required>
+        <select asp-for="Specialization">
             <option value="">Select Specialization</option>
             @foreach (Specialization specialization in Enum.GetValues(typeof(Specialization)))
             {
                 <option value="@specialization">@specialization</option>
             }
         </select>
+        <span class="text-danger" asp-validation-for="Specialization"></span>
     </div>
     <div>
         <label asp-for="Department">Department:</label>
-        <select asp-for="Department" required>
+        <select asp-for="Department">
             <option value="">Select Department</option>
 
             @foreach (Department department in Enum.GetValues(typeof(Department)))
@@ -55,6 +63,7 @@
                 <option value="@department">@department</option>
             }
         </select>
+        <span class="text-danger" asp-validation-for="Department"></span>
     </div>
     <button type="submit">Add Doctor</button>
 </form>

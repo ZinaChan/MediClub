@@ -3,22 +3,25 @@
     ViewData["Title"] = "Create Patient Page";
 }
 
-<form asp-action="CreatePatient" method="post">
+<form asp-route="CreatePatientApi" method="post">
    <div>
         <label asp-for="FirstName">First Name:</label>
-        <input asp-for="FirstName" type="text" required />
+        <input asp-for="FirstName" type="text"  />
+        <span class="text-danger" asp-validation-for="FirstName"></span>
     </div>
     <div>
         <label asp-for="LastName">Last Name:</label>
-        <input asp-for="LastName" type="text" required />
+        <input asp-for="LastName" type="text"  />
+        <span class="text-danger" asp-validation-for="LastName"></span>
     </div>
     <div>
         <label asp-for="DateOfBirth">Date of Birth:</label>
-        <input asp-for="DateOfBirth" type="date" required />
+        <input asp-for="DateOfBirth" type="date"  />
+        <span class="text-danger" asp-validation-for="DateOfBirth"></span>
     </div>
     <div>
         <label asp-for="Gender">Gender:</label>
-        <select asp-for="Gender" required>
+        <select asp-for="Gender" >
             <option value="">Select Gender</option>
 
             @foreach (Gender gender in Enum.GetValues(typeof(Gender)))
@@ -26,18 +29,24 @@
                 <option value="@gender">@gender</option>
             }
         </select>
+        <span class="text-danger" asp-validation-for="Gender"></span>
     </div>
     <div>
         <label asp-for="Email">Email:</label>
-        <input asp-for="Email" type="email" required />
+        <input asp-for="Email" type="email"  />
+        <span class="text-danger" asp-validation-for="Email"></span>
     </div>
     <div>
         <label asp-for="PhoneNumber">Phone Number:</label>
-        <input asp-for="PhoneNumber" type="tel" required />
+        <input asp-for="PhoneNumber" type="tel"  />
+        <br/>
+        <span class="text-danger" asp-validation-for="PhoneNumber"></span>
     </div>
      <div>
-        <label asp-for="Address">Phone Number:</label>
-        <input asp-for="Address" type="tel" required />
+        <label asp-for="Address">Address:</label>
+        <input asp-for="Address" type="tel"  />
+        <br/>
+        <span class="text-danger" asp-validation-for="Address"></span>
     </div> 
     <div>
         <label asp-for="MedicalHistory">Medical History:</label>
@@ -94,3 +103,8 @@
         background-color: #4cae4c;
     }
 </style>
+
+@* @section Scripts {
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+} *@

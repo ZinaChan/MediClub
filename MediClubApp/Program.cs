@@ -1,3 +1,5 @@
+using System.Reflection;
+using FluentValidation;
 using MediClubApp.Middleware;
 using MediClubApp.Options;
 using MediClubApp.Repositories.Base;
@@ -21,6 +23,8 @@ builder.Services.AddScoped<IDoctorService,DoctorService>();
 builder.Services.AddScoped<IPatientService,PatientService>();
 builder.Services.AddScoped<ILogService,LogService>();
 
+
+builder.Services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
 builder.Services.AddScoped<LogMiddleware>();
 
 var connectionStringSection = builder.Configuration.GetSection("Connections:MediClubDb");
