@@ -1,4 +1,3 @@
-
 using System.Text.RegularExpressions;
 using FluentValidation;
 using MediClubApp.Models;
@@ -27,15 +26,13 @@ public class DoctorValidator : AbstractValidator<Doctor>
         RuleFor(doctor => doctor.PhoneNumber)
             .NotEmpty().WithMessage("Phone Number is required.")
             .Matches(new Regex(@"(?:(?:\+?1\s*(?:[.-]\s*)?)?(?:(\s*([2-9]1[02-9]|[2-9][02-8]1|[2-9][02-8][02-9]‌​)\s*)|([2-9]1[02-9]|[2-9][02-8]1|[2-9][02-8][02-9]))\s*(?:[.-]\s*)?)([2-9]1[02-9]‌​|[2-9][02-9]1|[2-9][02-9]{2})\s*(?:[.-]\s*)?([0-9]{4})\s*(?:\s*(?:#|x\.?|ext\.?|extension)\s*(\d+)\s*)?$")).WithMessage("Invalid Phone Number format.");
-
-        RuleFor(doctor => doctor.Specialization)
-            .NotEmpty().WithMessage("Specialization is required.")
-            .Must(specialization => Enum.TryParse(typeof(Specialization), specialization, true, out _))
-            .WithMessage("Invalid Specialization value.");
-
-        RuleFor(doctor => doctor.Department)
+ 
+        RuleFor(doctor => doctor.SpecializationId)
             .NotEmpty().WithMessage("Department is required.")
-            .Must(department => Enum.TryParse(typeof(Department), department, true, out _))
-            .WithMessage("Invalid Department value.");
+            .GreaterThan(0).WithMessage("Invalid Specialization Id.");
+
+        RuleFor(doctor => doctor.DepartmentId)
+            .NotEmpty().WithMessage("Department is required.")
+            .GreaterThan(0).WithMessage("Invalid Department Id.");
     }
 }
