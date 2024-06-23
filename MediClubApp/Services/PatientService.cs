@@ -1,4 +1,3 @@
-
 using MediClubApp.Models;
 using MediClubApp.Repositories.Base;
 using MediClubApp.Services.Base;
@@ -37,7 +36,7 @@ public class PatientService : IPatientService
             throw new ArgumentNullException(nameof(newPatient));
         }
 
-        await this._patientRepository.UpdateAsync(id: id, newPatient:newPatient);
+        await this._patientRepository.UpdateAsync(id: id, newPatient: newPatient);
     }
     public async Task DeletePatientByIdAsync(int id)
     {

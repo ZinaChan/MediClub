@@ -26,6 +26,11 @@ builder.Services.AddScoped<ILogRepository,LogEFCoreRRepository>();
 
 builder.Services.AddScoped<IDoctorService,DoctorService>();
 builder.Services.AddScoped<IPatientService,PatientService>();
+builder.Services.AddScoped<IDepartmentService,DepartmentService>();
+builder.Services.AddScoped<ISpecializationService,SpecializationService>();
+builder.Services.AddScoped<IMedicalRecordService,MedicalRecordService>();
+builder.Services.AddScoped<IAppointmentService,AppointmentService>();
+builder.Services.AddScoped<IRoomService,RoomService>();
 builder.Services.AddScoped<ILogService,LogService>();
 
 builder.Services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
