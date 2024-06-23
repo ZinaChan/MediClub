@@ -1,16 +1,17 @@
-﻿@model IEnumerable<Doctor>;
+﻿@model DoctorViewModel;
 @{
     ViewData["Title"] = "Doctor Page";
 }
 
-
+@* Link to create view *@
 <h1> Doctors List</h1>
 <hr />
 <a asp-route="CreateDoctorPage"> <button class="btn-modern">Create new Doctor</button> </a>
 <br />
 <br />
 
-@if (!Model.Any() || Model is null)
+@* All Doctors *@
+@if (!Model.Doctors.Any() || Model.Doctors is null)
 {
     <div class="no-doctors">
         <img src="/images/sad-star.png" alt="No Doctors" class="sad-face" />
@@ -21,7 +22,7 @@ else
 {
     <ol class="card-list">
 
-        @foreach (var doctor in Model)
+        @foreach (var doctor in Model.Doctors)
         {
             <li class="doctor-item">
                 <a class="nav-link" asp-controller="Doctor" asp-action="DoctorInfo" asp-route-doctorId="@doctor?.Id">
@@ -32,8 +33,8 @@ else
                         <p><strong>Gender:</strong> @(doctor?.Gender ?? "UNKNOWN")</p>
                         <p><strong>Email:</strong> @(doctor?.Email ?? "UNKNOWN")</p>
                         <p><strong>Phone Number:</strong> @(doctor?.PhoneNumber ?? "UNKNOWN")</p>
-                        <p><strong>Specialization:</strong> @(doctor?.Specialization ?? "UNKNOWN")</p>
-                        <p><strong>Department:</strong> @(doctor?.Department ?? "UNKNOWN")</p>
+                        <p><strong>Department Name:</strong> @(doctor?.Department.Name ?? "UNKNOWN")</p>
+                        <p><strong>Specialization:</strong> @(doctor?.Specialization.Name ?? "UNKNOWN")</p>
                     </div>
                 </a>
                 <br>
@@ -66,7 +67,6 @@ else
         <label for="newGender">Gender:</label>
         <select id="newGender" name="newGender" required>
             <option value="">Select Gender</option>
-
             @foreach (Gender gender in Enum.GetValues(typeof(Gender)))
             {
                 <option value="@gender">@gender</option>
@@ -82,24 +82,22 @@ else
         <input type="text" id="newPhoneNumber">
     </div>
     <div>
-        <label for="newSpecialization">Specialization:</label>
-        <select id="newSpecialization" name="newSpecialization" required>
-            <option value="">Select Specialization</option>
-
-            @foreach (Specialization specialization in Enum.GetValues(typeof(Specialization)))
+        <label for="newDepartment">Department:</label>
+        <select id="newDepartment" name="newDepartment" required>
+            <option value="">Select Department</option>
+            @foreach (Department department in Model.Departments)
             {
-                <option value="@specialization">@specialization</option>
+                <option value="@department.Id">@department.Name</option>
             }
         </select>
     </div>
     <div>
-        <label for="Department">Department:</label>
-        <select id="newDepartment" name="newDepartment" required>
-            <option value="">Select Department</option>
-
-            @foreach (Department department in Enum.GetValues(typeof(Department)))
+        <label for="newSpecialization">Specialization:</label>
+        <select id="newSpecialization" name="newSpecialization" required>
+            <option value="">Select Specialization</option>
+            @foreach (Specialization specialization in Model.Specializations)
             {
-                <option value="@department">@department</option>
+                <option value="@specialization.Id">@specialization.Name</option>
             }
         </select>
     </div>
@@ -138,8 +136,8 @@ else
         document.getElementById('newGender').value = data.gender;
         document.getElementById('newEmail').value = data.email;
         document.getElementById('newPhoneNumber').value = data.phoneNumber;
-        document.getElementById('newSpecialization').value = data.specialization;
-        document.getElementById('newDepartment').value = data.department;
+        document.getElementById('newSpecialization').value = data.specializationId;
+        document.getElementById('newDepartment').value = data.departmentId;
         document.getElementById('updateForm').style.display = 'block';
     }
 
@@ -166,9 +164,10 @@ else
             gender: gender,
             email: email,
             phoneNumber: phoneNumber,
-            specialization: specialization,
-            department: department
+            departmentId: department,
+            specializationId: specialization
         };
+
         fetch(`/Doctor`, {
             method: 'PUT',
             headers: {

@@ -1,0 +1,40 @@
+﻿@model Specialization;
+@{
+    ViewData["Title"] = "Specialization Info Page";
+}
+
+
+<div class="infoContainer">
+    <div class="specialization-details">
+        <p>Specialization Number: @Model.Name</p>
+        <p>Department: @Model.Department.Name</p>
+    </div>
+</div>
+
+<style>
+    .infoContainer {
+        width: 80%;
+        margin: auto;
+        background-color: #fff;
+        padding: 20px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        border-radius: 10px;
+        margin-top: 50px;
+        display: flex;
+    }
+
+    .specialization-details {
+        flex-grow: 1;
+        padding-right: 20px;
+    }
+
+    .specialization-details h2 {
+        margin-top: 0;
+        color: #343a40;
+    }
+
+    .specialization-details p {
+        margin: 5px 0;
+        color: #6c757d;
+    }
+</style>

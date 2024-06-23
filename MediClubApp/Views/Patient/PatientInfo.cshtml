@@ -1,18 +1,18 @@
 ﻿@model Patient;
 @{
-    ViewData["Title"] = "Patient Info Page"; 
+    ViewData["Title"] = "Patient Info Page";
 }
 
 
 <div class="infoContainer">
-    @if ( @Model.Gender == nameof(Gender.Male))
+    @if (@Model.Gender == nameof(Gender.Male))
     {
         <img src="/images/anonymous-man.png" alt="User Logo" class="logo">
     }
-    else if(@Model.Gender == nameof(Gender.Female))
+    else if (@Model.Gender == nameof(Gender.Female))
     {
         <img src="/images/anonymous-woman.png" alt="User Logo" class="logo">
-    }   
+    }
     else
     {
         <img src="/images/anonymous.png" alt="User Logo" class="logo">
@@ -24,7 +24,7 @@
         <p>Email: @Model.Email</p>
         <p>Phone Number: @Model.PhoneNumber</p>
         <p>Address: @Model.Address</p>
-        <p>MedicalHistory: @Model.MedicalHistory</p>
+        @* <p>MedicalHistory: @Model.MedicalHistory</p> *@
     </div>
 </div>
 

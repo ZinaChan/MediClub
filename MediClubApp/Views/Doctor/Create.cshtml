@@ -1,27 +1,27 @@
-@model Doctor
+@model DoctorViewModel
 @{
     ViewData["Title"] = "Create Doctor Page";
 }
 
 <form asp-route="CreateDoctorApi" method="post">
     <div>
-        <label asp-for="FirstName">First Name:</label>
-        <input asp-for="FirstName" type="text" />
-        <span class="text-danger" asp-validation-for="FirstName"></span>
+        <label asp-for="Doctor.FirstName">First Name:</label>
+        <input asp-for="Doctor.FirstName" type="text" />
+        <span class="text-danger" asp-validation-for="Doctor.FirstName"></span>
     </div>
     <div>
-        <label asp-for="LastName">Last Name:</label>
-        <input asp-for="LastName" type="text" />
-        <span class="text-danger" asp-validation-for="LastName"></span>
+        <label asp-for="Doctor.LastName">Last Name:</label>
+        <input asp-for="Doctor.LastName" type="text" />
+        <span class="text-danger" asp-validation-for="Doctor.LastName"></span>
     </div>
     <div>
-        <label asp-for="DateOfBirth">Date of Birth:</label>
-        <input asp-for="DateOfBirth" type="date" />
-        <span class="text-danger" asp-validation-for="DateOfBirth"></span>
+        <label asp-for="Doctor.DateOfBirth">Date of Birth:</label>
+        <input asp-for="Doctor.DateOfBirth" type="date" />
+        <span class="text-danger" asp-validation-for="Doctor.DateOfBirth"></span>
     </div>
     <div>
-        <label asp-for="Gender">Gender:</label>
-        <select asp-for="Gender">
+        <label asp-for="Doctor.Gender">Gender:</label>
+        <select asp-for="Doctor.Gender">
             <option value="">Select Gender</option>
 
             @foreach (Gender gender in Enum.GetValues(typeof(Gender)))
@@ -29,42 +29,44 @@
                 <option value="@gender">@gender</option>
             }
         </select>
-        <span class="text-danger" asp-validation-for="Gender"></span>
+        <span class="text-danger" asp-validation-for="Doctor.Gender"></span>
     </div>
     <div>
-        <label asp-for="Email">Email:</label>
-        <input asp-for="Email" type="email" />
-        <span class="text-danger" asp-validation-for="Email"></span>
+        <label asp-for="Doctor.Email">Email:</label>
+        <input asp-for="Doctor.Email" type="email" />
+        <span class="text-danger" asp-validation-for="Doctor.Email"></span>
     </div>
     <div>
-        <label asp-for="PhoneNumber">Phone Number:</label>
-        <input asp-for="PhoneNumber" type="tel" />
+        <label asp-for="Doctor.PhoneNumber">Phone Number:</label>
+        <input asp-for="Doctor.PhoneNumber" type="tel" />
         <br />
-        <span class="text-danger" asp-validation-for="PhoneNumber"></span>
+        <span class="text-danger" asp-validation-for="Doctor.PhoneNumber"></span>
     </div>
     <div>
-        <label asp-for="Specialization">Specialization:</label>
-        <select asp-for="Specialization">
-            <option value="">Select Specialization</option>
-            @foreach (Specialization specialization in Enum.GetValues(typeof(Specialization)))
-            {
-                <option value="@specialization">@specialization</option>
-            }
-        </select>
-        <span class="text-danger" asp-validation-for="Specialization"></span>
-    </div>
-    <div>
-        <label asp-for="Department">Department:</label>
-        <select asp-for="Department">
+        <label asp-for="Doctor.DepartmentId">Department:</label>
+        <select asp-for="Doctor.DepartmentId">
             <option value="">Select Department</option>
 
-            @foreach (Department department in Enum.GetValues(typeof(Department)))
+            @foreach (Department department in Model.Departments)
             {
-                <option value="@department">@department</option>
+                <option value="@department.Id">@department.Name</option>
             }
         </select>
-        <span class="text-danger" asp-validation-for="Department"></span>
+        <span class="text-danger" asp-validation-for="Doctor.DepartmentId"></span>
     </div>
+    <div>
+        <label asp-for="Doctor.SpecializationId">Department:</label>
+        <select asp-for="Doctor.SpecializationId">
+            <option value="">Select Department</option>
+
+            @foreach (Specialization specialization in Model.Specializations)
+            {
+                <option value="@specialization.Id">@specialization.Name</option>
+            }
+        </select>
+        <span class="text-danger" asp-validation-for="Doctor.SpecializationId"></span>
+    </div>
+
     <button type="submit">Add Doctor</button>
 </form>
 

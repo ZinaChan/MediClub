@@ -1,0 +1,43 @@
+﻿@model Appointment;
+@{
+    ViewData["Title"] = "Appointment Info Page";
+}
+
+<div class="infoContainer">
+    <div class="appointment-details">
+        <p>Doctor: @Model.Doctor.FirstName @Model.Doctor.LastName</p>
+        <p>Patient: @Model.Patient.FirstName @Model.Patient.LastName</p>
+        <p>Room: @Model.Room.RoomNumber</p>
+        <p>Date: @Model.Date.ToString("dd.MM.yyyy")</p>
+        <p>Time: @Model.Time</p>
+        <p>Reason: @Model.Reason</p>
+    </div>
+</div>
+
+<style>
+    .infoContainer {
+        width: 80%;
+        margin: auto;
+        background-color: #fff;
+        padding: 20px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        border-radius: 10px;
+        margin-top: 50px;
+        display: flex;
+    }
+
+    .appointment-details {
+        flex-grow: 1;
+        padding-right: 20px;
+    }
+
+    .appointment-details h2 {
+        margin-top: 0;
+        color: #343a40;
+    }
+
+    .appointment-details p {
+        margin: 5px 0;
+        color: #6c757d;
+    }
+</style>

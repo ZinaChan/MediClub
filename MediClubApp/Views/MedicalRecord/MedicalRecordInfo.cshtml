@@ -1,0 +1,43 @@
+﻿@model MedicalRecord;
+@{
+    ViewData["Title"] = "Medical Record Info Page";
+}
+
+
+<div class="infoContainer">
+    <div class="medicalRecord-details">
+        <p>Doctor: @Model.Doctor.FirstName @Model.Doctor.LastName</p>
+        <p>Patient: @Model.Patient.FirstName @Model.Patient.LastName</p>
+        <p>Date: @Model.Date.ToString("dd.MM.yyyy")</p>
+        <p>Diagnosis: @Model.Diagnosis</p>
+        <p>Treatment: @Model.Treatment</p>
+    </div>
+</div>
+
+<style>
+    .infoContainer {
+        width: 80%;
+        margin: auto;
+        background-color: #fff;
+        padding: 20px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        border-radius: 10px;
+        margin-top: 50px;
+        display: flex;
+    }
+
+    .medicalRecord-details {
+        flex-grow: 1;
+        padding-right: 20px;
+    }
+
+    .medicalRecord-details h2 {
+        margin-top: 0;
+        color: #343a40;
+    }
+
+    .medicalRecord-details p {
+        margin: 5px 0;
+        color: #6c757d;
+    }
+</style>
