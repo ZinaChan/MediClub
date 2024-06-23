@@ -17,15 +17,15 @@ public class PatientEFCoreRRepository : IPatientRepository
 
     public async Task CreateAsync(Patient newPatient)
     {
-       await this._clinicDbContext.Patients.AddAsync(entity: newPatient);
-       await this._clinicDbContext.SaveChangesAsync();
+        await this._clinicDbContext.Patients.AddAsync(entity: newPatient);
+        await this._clinicDbContext.SaveChangesAsync();
     }
 
     public async Task DeleteByIdAsync(int id)
     {
         var oldPatient = await this._clinicDbContext.Patients.FirstOrDefaultAsync(d => d.Id == id);
 
-        if(oldPatient is null) return;
+        if (oldPatient is null) return;
 
         this._clinicDbContext.Patients.Remove(entity: oldPatient);
         await this._clinicDbContext.SaveChangesAsync();
@@ -33,7 +33,11 @@ public class PatientEFCoreRRepository : IPatientRepository
 
     public async Task<IEnumerable<Patient>> GetAllAsync()
     {
-        return this._clinicDbContext.Patients;
+        var patients = await this._clinicDbContext.Patients
+                        .Include(p => p.Appointments)
+                        .Include(p => p.MedicalRecords)
+                        .ToListAsync();
+        return patients;
     }
 
     public Task<Patient?> GetAsync(int id)
@@ -50,11 +54,10 @@ public class PatientEFCoreRRepository : IPatientRepository
         oldPatient.FirstName = newPatient.FirstName;
         oldPatient.LastName = newPatient.LastName;
         oldPatient.DateOfBirth = newPatient.DateOfBirth;
-        oldPatient.Gender = newPatient.Gender; 
+        oldPatient.Gender = newPatient.Gender;
         oldPatient.Email = newPatient.Email;
         oldPatient.PhoneNumber = newPatient.PhoneNumber;
         oldPatient.Address = newPatient.Address;
-        oldPatient.MedicalHistory = newPatient.MedicalHistory;
 
         this._clinicDbContext.Update(oldPatient);
         await this._clinicDbContext.SaveChangesAsync();

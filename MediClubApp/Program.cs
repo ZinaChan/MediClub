@@ -17,12 +17,16 @@ builder.Services.AddDbContext<MyClinicDbContext>();
 
 builder.Services.AddScoped<IDoctorRepository,DoctorEFCoreRepository>();
 builder.Services.AddScoped<IPatientRepository,PatientEFCoreRRepository>();
+builder.Services.AddScoped<IDepartmentRepository,DepartmentEFCoreRepository>();
+builder.Services.AddScoped<ISpecializationRepository,SpecializationEFCoreRepository>();
+builder.Services.AddScoped<IMedicalRecordRepository,MedicalRecordEFCoreRepository>();
+builder.Services.AddScoped<IAppointmentRepository,AppointmentEFCoreRepository>();
+builder.Services.AddScoped<IRoomRepository,RoomEFCoreRepository>();
 builder.Services.AddScoped<ILogRepository,LogEFCoreRRepository>();
 
 builder.Services.AddScoped<IDoctorService,DoctorService>();
 builder.Services.AddScoped<IPatientService,PatientService>();
 builder.Services.AddScoped<ILogService,LogService>();
-
 
 builder.Services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
 builder.Services.AddScoped<LogMiddleware>();

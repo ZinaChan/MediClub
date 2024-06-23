@@ -12,4 +12,4 @@ public interface IDoctorRepository :  ICreateAsync<Doctor>, IGetAsync<Doctor>, I
     Task CreateAsync(Doctor newDoctor);
     Task UpdateAsync(int id, Doctor newDoctor);
     Task DeleteByIdAsync(int id);
-}
+} 

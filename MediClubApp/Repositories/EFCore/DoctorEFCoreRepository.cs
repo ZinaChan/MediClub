@@ -33,7 +33,10 @@ public class DoctorEFCoreRepository : IDoctorRepository
 
     public async Task<IEnumerable<Doctor>> GetAllAsync()
     {
-        return this._clinicDbContext.Doctors;
+        var doctors = await this._clinicDbContext.Doctors
+                        .Include(d => d.Department)
+                        .ToListAsync();
+        return doctors;    
     }
 
     public Task<Doctor?> GetAsync(int id)
@@ -53,7 +56,6 @@ public class DoctorEFCoreRepository : IDoctorRepository
         oldDoctor.Email = newDoctor.Email;
         oldDoctor.PhoneNumber = newDoctor.PhoneNumber;
         oldDoctor.Specialization = newDoctor.Specialization;
-        oldDoctor.Department = newDoctor.Department;
 
         this._clinicDbContext.Update(oldDoctor);
         await this._clinicDbContext.SaveChangesAsync();
