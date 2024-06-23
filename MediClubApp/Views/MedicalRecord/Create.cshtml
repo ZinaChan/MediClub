@@ -1,0 +1,102 @@
+@model MedicalRecordViewModel
+@{
+    ViewData["Title"] = "Create MedicalRecord Page";
+}
+
+<form asp-route="CreateMedicalRecordApi" method="post">
+    <div>
+        <label asp-for="MedicalRecord.DoctorId">Doctor:</label>
+        <select asp-for="MedicalRecord.DoctorId">
+            <option value="">Select Doctor</option>
+
+            @foreach (Doctor doctor in Model.Doctors)
+            {
+                <option value="@doctor.Id">@doctor.FirstName @doctor.LastName</option>
+            }
+        </select>
+        <span class="text-danger" asp-validation-for="MedicalRecord.DoctorId"></span>
+    </div>
+    <div>
+        <label asp-for="MedicalRecord.PatientId">Patient:</label>
+        <select asp-for="MedicalRecord.PatientId">
+            <option value="">Select Patient</option>
+
+            @foreach (Patient patient in Model.Patients)
+            {
+                <option value="@patient.Id">@patient.FirstName @patient.LastName</option>
+            }
+        </select>
+        <span class="text-danger" asp-validation-for="MedicalRecord.PatientId"></span>
+    </div>
+    <div>
+        <label asp-for="MedicalRecord.Date">Date:</label>
+        <input asp-for="MedicalRecord.Date" type="date" />
+        <span class="text-danger" asp-validation-for="MedicalRecord.Date"></span>
+    </div>
+    <div>
+        <label asp-for="MedicalRecord.Diagnosis">Diagnosis:</label>
+        <input asp-for="MedicalRecord.Diagnosis" type="text" />
+        <span class="text-danger" asp-validation-for="MedicalRecord.Diagnosis"></span>
+    </div>
+    <div>
+        <label asp-for="MedicalRecord.Treatment">Treatment:</label>
+        <input asp-for="MedicalRecord.Treatment" type="text" />
+        <span class="text-danger" asp-validation-for="MedicalRecord.Treatment"></span>
+    </div>
+
+    <button type="submit">Add MedicalRecord</button>
+</form>
+
+<style>
+    h1 {
+        color: #333;
+    }
+
+    form {
+        background-color: #fff;
+        padding: 20px;
+        border-radius: 5px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        margin-bottom: 20px;
+    }
+
+    form div {
+        margin-bottom: 15px;
+    }
+
+    label {
+        display: block;
+        margin-bottom: 5px;
+        font-weight: bold;
+    }
+
+    input[type="text"],
+    input[type="date"],
+    input[type="email"],
+    select,
+    textarea {
+        width: 100%;
+        padding: 8px;
+        box-sizing: border-box;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+    }
+
+    button {
+        background-color: #5cb85c;
+        color: white;
+        border: none;
+        padding: 10px 15px;
+        border-radius: 4px;
+        cursor: pointer;
+    }
+
+    button:hover {
+        background-color: #4cae4c;
+    }
+</style>
+
+@* @section Scripts {
+<script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+<script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+} *@
