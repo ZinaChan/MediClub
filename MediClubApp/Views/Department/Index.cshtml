@@ -32,8 +32,8 @@ else
                 </a>
                 <br>
                 <div class="department-actions">
-                    <button class="update-btn" onclick="showUpdateForm('@department!.Id')">Update</button>
-                    <button class="delete-btn" onclick="deleteDepartment('@department!.Id')">Delete</button>
+                    <button class="update-btn btn-close-white" onclick="showUpdateForm('@department!.Id')">Update</button>
+                    <button class="delete-btn btn-danger" onclick="deleteDepartment('@department!.Id')">Delete</button>
                 </div>
             </li>
             <hr class="divider" />
@@ -241,14 +241,14 @@ else
         position: absolute;
         top: 40%;
         left: 50%;
-        transform: translate(-40%, -40%);
+        transform: translate(-40%, -50%);
         background-color: #fff;
         padding: 20px;
         border-radius: 10px;
         box-shadow: 0 0 20px rgba(0, 0, 0, 0.418);
         display: none;
         z-index: 1000;
-        width: 500px;
+        width: 400px;
     }
 
     .update-form label {
