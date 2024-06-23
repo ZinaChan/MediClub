@@ -1,6 +1,7 @@
 using FluentValidation;
 using MediClubApp.Models;
 using MediClubApp.Services.Base;
+using MediClubApp.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 
 namespace MediClubApp.Controllers;
@@ -9,35 +10,104 @@ namespace MediClubApp.Controllers;
 public class DoctorController : Controller
 {
     private readonly IDoctorService _doctorService;
+    private readonly IDepartmentService _departmentService;
+    private readonly ISpecializationService _specializationService;
     private readonly IValidator<Doctor> _validator;
 
-    public DoctorController(IValidator<Doctor> validator, IDoctorService doctorService)
+    public DoctorController(IValidator<Doctor> validator, IDoctorService doctorService, IDepartmentService departmentService, ISpecializationService specializationService)
     {
         this._validator = validator;
         this._doctorService = doctorService;
+        this._departmentService = departmentService;
+        this._specializationService = specializationService;
     }
 
     [HttpGet]
     [Route("/[controller]")]
     public async Task<IActionResult> Index()
     {
-        var doctors = await this._doctorService.GetAllDoctorsAsync();
-        return View(doctors);
+        var model = new DoctorViewModel
+        {
+            Departments = await this._departmentService.GetAllDepartmentsAsync(),
+            Specializations = await this._specializationService.GetAllSpecializationsAsync(),
+            Doctors = await this._doctorService.GetAllDoctorsAsync()
+        }; 
+        return base.View(model);
+    }
+
+    [HttpGet]
+    [Route("Json")]
+    public async Task<IActionResult> GetAllDoctorsJson()
+    {
+        try
+        {
+            var doctors = await this._doctorService.GetAllDoctorsAsync();
+            foreach (var doctor in doctors)
+            {
+                doctor.Specialization = null!;
+                doctor.Department = null!;
+            }
+            return base.Json(data: doctors);
+        }
+        catch (System.Exception ex)
+        {
+            return base.StatusCode(statusCode: StatusCodes.Status500InternalServerError, value: ex.Message);
+        }
+    }
+
+    [HttpGet]
+    [Route("Json/{doctorId:int}")]
+    public async Task<IActionResult> GetDoctorJson(int doctorId)
+    {
+        try
+        {
+            var doctor = await this._doctorService.GetDoctorAsync(id: doctorId);
+            return base.Json(data: doctor);
+        }
+        catch (System.Exception ex)
+        {
+            return base.StatusCode(statusCode: StatusCodes.Status500InternalServerError, value: ex.Message);
+        }
+    }
+
+    [HttpGet]
+    [Route("/[controller]/{doctorId:int}")]
+    public async Task<IActionResult> DoctorInfo(int doctorId)
+    {
+        try
+        {
+            var doctor = await this._doctorService.GetDoctorAsync(id: doctorId);
+            doctor!.Department = await this._departmentService.GetDepartmentAsync(id: doctor.DepartmentId) ?? new Department();
+            doctor!.Specialization = await this._specializationService.GetSpecializationAsync(id: doctor.SpecializationId) ?? new Specialization();
+
+            return base.View(model: doctor);
+        }
+        catch (System.Exception ex)
+        {
+            return base.StatusCode(statusCode: StatusCodes.Status500InternalServerError, value: ex.Message);
+        }
     }
 
     [HttpGet]
     [Route("[action]", Name = "CreateDoctorPage")]
-    public IActionResult Create()
+    public async Task<IActionResult> Create()
     {
-        return View();
+        var model = new DoctorViewModel
+        {
+            Departments = await this._departmentService.GetAllDepartmentsAsync(),
+            Specializations = await this._specializationService.GetAllSpecializationsAsync(),
+            Doctor = new Doctor()
+        };
+
+        return base.View(model: model);
     }
 
     [HttpPost(Name = "CreateDoctorApi")]
-    public async Task<IActionResult> Create(Doctor newDoctor)
+    public async Task<IActionResult> Create(DoctorViewModel model)
     {
         try
         {
-            var validatorResult = this._validator.Validate(newDoctor);
+            var validatorResult = this._validator.Validate(instance: model.Doctor);
             if (!validatorResult.IsValid)
             {
                 foreach (var error in validatorResult.Errors)
@@ -45,43 +115,21 @@ public class DoctorController : Controller
                     base.ModelState.AddModelError(key: error.PropertyName, errorMessage: error.ErrorMessage);
                 }
 
-                return base.View("Create");
+                model = new DoctorViewModel
+                {
+                    Departments = await this._departmentService.GetAllDepartmentsAsync(),
+                    Specializations = await this._specializationService.GetAllSpecializationsAsync(),
+                    Doctor = new Doctor()
+                };
+                return base.View(viewName: "Create", model: model);
             }
 
-            await this._doctorService.CreateDoctorAsync(newDoctor);
+            await this._doctorService.CreateDoctorAsync(newDoctor: model.Doctor);
             return base.RedirectToAction(actionName: "Index");
         }
         catch (System.Exception ex)
         {
-            return base.StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
-        }
-    }
-
-    [HttpGet("{doctorId:int}")]
-    public async Task<IActionResult> DoctorInfo(int doctorId)
-    {
-        try
-        {
-            var doctor = await _doctorService.GetDoctorAsync(doctorId);
-            return View(doctor);
-        }
-        catch (System.Exception ex)
-        {
-            return base.StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
-        }
-    }
-
-    [HttpGet("Json/{doctorId:int}")]
-    public async Task<IActionResult> GetDoctorJson(int doctorId)
-    {
-        try
-        {
-            var doctor = await _doctorService.GetDoctorAsync(doctorId);
-            return Json(doctor);
-        }
-        catch (System.Exception ex)
-        {
-            return base.StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            return base.StatusCode(statusCode: StatusCodes.Status500InternalServerError, value: ex.Message);
         }
     }
 
@@ -90,12 +138,12 @@ public class DoctorController : Controller
     {
         try
         {
-            await this._doctorService.UpdateDoctorAsync(doctor.Id, doctor);
-            return Ok();
+            await this._doctorService.UpdateDoctorAsync(id: doctor.Id, newDoctor: doctor);
+            return base.Ok();
         }
         catch (System.Exception ex)
         {
-            return base.StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            return base.StatusCode(statusCode: StatusCodes.Status500InternalServerError, value: ex.Message);
         }
     }
 
@@ -104,12 +152,12 @@ public class DoctorController : Controller
     {
         try
         {
-            await this._doctorService.DeleteDoctorByIdAsync(doctorId);
-            return Ok();
+            await this._doctorService.DeleteDoctorByIdAsync(id: doctorId);
+            return base.Ok();
         }
         catch (System.Exception ex)
         {
-            return base.StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            return base.StatusCode(statusCode: StatusCodes.Status500InternalServerError, value: ex.Message);
         }
     }
 }

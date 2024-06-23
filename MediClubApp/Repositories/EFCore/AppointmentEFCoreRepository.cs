@@ -52,8 +52,11 @@ public class AppointmentEFCoreRepository : IAppointmentRepository
         if (oldAppointment is null) return;
 
         oldAppointment.PatientId = newAppointment.PatientId;
+        oldAppointment.Patient = await this._clinicDbContext.Patients.FirstOrDefaultAsync(s => s.Id == newAppointment.PatientId) ?? new Patient();
         oldAppointment.DoctorId = newAppointment.DoctorId;
-        oldAppointment.RoomId = newAppointment.RoomId;
+        oldAppointment.Doctor = await this._clinicDbContext.Doctors.FirstOrDefaultAsync(s => s.Id == newAppointment.DoctorId) ?? new Doctor();
+        oldAppointment.RoomId = newAppointment.RoomId; 
+        oldAppointment.Room = await this._clinicDbContext.Rooms.FirstOrDefaultAsync(s => s.Id == newAppointment.RoomId) ?? new Room();
         oldAppointment.Date = newAppointment.Date;
         oldAppointment.Time = newAppointment.Time;
         oldAppointment.Reason = newAppointment.Reason;

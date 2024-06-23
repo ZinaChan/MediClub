@@ -35,6 +35,7 @@ public class DoctorEFCoreRepository : IDoctorRepository
     {
         var doctors = await this._clinicDbContext.Doctors
                         .Include(d => d.Department)
+                        .Include(d => d.Specialization)
                         .ToListAsync();
         return doctors;    
     }
@@ -55,7 +56,10 @@ public class DoctorEFCoreRepository : IDoctorRepository
         oldDoctor.Gender = newDoctor.Gender;
         oldDoctor.Email = newDoctor.Email;
         oldDoctor.PhoneNumber = newDoctor.PhoneNumber;
-        oldDoctor.Specialization = newDoctor.Specialization;
+        oldDoctor.DepartmentId = newDoctor.DepartmentId;
+        oldDoctor.Department = await this._clinicDbContext.Departments.FirstOrDefaultAsync(d => d.Id == newDoctor.DepartmentId) ?? new Department();
+        oldDoctor.SpecializationId = newDoctor.SpecializationId;
+        oldDoctor.Specialization = await this._clinicDbContext.Specializations.FirstOrDefaultAsync(s => s.Id == newDoctor.SpecializationId) ?? new Specialization();
 
         this._clinicDbContext.Update(oldDoctor);
         await this._clinicDbContext.SaveChangesAsync();

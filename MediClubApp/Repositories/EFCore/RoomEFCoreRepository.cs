@@ -48,8 +48,9 @@ public class RoomEFCoreRepository : IRoomRepository
         var oldRoom = await this._clinicDbContext.Rooms.FirstOrDefaultAsync(d => d.Id == id);
         if (oldRoom is null) return;
 
-         oldRoom.RoomNumber = newRoom.RoomNumber;
+        oldRoom.RoomNumber = newRoom.RoomNumber;
         oldRoom.DepartmentId = newRoom.DepartmentId;
+        oldRoom.Department = await this._clinicDbContext.Departments.FirstOrDefaultAsync(p => p.Id == newRoom.DepartmentId) ?? new Department();
 
         this._clinicDbContext.Update(oldRoom);
         await this._clinicDbContext.SaveChangesAsync();

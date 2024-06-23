@@ -51,7 +51,9 @@ public class MedicalRecordEFCoreRepository : IMedicalRecordRepository
         if (oldMedicalRecord is null) return;
 
         oldMedicalRecord.PatientId = newMedicalRecord.PatientId;
+        oldMedicalRecord.Patient = await this._clinicDbContext.Patients.FirstOrDefaultAsync(p => p.Id == newMedicalRecord.PatientId) ?? new Patient();
         oldMedicalRecord.DoctorId = newMedicalRecord.DoctorId;
+        oldMedicalRecord.Doctor = await this._clinicDbContext.Doctors.FirstOrDefaultAsync(p => p.Id == newMedicalRecord.DoctorId) ?? new Doctor();
         oldMedicalRecord.Date = newMedicalRecord.Date;
         oldMedicalRecord.Diagnosis = newMedicalRecord.Diagnosis;
         oldMedicalRecord.Treatment = newMedicalRecord.Treatment;

@@ -24,14 +24,63 @@ public class PatientController : Controller
     {
         var patients = await this._patientService.GetAllPatientsAsync();
 
-        return View(patients);
+        return base.View(patients);
+    }
+
+    [HttpGet("Json")]
+    public async Task<IActionResult> GetAllPatientsJson()
+    {
+        try
+        {
+            var patients = await this._patientService.GetAllPatientsAsync();
+            foreach (var patient in patients)
+            {
+                patient.Appointments = null!;
+                patient.MedicalRecords = null!;
+            }
+            return base.Json(data: patients);
+        }
+        catch (System.Exception ex)
+        {
+            return base.StatusCode(statusCode: StatusCodes.Status500InternalServerError, value: ex.Message);
+        }
+    }
+
+    [HttpGet]
+    [Route("Json/{patientId:int}")]
+    public async Task<IActionResult> GetPatientJson(int patientId)
+    {
+        try
+        {
+            var patient = await this._patientService.GetPatientAsync(id: patientId);
+            return base.Json(data: patient);
+        }
+        catch (System.Exception ex)
+        {
+            return base.StatusCode(statusCode: StatusCodes.Status500InternalServerError, value: ex.Message);
+        }
+    }
+
+    [HttpGet]
+    [Route("/[controller]/{patientId:int}")]
+    public async Task<IActionResult> PatientInfo(int patientId)
+    {
+        try
+        {
+            var doctor = await this._patientService.GetPatientAsync(id: patientId);
+            return base.View(doctor);
+        }
+        catch (System.Exception ex)
+        {
+            return base.StatusCode(statusCode: StatusCodes.Status500InternalServerError, value: ex.Message);
+        }
     }
 
     [HttpGet]
     [Route("[action]", Name = "CreatePatientPage")]
     public IActionResult Create()
     {
-        return View();
+        return base.View();
     }
 
     [HttpPost]
@@ -40,7 +89,7 @@ public class PatientController : Controller
     {
         try
         {
-            var validatorResult = this._validator.Validate(newPatient);
+            var validatorResult = this._validator.Validate(instance: newPatient);
             if (!validatorResult.IsValid)
             {
                 foreach (var error in validatorResult.Errors)
@@ -48,43 +97,15 @@ public class PatientController : Controller
                     base.ModelState.AddModelError(key: error.PropertyName, errorMessage: error.ErrorMessage);
                 }
 
-                return base.View("Create");
+                return base.View(viewName: "Create");
             }
 
-            await this._patientService.CreatePatientAsync(newPatient);
+            await this._patientService.CreatePatientAsync(newPatient: newPatient);
             return base.RedirectToAction(actionName: "Index");
         }
         catch (System.Exception ex)
         {
-            return base.StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
-        }
-    }
-
-    [HttpGet("{patientId:int}")]
-    public async Task<IActionResult> PatientInfo(int patientId)
-    {
-        try
-        {
-            var doctor = await _patientService.GetPatientAsync(patientId);
-            return View(doctor);
-        }
-        catch (System.Exception ex)
-        {
-            return base.StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
-        }
-    }
-
-    [HttpGet("Json/{patientId:int}")]
-    public async Task<IActionResult> GetPatientJson(int patientId)
-    {
-        try
-        {
-            var doctor = await _patientService.GetPatientAsync(patientId);
-            return Json(doctor);
-        }
-        catch (System.Exception ex)
-        {
-            return base.StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            return base.StatusCode(statusCode: StatusCodes.Status500InternalServerError, value: ex.Message);
         }
     }
 
@@ -93,12 +114,12 @@ public class PatientController : Controller
     {
         try
         {
-            await this._patientService.UpdatePatientAsync(patient.Id, patient);
-            return Ok();
+            await this._patientService.UpdatePatientAsync(id: patient.Id, newPatient: patient);
+            return base.Ok();
         }
         catch (System.Exception ex)
         {
-            return base.StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            return base.StatusCode(statusCode: StatusCodes.Status500InternalServerError, value: ex.Message);
         }
     }
 
@@ -107,12 +128,12 @@ public class PatientController : Controller
     {
         try
         {
-            await this._patientService.DeletePatientByIdAsync(patientId);
+            await this._patientService.DeletePatientByIdAsync(id: patientId);
             return Ok();
         }
         catch (System.Exception ex)
         {
-            return base.StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            return base.StatusCode(statusCode: StatusCodes.Status500InternalServerError, value: ex.Message);
         }
     }
 }
