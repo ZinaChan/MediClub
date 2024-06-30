@@ -7,9 +7,9 @@ namespace MediClubApp.Repositories.Base;
 
 public interface IDepartmentRepository :  ICreateAsync<Department>, IGetAsync<Department>, IGetAllAsync<Department>, IUpdateAsync<Department>, IDeleteAsync<Department>
 {
-    Task<Department?> GetAsync(int id);
+    Task<Department?> GetAsync(Guid id);
     Task<IEnumerable<Department>> GetAllAsync();
     Task CreateAsync(Department newDepartment);
-    Task UpdateAsync(int id, Department newDepartment);
-    Task DeleteByIdAsync(int id);
+    Task UpdateAsync(Guid id, Department newDepartment);
+    Task DeleteByIdAsync(Guid id);
 }

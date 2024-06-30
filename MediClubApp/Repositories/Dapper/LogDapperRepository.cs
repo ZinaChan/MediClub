@@ -15,7 +15,7 @@ public class LogDapperRepository : ILogRepository
         this._connectionStringOption = options.Value;
     }
 
-    public async Task<Log?> GetAsync(int id)
+    public async Task<Log?> GetAsync(Guid id)
     {
         using var connection = new SqlConnection(this._connectionStringOption.ConnectionString);
 
@@ -35,7 +35,7 @@ public class LogDapperRepository : ILogRepository
         }
 
         using var connection = new SqlConnection(this._connectionStringOption.ConnectionString);
-
+        newLog.Id = new Guid();
         var numberOfRows = await connection.ExecuteAsync(
             sql: $@"INSERT INTO Logs (Url, RequestBody, ResponsetBody, CreationDate, EndDate, StatusCode, HttpMethod )
                         VALUES(@Url, @RequestBody, @ResponsetBody, @CreationDate, @EndDate, @StatusCode, @HttpMethod)",
@@ -44,7 +44,7 @@ public class LogDapperRepository : ILogRepository
 
         if (numberOfRows <= 0) throw new ArgumentException("Unsuccsess insert!");
     }
-    public async Task UpdateAsync(int id, Log newLog)
+    public async Task UpdateAsync(Guid id, Log newLog)
     {
         using var connection = new SqlConnection(this._connectionStringOption.ConnectionString);
 
@@ -53,7 +53,7 @@ public class LogDapperRepository : ILogRepository
                         WHERE Id = @Id",
             param: newLog); 
     }
-    public async Task DeleteByIdAsync(int id)
+    public async Task DeleteByIdAsync(Guid id)
     {
         using var connection = new SqlConnection(this._connectionStringOption.ConnectionString);
 

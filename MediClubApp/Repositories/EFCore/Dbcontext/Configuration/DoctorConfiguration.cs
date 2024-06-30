@@ -8,6 +8,10 @@ public class DoctorConfiguration : IEntityTypeConfiguration<Doctor>
     public void Configure(EntityTypeBuilder<Doctor> builder)
     {
         builder.HasKey(d => d.Id);
+        builder.Property(d => d.Id)
+                    .ValueGeneratedOnAdd()
+                    .IsRequired()
+                    .HasDefaultValueSql("NEWID()");
 
         builder.Property(d => d.FirstName)
             .IsRequired()
@@ -32,9 +36,10 @@ public class DoctorConfiguration : IEntityTypeConfiguration<Doctor>
             .IsRequired()
             .HasMaxLength(20);
 
-        builder.Property(d => d.Specialization)
-            .IsRequired()
-            .HasMaxLength(100);
+        builder.HasOne(d => d.Specialization)
+            .WithMany(s => s.Doctors)
+            .HasForeignKey(d => d.SpecializationId)
+            .OnDelete(DeleteBehavior.Restrict);
 
         builder.HasOne(d => d.Department)
             .WithMany(dept => dept.Doctors)

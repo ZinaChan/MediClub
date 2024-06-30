@@ -25,11 +25,11 @@ public class MedicalRecordService : IMedicalRecordService
     {
         return await _medicalRecordRepository.GetAllAsync();
     }
-    public async Task<MedicalRecord?> GetMedicalRecordAsync(int id)
+    public async Task<MedicalRecord?> GetMedicalRecordAsync(Guid id)
     {
         return await this._medicalRecordRepository.GetAsync(id: id);
     }
-    public async Task UpdateMedicalRecordAsync(int id, MedicalRecord newMedicalRecord)
+    public async Task UpdateMedicalRecordAsync(Guid id, MedicalRecord newMedicalRecord)
     {
 
         if (newMedicalRecord is null || await this._medicalRecordRepository.GetAsync(id) is null)
@@ -39,7 +39,7 @@ public class MedicalRecordService : IMedicalRecordService
 
         await _medicalRecordRepository.UpdateAsync(id: id, newMedicalRecord: newMedicalRecord);
     }
-    public async Task DeleteMedicalRecordByIdAsync(int id)
+    public async Task DeleteMedicalRecordByIdAsync(Guid id)
     {
         if (await this._medicalRecordRepository.GetAsync(id) is null)
         {

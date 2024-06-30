@@ -17,11 +17,12 @@ public class SpecializationEFCoreRepository : ISpecializationRepository
 
     public async Task CreateAsync(Specialization newSpecialization)
     {
+        newSpecialization.Id = Guid.NewGuid();
         await this._clinicDbContext.Specializations.AddAsync(entity: newSpecialization);
         await this._clinicDbContext.SaveChangesAsync();
     }
 
-    public async Task DeleteByIdAsync(int id)
+    public async Task DeleteByIdAsync(Guid id)
     {
         var oldSpecialization = await this._clinicDbContext.Specializations.FirstOrDefaultAsync(d => d.Id == id);
 
@@ -38,12 +39,12 @@ public class SpecializationEFCoreRepository : ISpecializationRepository
         return specializations;
     }
 
-    public Task<Specialization?> GetAsync(int id)
+    public Task<Specialization?> GetAsync(Guid id)
     {
         return this._clinicDbContext.Specializations.FirstOrDefaultAsync(d => d.Id == id);
     }
 
-    public async Task UpdateAsync(int id, Specialization newSpecialization)
+    public async Task UpdateAsync(Guid id, Specialization newSpecialization)
     {
         var oldSpecialization = await this._clinicDbContext.Specializations.FirstOrDefaultAsync(d => d.Id == id);
         if (oldSpecialization is null) return;

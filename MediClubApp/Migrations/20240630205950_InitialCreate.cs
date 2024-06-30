@@ -17,8 +17,7 @@ namespace MediClubApp.Migrations
                 name: "Departments",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false, defaultValueSql: "NEWID()"),
                     Name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false)
                 },
                 constraints: table =>
@@ -30,8 +29,7 @@ namespace MediClubApp.Migrations
                 name: "Logs",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Url = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     RequestBody = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     ResponsetBody = table.Column<string>(type: "nvarchar(max)", nullable: true),
@@ -49,8 +47,7 @@ namespace MediClubApp.Migrations
                 name: "Patients",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false, defaultValueSql: "NEWID()"),
                     FirstName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     LastName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     DateOfBirth = table.Column<DateTime>(type: "datetime2", nullable: false),
@@ -65,13 +62,29 @@ namespace MediClubApp.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Users",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false, defaultValueSql: "NEWID()"),
+                    Login = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
+                    Password = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
+                    Email = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    Username = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
+                    AvatarUrl = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: true),
+                    Role = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Users", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Rooms",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false, defaultValueSql: "NEWID()"),
                     RoomNumber = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: false),
-                    DepartmentId = table.Column<int>(type: "int", nullable: false)
+                    DepartmentId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -88,10 +101,9 @@ namespace MediClubApp.Migrations
                 name: "Specializations",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false, defaultValueSql: "NEWID()"),
                     Name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    DepartmentId = table.Column<int>(type: "int", nullable: false)
+                    DepartmentId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -108,16 +120,15 @@ namespace MediClubApp.Migrations
                 name: "Doctors",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    FirstName = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    LastName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false, defaultValueSql: "NEWID()"),
+                    FirstName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    LastName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     DateOfBirth = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Gender = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    PhoneNumber = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    DepartmentId = table.Column<int>(type: "int", nullable: false),
-                    SpecializationId = table.Column<int>(type: "int", nullable: false)
+                    Gender = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: false),
+                    Email = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    PhoneNumber = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
+                    DepartmentId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    SpecializationId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -133,18 +144,17 @@ namespace MediClubApp.Migrations
                         column: x => x.SpecializationId,
                         principalTable: "Specializations",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
                 name: "Appointments",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    PatientId = table.Column<int>(type: "int", nullable: false),
-                    DoctorId = table.Column<int>(type: "int", nullable: false),
-                    RoomId = table.Column<int>(type: "int", nullable: false),
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false, defaultValueSql: "NEWID()"),
+                    PatientId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    DoctorId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    RoomId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Date = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Time = table.Column<TimeSpan>(type: "time", nullable: false),
                     Reason = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: false)
@@ -176,10 +186,9 @@ namespace MediClubApp.Migrations
                 name: "MedicalRecords",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    PatientId = table.Column<int>(type: "int", nullable: false),
-                    DoctorId = table.Column<int>(type: "int", nullable: false),
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false, defaultValueSql: "NEWID()"),
+                    PatientId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    DoctorId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Date = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Diagnosis = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: false),
                     Treatment = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: false)
@@ -206,8 +215,8 @@ namespace MediClubApp.Migrations
                 columns: new[] { "Id", "Name" },
                 values: new object[,]
                 {
-                    { 1, "Cardiology" },
-                    { 2, "Neurology" }
+                    { new Guid("14d1db4e-0a98-44c8-92d8-2d7b04015e1b"), "Cardiology" },
+                    { new Guid("f41d7f55-2538-48a5-a7d2-da1b242a9dd4"), "Neurology" }
                 });
 
             migrationBuilder.InsertData(
@@ -215,8 +224,8 @@ namespace MediClubApp.Migrations
                 columns: new[] { "Id", "Address", "DateOfBirth", "Email", "FirstName", "Gender", "LastName", "PhoneNumber" },
                 values: new object[,]
                 {
-                    { 1, "123 Main St", new DateTime(1980, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "john.doe@example.com", "John", "Male", "Doe", "555-555-5555" },
-                    { 2, "456 Elm St", new DateTime(1985, 5, 15, 0, 0, 0, 0, DateTimeKind.Unspecified), "jane.smith@example.com", "Jane", "Female", "Smith", "555-555-5556" }
+                    { new Guid("cd31ad1a-d2d9-4123-8a7c-7df5181c8980"), "456 Elm St", new DateTime(1985, 5, 15, 0, 0, 0, 0, DateTimeKind.Unspecified), "jane.smith@example.com", "Jane", "Female", "Smith", "555-555-5556" },
+                    { new Guid("d346cd2e-d64a-4854-ba70-8a79d413eda5"), "123 Main St", new DateTime(1980, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "john.doe@example.com", "John", "Male", "Doe", "555-555-5555" }
                 });
 
             migrationBuilder.InsertData(
@@ -224,10 +233,10 @@ namespace MediClubApp.Migrations
                 columns: new[] { "Id", "DepartmentId", "RoomNumber" },
                 values: new object[,]
                 {
-                    { 1, 1, "101" },
-                    { 2, 1, "102" },
-                    { 3, 2, "201" },
-                    { 4, 2, "202" }
+                    { new Guid("0ef7ac9f-618e-49a1-8fa5-0f56bbe35c6f"), new Guid("f41d7f55-2538-48a5-a7d2-da1b242a9dd4"), "202" },
+                    { new Guid("1a640322-314a-4bee-8bd7-6d4d451f0707"), new Guid("f41d7f55-2538-48a5-a7d2-da1b242a9dd4"), "102" },
+                    { new Guid("2eee6487-7371-4aab-9507-47cddc964125"), new Guid("14d1db4e-0a98-44c8-92d8-2d7b04015e1b"), "101" },
+                    { new Guid("e53e51ad-d681-46a7-a215-12929688ce47"), new Guid("14d1db4e-0a98-44c8-92d8-2d7b04015e1b"), "201" }
                 });
 
             migrationBuilder.InsertData(
@@ -235,8 +244,8 @@ namespace MediClubApp.Migrations
                 columns: new[] { "Id", "DepartmentId", "Name" },
                 values: new object[,]
                 {
-                    { 1, 1, "Cardiologist" },
-                    { 2, 2, "Neurologist" }
+                    { new Guid("e7e4d2a3-18f5-482b-8f8c-41321028d7bb"), new Guid("f41d7f55-2538-48a5-a7d2-da1b242a9dd4"), "Neurologist" },
+                    { new Guid("f1536a01-dee9-479f-99bd-c2eb3cb96119"), new Guid("14d1db4e-0a98-44c8-92d8-2d7b04015e1b"), "Cardiologist" }
                 });
 
             migrationBuilder.InsertData(
@@ -244,8 +253,8 @@ namespace MediClubApp.Migrations
                 columns: new[] { "Id", "DateOfBirth", "DepartmentId", "Email", "FirstName", "Gender", "LastName", "PhoneNumber", "SpecializationId" },
                 values: new object[,]
                 {
-                    { 1, new DateTime(1975, 2, 20, 0, 0, 0, 0, DateTimeKind.Unspecified), 1, "alice.johnson@example.com", "Alice", "Female", "Johnson", "555-555-5557", 1 },
-                    { 2, new DateTime(1980, 8, 30, 0, 0, 0, 0, DateTimeKind.Unspecified), 2, "bob.brown@example.com", "Bob", "Male", "Brown", "555-555-5558", 2 }
+                    { new Guid("a546b2d9-cc96-4cc8-911f-b23dee7257d4"), new DateTime(1975, 2, 20, 0, 0, 0, 0, DateTimeKind.Unspecified), new Guid("14d1db4e-0a98-44c8-92d8-2d7b04015e1b"), "alice.johnson@example.com", "Alice", "Female", "Johnson", "555-555-5557", new Guid("f1536a01-dee9-479f-99bd-c2eb3cb96119") },
+                    { new Guid("e6f1e7de-c44a-4f93-9bb0-92f4430c4458"), new DateTime(1980, 8, 30, 0, 0, 0, 0, DateTimeKind.Unspecified), new Guid("14d1db4e-0a98-44c8-92d8-2d7b04015e1b"), "bob.brown@example.com", "Bob", "Male", "Brown", "555-555-5558", new Guid("e7e4d2a3-18f5-482b-8f8c-41321028d7bb") }
                 });
 
             migrationBuilder.InsertData(
@@ -253,8 +262,8 @@ namespace MediClubApp.Migrations
                 columns: new[] { "Id", "Date", "DoctorId", "PatientId", "Reason", "RoomId", "Time" },
                 values: new object[,]
                 {
-                    { 1, new DateTime(2024, 7, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), 1, 1, "Routine Checkup", 1, new TimeSpan(0, 10, 0, 0, 0) },
-                    { 2, new DateTime(2024, 7, 2, 0, 0, 0, 0, DateTimeKind.Unspecified), 2, 2, "Neurological Consultation", 3, new TimeSpan(0, 11, 0, 0, 0) }
+                    { new Guid("195f8087-0a0a-4347-99a3-30e9846ec974"), new DateTime(2024, 7, 2, 0, 0, 0, 0, DateTimeKind.Unspecified), new Guid("a546b2d9-cc96-4cc8-911f-b23dee7257d4"), new Guid("cd31ad1a-d2d9-4123-8a7c-7df5181c8980"), "Neurological Consultation", new Guid("2eee6487-7371-4aab-9507-47cddc964125"), new TimeSpan(0, 11, 0, 0, 0) },
+                    { new Guid("669424b8-df22-4024-b024-1074335ed14e"), new DateTime(2024, 7, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new Guid("e6f1e7de-c44a-4f93-9bb0-92f4430c4458"), new Guid("d346cd2e-d64a-4854-ba70-8a79d413eda5"), "Routine Checkup", new Guid("1a640322-314a-4bee-8bd7-6d4d451f0707"), new TimeSpan(0, 10, 0, 0, 0) }
                 });
 
             migrationBuilder.InsertData(
@@ -262,8 +271,8 @@ namespace MediClubApp.Migrations
                 columns: new[] { "Id", "Date", "Diagnosis", "DoctorId", "PatientId", "Treatment" },
                 values: new object[,]
                 {
-                    { 1, new DateTime(2024, 6, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "Hypertension", 1, 1, "Medication" },
-                    { 2, new DateTime(2024, 6, 15, 0, 0, 0, 0, DateTimeKind.Unspecified), "Migraine", 2, 2, "Rest and Medication" }
+                    { new Guid("bb73e173-98df-49c6-86ae-53e3dfbf8975"), new DateTime(2024, 6, 15, 0, 0, 0, 0, DateTimeKind.Unspecified), "Migraine", new Guid("a546b2d9-cc96-4cc8-911f-b23dee7257d4"), new Guid("cd31ad1a-d2d9-4123-8a7c-7df5181c8980"), "Rest and Medication" },
+                    { new Guid("c51eaadc-5d76-4095-8136-53f1ba1eba67"), new DateTime(2024, 6, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "Hypertension", new Guid("e6f1e7de-c44a-4f93-9bb0-92f4430c4458"), new Guid("d346cd2e-d64a-4854-ba70-8a79d413eda5"), "Medication" }
                 });
 
             migrationBuilder.CreateIndex(
@@ -323,6 +332,9 @@ namespace MediClubApp.Migrations
 
             migrationBuilder.DropTable(
                 name: "MedicalRecords");
+
+            migrationBuilder.DropTable(
+                name: "Users");
 
             migrationBuilder.DropTable(
                 name: "Rooms");

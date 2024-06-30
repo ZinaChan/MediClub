@@ -25,11 +25,11 @@ public class DepartmentService : IDepartmentService
     {
         return await _departmentRepository.GetAllAsync();
     }
-    public async Task<Department?> GetDepartmentAsync(int id)
+    public async Task<Department?> GetDepartmentAsync(Guid id)
     {
         return await this._departmentRepository.GetAsync(id: id);
     }
-    public async Task UpdateDepartmentAsync(int id, Department newDepartment)
+    public async Task UpdateDepartmentAsync(Guid id, Department newDepartment)
     {
 
         if (newDepartment is null || await this._departmentRepository.GetAsync(id) is null)
@@ -39,7 +39,7 @@ public class DepartmentService : IDepartmentService
 
         await _departmentRepository.UpdateAsync(id: id, newDepartment: newDepartment);
     }
-    public async Task DeleteDepartmentByIdAsync(int id)
+    public async Task DeleteDepartmentByIdAsync(Guid id)
     {
         if (await this._departmentRepository.GetAsync(id) is null)
         {
@@ -49,4 +49,3 @@ public class DepartmentService : IDepartmentService
         await _departmentRepository.DeleteByIdAsync(id: id);
     }
 }
-

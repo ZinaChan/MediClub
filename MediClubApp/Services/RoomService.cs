@@ -25,11 +25,11 @@ public class RoomService : IRoomService
     {
         return await _roomRepository.GetAllAsync();
     }
-    public async Task<Room?> GetRoomAsync(int id)
+    public async Task<Room?> GetRoomAsync(Guid id)
     {
         return await this._roomRepository.GetAsync(id: id);
     }
-    public async Task UpdateRoomAsync(int id, Room newRoom)
+    public async Task UpdateRoomAsync(Guid id, Room newRoom)
     {
 
         if (newRoom is null || await this._roomRepository.GetAsync(id) is null)
@@ -39,7 +39,7 @@ public class RoomService : IRoomService
 
         await _roomRepository.UpdateAsync(id: id, newRoom: newRoom);
     }
-    public async Task DeleteRoomByIdAsync(int id)
+    public async Task DeleteRoomByIdAsync(Guid id)
     {
         if (await this._roomRepository.GetAsync(id) is null)
         {

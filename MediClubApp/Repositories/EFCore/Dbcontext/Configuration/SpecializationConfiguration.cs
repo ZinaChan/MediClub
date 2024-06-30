@@ -9,7 +9,11 @@ public class SpecializationConfiguration : IEntityTypeConfiguration<Specializati
     public void Configure(EntityTypeBuilder<Specialization> builder)
     {
         builder.HasKey(s => s.Id);
-
+        builder.Property(s => s.Id)
+                    .ValueGeneratedOnAdd()
+                    .IsRequired()
+                    .HasDefaultValueSql("NEWID()");
+                
         builder.Property(s => s.Name)
             .IsRequired()
             .HasMaxLength(100);

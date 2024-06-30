@@ -22,6 +22,7 @@ builder.Services.AddScoped<ISpecializationRepository,SpecializationEFCoreReposit
 builder.Services.AddScoped<IMedicalRecordRepository,MedicalRecordEFCoreRepository>();
 builder.Services.AddScoped<IAppointmentRepository,AppointmentEFCoreRepository>();
 builder.Services.AddScoped<IRoomRepository,RoomEFCoreRepository>();
+builder.Services.AddScoped<IUserRepository,UserEFCoreRepository>();
 builder.Services.AddScoped<ILogRepository,LogEFCoreRRepository>();
 
 builder.Services.AddScoped<IDoctorService,DoctorService>();
@@ -31,6 +32,7 @@ builder.Services.AddScoped<ISpecializationService,SpecializationService>();
 builder.Services.AddScoped<IMedicalRecordService,MedicalRecordService>();
 builder.Services.AddScoped<IAppointmentService,AppointmentService>();
 builder.Services.AddScoped<IRoomService,RoomService>();
+builder.Services.AddScoped<IUserService,UserService>();
 builder.Services.AddScoped<ILogService,LogService>();
 
 builder.Services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());

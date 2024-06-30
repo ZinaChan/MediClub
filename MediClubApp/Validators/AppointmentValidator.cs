@@ -8,8 +8,7 @@ public class AppointmentValidator : AbstractValidator<Appointment>
     public AppointmentValidator()
     {
         RuleFor(appointment => appointment.DoctorId)
-            .NotEmpty().WithMessage("Doctor is required.")
-            .GreaterThan(0).WithMessage("Invalid Department Id.");
+            .NotEmpty().WithMessage("Doctor is required.");
 
         RuleFor(appointment => appointment.PatientId)
             .NotEmpty().WithMessage("Patient is required.");

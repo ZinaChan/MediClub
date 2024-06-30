@@ -52,8 +52,8 @@ public class SpecializationController : Controller
     }
 
     [HttpGet]
-    [Route("Json/{specializationId:int}")]
-    public async Task<IActionResult> GetSpecializationJson(int specializationId)
+    [Route("Json/{specializationId:Guid}")]
+    public async Task<IActionResult> GetSpecializationJson(Guid specializationId)
     {
         try
         {
@@ -67,8 +67,8 @@ public class SpecializationController : Controller
     }
 
     [HttpGet]
-    [Route("/[controller]/{specializationId:int}")]
-    public async Task<IActionResult> SpecializationInfo(int specializationId)
+    [Route("/[controller]/{specializationId:Guid}")]
+    public async Task<IActionResult> SpecializationInfo(Guid specializationId)
     {
         try
         {
@@ -142,8 +142,8 @@ public class SpecializationController : Controller
         }
     }
 
-    [HttpDelete("{specializationId:int}")]
-    public async Task<IActionResult> DeleteSpecialization(int specializationId)
+    [HttpDelete("{specializationId:Guid}")]
+    public async Task<IActionResult> DeleteSpecialization(Guid specializationId)
     {
         try
         {

@@ -25,11 +25,11 @@ public class AppointmentService : IAppointmentService
     {
         return await _appointmentRepository.GetAllAsync();
     }
-    public async Task<Appointment?> GetAppointmentAsync(int id)
+    public async Task<Appointment?> GetAppointmentAsync(Guid id)
     {
         return await this._appointmentRepository.GetAsync(id: id);
     }
-    public async Task UpdateAppointmentAsync(int id, Appointment newAppointment)
+    public async Task UpdateAppointmentAsync(Guid id, Appointment newAppointment)
     {
 
         if (newAppointment is null || await this._appointmentRepository.GetAsync(id) is null)
@@ -39,7 +39,7 @@ public class AppointmentService : IAppointmentService
 
         await _appointmentRepository.UpdateAsync(id: id, newAppointment: newAppointment);
     }
-    public async Task DeleteAppointmentByIdAsync(int id)
+    public async Task DeleteAppointmentByIdAsync(Guid id)
     {
         if (await this._appointmentRepository.GetAsync(id) is null)
         {

@@ -37,7 +37,7 @@ public class MedicalRecordController : Controller
 
     [HttpGet]
     [Route("Json")]
-    public async Task<IActionResult> GetAllMedicalsRecord(int medicalRecordId)
+    public async Task<IActionResult> GetAllMedicalsRecord(Guid medicalRecordId)
     {
         try
         {
@@ -56,8 +56,8 @@ public class MedicalRecordController : Controller
     }
 
     [HttpGet]
-    [Route("Json/{medicalRecordId:int}")]
-    public async Task<IActionResult> GetMedicalRecord(int medicalRecordId)
+    [Route("Json/{medicalRecordId:Guid}")]
+    public async Task<IActionResult> GetMedicalRecord(Guid medicalRecordId)
     {
         try
         {
@@ -71,8 +71,8 @@ public class MedicalRecordController : Controller
     }
 
     [HttpGet]
-    [Route("/[controller]/{medicalRecordId:int}")]
-    public async Task<IActionResult> MedicalRecordInfo(int medicalRecordId)
+    [Route("/[controller]/{medicalRecordId:Guid}")]
+    public async Task<IActionResult> MedicalRecordInfo(Guid medicalRecordId)
     {
         try
         {
@@ -151,8 +151,8 @@ public class MedicalRecordController : Controller
         }
     }
 
-    [HttpDelete("{medicalRecordId:int}")]
-    public async Task<IActionResult> DeleteMedicalRecord(int medicalRecordId)
+    [HttpDelete("{medicalRecordId:Guid}")]
+    public async Task<IActionResult> DeleteMedicalRecord(Guid medicalRecordId)
     {
         try
         {

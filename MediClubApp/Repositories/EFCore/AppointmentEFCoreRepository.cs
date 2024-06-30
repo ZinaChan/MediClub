@@ -17,11 +17,12 @@ public class AppointmentEFCoreRepository : IAppointmentRepository
 
     public async Task CreateAsync(Appointment newAppointment)
     {
+        newAppointment.Id = Guid.NewGuid();
         await this._clinicDbContext.Appointments.AddAsync(entity: newAppointment);
         await this._clinicDbContext.SaveChangesAsync();
     }
 
-    public async Task DeleteByIdAsync(int id)
+    public async Task DeleteByIdAsync(Guid id)
     {
         var oldAppointment = await this._clinicDbContext.Appointments.FirstOrDefaultAsync(d => d.Id == id);
 
@@ -41,12 +42,12 @@ public class AppointmentEFCoreRepository : IAppointmentRepository
         return appointment; 
     }
 
-    public Task<Appointment?> GetAsync(int id)
+    public Task<Appointment?> GetAsync(Guid id)
     {
         return this._clinicDbContext.Appointments.FirstOrDefaultAsync(d => d.Id == id);
     }
 
-    public async Task UpdateAsync(int id, Appointment newAppointment)
+    public async Task UpdateAsync(Guid id, Appointment newAppointment)
     {
         var oldAppointment = await this._clinicDbContext.Appointments.FirstOrDefaultAsync(d => d.Id == id);
         if (oldAppointment is null) return;

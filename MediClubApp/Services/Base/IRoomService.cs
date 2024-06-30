@@ -3,9 +3,9 @@ namespace MediClubApp.Services.Base;
 
 public interface IRoomService
 {
-    Task<Room?> GetRoomAsync(int id);
+    Task<Room?> GetRoomAsync(Guid id);
     Task<IEnumerable<Room>> GetAllRoomsAsync();
     Task CreateRoomAsync(Room newRoom);
-    Task UpdateRoomAsync(int id, Room newRoom);
-    Task DeleteRoomByIdAsync(int id);
+    Task UpdateRoomAsync(Guid id, Room newRoom);
+    Task DeleteRoomByIdAsync(Guid id);
 }

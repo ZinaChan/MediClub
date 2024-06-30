@@ -17,11 +17,12 @@ public class DoctorEFCoreRepository : IDoctorRepository
 
     public async Task CreateAsync(Doctor newDoctor)
     {
+        newDoctor.Id = Guid.NewGuid();
         await this._clinicDbContext.Doctors.AddAsync(entity: newDoctor);
         await this._clinicDbContext.SaveChangesAsync();
     }
 
-    public async Task DeleteByIdAsync(int id)
+    public async Task DeleteByIdAsync(Guid id)
     {
         var oldDoctor = await this._clinicDbContext.Doctors.FirstOrDefaultAsync(d => d.Id == id);
 
@@ -40,12 +41,12 @@ public class DoctorEFCoreRepository : IDoctorRepository
         return doctors;    
     }
 
-    public Task<Doctor?> GetAsync(int id)
+    public Task<Doctor?> GetAsync(Guid id)
     {
         return this._clinicDbContext.Doctors.FirstOrDefaultAsync(d => d.Id == id);
     }
 
-    public async Task UpdateAsync(int id, Doctor newDoctor)
+    public async Task UpdateAsync(Guid id, Doctor newDoctor)
     {
         var oldDoctor = await this._clinicDbContext.Doctors.FirstOrDefaultAsync(d => d.Id == id);
         if (oldDoctor is null) return;

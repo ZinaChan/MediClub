@@ -25,11 +25,11 @@ public class LogService : ILogService
     {
         return await _LogRepository.GetAllAsync();
     }
-    public async Task<Log?> GetLogAsync(int id)
+    public async Task<Log?> GetLogAsync(Guid id)
     {
         return await this._LogRepository.GetAsync(id: id);
     }
-    public async Task UpdateLogAsync(int id, Log newLog)
+    public async Task UpdateLogAsync(Guid id, Log newLog)
     {
 
         if (newLog is null || await this._LogRepository.GetAsync(id) is null)
@@ -39,7 +39,7 @@ public class LogService : ILogService
 
         await _LogRepository.UpdateAsync(id: id, newLog: newLog);
     }
-    public async Task DeleteLogByIdAsync(int id)
+    public async Task DeleteLogByIdAsync(Guid id)
     {
         if (await this._LogRepository.GetAsync(id) is null)
         {

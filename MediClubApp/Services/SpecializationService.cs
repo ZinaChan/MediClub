@@ -25,11 +25,11 @@ public class SpecializationService : ISpecializationService
     {
         return await _specializationRepository.GetAllAsync();
     }
-    public async Task<Specialization?> GetSpecializationAsync(int id)
+    public async Task<Specialization?> GetSpecializationAsync(Guid id)
     {
         return await this._specializationRepository.GetAsync(id: id);
     }
-    public async Task UpdateSpecializationAsync(int id, Specialization newSpecialization)
+    public async Task UpdateSpecializationAsync(Guid id, Specialization newSpecialization)
     {
 
         if (newSpecialization is null || await this._specializationRepository.GetAsync(id) is null)
@@ -39,7 +39,7 @@ public class SpecializationService : ISpecializationService
 
         await _specializationRepository.UpdateAsync(id: id, newSpecialization: newSpecialization);
     }
-    public async Task DeleteSpecializationByIdAsync(int id)
+    public async Task DeleteSpecializationByIdAsync(Guid id)
     {
         if (await this._specializationRepository.GetAsync(id) is null)
         {

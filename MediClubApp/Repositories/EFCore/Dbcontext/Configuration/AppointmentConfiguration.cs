@@ -9,6 +9,10 @@ public class AppointmentConfiguration : IEntityTypeConfiguration<Appointment>
     public void Configure(EntityTypeBuilder<Appointment> builder)
     {
         builder.HasKey(a => a.Id);
+        builder.Property(a => a.Id)
+                    .ValueGeneratedOnAdd()
+                    .IsRequired()
+                    .HasDefaultValueSql("NEWID()");
 
         builder.Property(a => a.Date)
             .IsRequired();

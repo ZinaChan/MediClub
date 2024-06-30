@@ -17,11 +17,12 @@ public class DepartmentEFCoreRepository : IDepartmentRepository
 
     public async Task CreateAsync(Department newDepartment)
     {
+        newDepartment.Id = Guid.NewGuid();
         await this._clinicDbContext.Departments.AddAsync(entity: newDepartment);
         await this._clinicDbContext.SaveChangesAsync();
     }
 
-    public async Task DeleteByIdAsync(int id)
+    public async Task DeleteByIdAsync(Guid id)
     {
         var oldDepartment = await this._clinicDbContext.Departments.FirstOrDefaultAsync(d => d.Id == id);
 
@@ -40,12 +41,12 @@ public class DepartmentEFCoreRepository : IDepartmentRepository
         return departments;  
     }
 
-    public Task<Department?> GetAsync(int id)
+    public Task<Department?> GetAsync(Guid id)
     {
         return this._clinicDbContext.Departments.FirstOrDefaultAsync(d => d.Id == id);
     }
 
-    public async Task UpdateAsync(int id, Department newDepartment)
+    public async Task UpdateAsync(Guid id, Department newDepartment)
     {
         var oldDepartment = await this._clinicDbContext.Departments.FirstOrDefaultAsync(d => d.Id == id);
         if (oldDepartment is null) return;
@@ -56,4 +57,3 @@ public class DepartmentEFCoreRepository : IDepartmentRepository
         await this._clinicDbContext.SaveChangesAsync();
     }
 }
-

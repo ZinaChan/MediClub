@@ -52,8 +52,8 @@ public class RoomController : Controller
     }
 
     [HttpGet]
-    [Route("Json/{roomId:int}")]
-    public async Task<IActionResult> GetRoomJson(int roomId)
+    [Route("Json/{roomId:Guid}")]
+    public async Task<IActionResult> GetRoomJson(Guid roomId)
     {
         try
         {
@@ -67,8 +67,8 @@ public class RoomController : Controller
     }
 
     [HttpGet]
-    [Route("/[controller]/{roomId:int}")]
-    public async Task<IActionResult> RoomInfo(int roomId)
+    [Route("/[controller]/{roomId:Guid}")]
+    public async Task<IActionResult> RoomInfo(Guid roomId)
     {
         try
         {
@@ -142,8 +142,8 @@ public class RoomController : Controller
         }
     }
 
-    [HttpDelete("{roomId:int}")]
-    public async Task<IActionResult> DeleteRoom(int roomId)
+    [HttpDelete("{roomId:Guid}")]
+    public async Task<IActionResult> DeleteRoom(Guid roomId)
     {
         try
         {

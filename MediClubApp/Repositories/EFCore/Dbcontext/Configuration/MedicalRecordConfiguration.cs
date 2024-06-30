@@ -9,6 +9,10 @@ public class MedicalRecordConfiguration : IEntityTypeConfiguration<MedicalRecord
     public void Configure(EntityTypeBuilder<MedicalRecord> builder)
     {
         builder.HasKey(mr => mr.Id);
+        builder.Property(mr => mr.Id)
+                    .ValueGeneratedOnAdd()
+                    .IsRequired()
+                    .HasDefaultValueSql("NEWID()");
 
         builder.Property(mr => mr.Date)
             .IsRequired();

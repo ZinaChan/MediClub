@@ -9,6 +9,10 @@ public class PatientConfiguration : IEntityTypeConfiguration<Patient>
     public void Configure(EntityTypeBuilder<Patient> builder)
     {
         builder.HasKey(p => p.Id);
+        builder.Property(p => p.Id)
+                    .ValueGeneratedOnAdd()
+                    .IsRequired()
+                    .HasDefaultValueSql("NEWID()");
 
         builder.Property(p => p.FirstName)
             .IsRequired()

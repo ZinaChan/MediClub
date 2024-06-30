@@ -47,8 +47,8 @@ public class DepartmentController : Controller
     }
 
     [HttpGet]
-    [Route("Json/{departmentId:int}")]
-    public async Task<IActionResult> GetDepartmentJson(int departmentId)
+    [Route("Json/{departmentId:Guid}")]
+    public async Task<IActionResult> GetDepartmentJson(Guid departmentId)
     {
         try
         {
@@ -62,8 +62,8 @@ public class DepartmentController : Controller
     }
 
     [HttpGet]
-    [Route("/[controller]/{departmentId:int}")]
-    public async Task<IActionResult> DepartmentInfo(int departmentId)
+    [Route("/[controller]/{departmentId:Guid}")]
+    public async Task<IActionResult> DepartmentInfo(Guid departmentId)
     {
         try
         {
@@ -121,8 +121,8 @@ public class DepartmentController : Controller
         }
     }
 
-    [HttpDelete("{departmentId:int}")]
-    public async Task<IActionResult> DeleteDepartment(int departmentId)
+    [HttpDelete("{departmentId:Guid}")]
+    public async Task<IActionResult> DeleteDepartment(Guid departmentId)
     {
         try
         {

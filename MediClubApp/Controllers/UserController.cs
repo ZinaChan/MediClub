@@ -7,38 +7,33 @@ using Microsoft.AspNetCore.Mvc;
 namespace MediClubApp.Controllers;
 
 [Route("[controller]")]
-public class PatientController : Controller
+public class UserController : Controller
 {
-    private readonly IPatientService _patientService;
-    private readonly IValidator<Patient> _validator;
+    private readonly IUserService _userService;
+    private readonly IValidator<User> _validator;
 
-    public PatientController(IValidator<Patient> validator, IPatientService patientService)
+    public UserController(IValidator<User> validator, IUserService userService)
     {
         this._validator = validator;
-        this._patientService = patientService;
+        this._userService = userService;
     }
 
     [HttpGet]
     [Route("/[controller]")]
     public async Task<IActionResult> Index()
     {
-        var patients = await this._patientService.GetAllPatientsAsync();
+        var users = await this._userService.GetAllUsersAsync();
 
-        return base.View(patients);
+        return base.View(null);
     }
 
     [HttpGet("Json")]
-    public async Task<IActionResult> GetAllPatientsJson()
+    public async Task<IActionResult> GetAllUsersJson()
     {
         try
         {
-            var patients = await this._patientService.GetAllPatientsAsync();
-            foreach (var patient in patients)
-            {
-                patient.Appointments = null!;
-                patient.MedicalRecords = null!;
-            }
-            return base.Json(data: patients);
+            var users = await this._userService.GetAllUsersAsync(); 
+            return base.Json(data: users);
         }
         catch (System.Exception ex)
         {
@@ -47,13 +42,13 @@ public class PatientController : Controller
     }
 
     [HttpGet]
-    [Route("Json/{patientId:Guid}")]
-    public async Task<IActionResult> GetPatientJson(Guid patientId)
+    [Route("Json/{userId:Guid}")]
+    public async Task<IActionResult> GetUserJson(Guid userId)
     {
         try
         {
-            var patient = await this._patientService.GetPatientAsync(id: patientId);
-            return base.Json(data: patient);
+            var user = await this._userService.GetUserAsync(id: userId);
+            return base.Json(data: user);
         }
         catch (System.Exception ex)
         {
@@ -62,12 +57,12 @@ public class PatientController : Controller
     }
 
     [HttpGet]
-    [Route("/[controller]/{patientId:Guid}")]
-    public async Task<IActionResult> PatientInfo(Guid patientId)
+    [Route("/[controller]/{userId:Guid}")]
+    public async Task<IActionResult> UserInfo(Guid userId)
     {
         try
         {
-            var doctor = await this._patientService.GetPatientAsync(id: patientId);
+            var doctor = await this._userService.GetUserAsync(id: userId);
             return base.View(doctor);
         }
         catch (System.Exception ex)
@@ -77,19 +72,19 @@ public class PatientController : Controller
     }
 
     [HttpGet]
-    [Route("[action]", Name = "CreatePatientPage")]
+    [Route("[action]", Name = "CreateUserPage")]
     public IActionResult Create()
     {
         return base.View();
     }
 
     [HttpPost]
-    [Route("[action]", Name = "CreatePatientApi")]
-    public async Task<IActionResult> Create(Patient newPatient)
+    [Route("[action]", Name = "CreateUserApi")]
+    public async Task<IActionResult> Create(User newUser)
     {
         try
         {
-            var validatorResult = this._validator.Validate(instance: newPatient);
+            var validatorResult = this._validator.Validate(instance: newUser);
             if (!validatorResult.IsValid)
             {
                 foreach (var error in validatorResult.Errors)
@@ -100,7 +95,7 @@ public class PatientController : Controller
                 return base.View(viewName: "Create");
             }
 
-            await this._patientService.CreatePatientAsync(newPatient: newPatient);
+            await this._userService.CreateUserAsync(newUser: newUser);
             return base.RedirectToAction(actionName: "Index");
         }
         catch (System.Exception ex)
@@ -110,11 +105,11 @@ public class PatientController : Controller
     }
 
     [HttpPut]
-    public async Task<IActionResult> UpdateDoctor([FromBody] Patient patient)
+    public async Task<IActionResult> UpdateDoctor([FromBody] User user)
     {
         try
         {
-            await this._patientService.UpdatePatientAsync(id: patient.Id, newPatient: patient);
+            await this._userService.UpdateUserAsync(id: user.Id, newUser: user);
             return base.Ok();
         }
         catch (System.Exception ex)
@@ -123,12 +118,12 @@ public class PatientController : Controller
         }
     }
 
-    [HttpDelete("{patientId:Guid}")]
-    public async Task<IActionResult> DeleteDoctor(Guid patientId)
+    [HttpDelete("{userId:Guid}")]
+    public async Task<IActionResult> DeleteDoctor(Guid userId)
     {
         try
         {
-            await this._patientService.DeletePatientByIdAsync(id: patientId);
+            await this._userService.DeleteUserByIdAsync(id: userId);
             return Ok();
         }
         catch (System.Exception ex)

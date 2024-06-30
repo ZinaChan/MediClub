@@ -1,15 +1,25 @@
 #pragma warning disable CS8618
 
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+
 namespace MediClubApp.Models;
 
 public class Appointment
-{
-    public int Id { get; set; }
-    public int PatientId { get; set; }
+{ 
+    [Key]
+    public Guid Id { get; set; }
+    public Guid PatientId { get; set; }
+
+    [ForeignKey("PatientId")]
     public Patient Patient { get; set; }
-    public int DoctorId { get; set; }
+    public Guid DoctorId { get; set; }
+    
+    [ForeignKey("DoctorId")]
     public Doctor Doctor { get; set; }
-    public int RoomId { get; set; }
+
+    [ForeignKey("RoomId")]
+    public Guid RoomId { get; set; }
     public Room Room { get; set; }
     public DateTime Date { get; set; }
     public TimeSpan Time { get; set; }

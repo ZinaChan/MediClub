@@ -28,32 +28,51 @@ public class MyClinicDbContext : DbContext
     {
         base.OnModelCreating(modelBuilder);
 
-        modelBuilder.ApplyConfiguration(new DepartmentConfiguration());
-        modelBuilder.ApplyConfiguration(new SpecializationConfiguration());
-        modelBuilder.ApplyConfiguration(new MedicalRecordConfiguration());
         modelBuilder.ApplyConfiguration(new PatientConfiguration());
         modelBuilder.ApplyConfiguration(new RoomConfiguration());
+        modelBuilder.ApplyConfiguration(new DepartmentConfiguration());
+        modelBuilder.ApplyConfiguration(new SpecializationConfiguration());
+        modelBuilder.ApplyConfiguration(new DoctorConfiguration());
         modelBuilder.ApplyConfiguration(new AppointmentConfiguration());
+        modelBuilder.ApplyConfiguration(new MedicalRecordConfiguration());
+        modelBuilder.ApplyConfiguration(new UserConfiguration());
 
         this.SeedDefaultData(modelBuilder);
     }
 
     private void SeedDefaultData(ModelBuilder modelBuilder)
     {
+            var departmentId1 = Guid.NewGuid();
+            var departmentId2 = Guid.NewGuid();
+            var specializationId1 = Guid.NewGuid();
+            var specializationId2 = Guid.NewGuid();
+            var doctorId1 = Guid.NewGuid();
+            var doctorId2 = Guid.NewGuid();
+            var patientId1 = Guid.NewGuid();
+            var patientId2 = Guid.NewGuid();
+            var roomId1 = Guid.NewGuid();
+            var roomId2 = Guid.NewGuid();
+            var roomId3 = Guid.NewGuid();
+            var roomId4 = Guid.NewGuid();
+            var appointmentId1 = Guid.NewGuid();
+            var appointmentId2 = Guid.NewGuid();
+            var mrId1 = Guid.NewGuid();
+            var mrId2 = Guid.NewGuid();
+
         modelBuilder.Entity<Department>().HasData(
-            new Department { Id = 1, Name = "Cardiology" },
-            new Department { Id = 2, Name = "Neurology" }
+            new Department { Id = departmentId1, Name = "Cardiology" },
+            new Department { Id = departmentId2, Name = "Neurology" }
         );
 
         modelBuilder.Entity<Specialization>().HasData(
-            new Specialization { Id = 1, Name = "Cardiologist", DepartmentId = 1 },
-            new Specialization { Id = 2, Name = "Neurologist", DepartmentId = 2 }
+            new Specialization { Id = specializationId1, Name = "Cardiologist", DepartmentId = departmentId1 },
+            new Specialization { Id = specializationId2, Name = "Neurologist", DepartmentId = departmentId2 }
         );
 
         modelBuilder.Entity<Patient>().HasData(
             new Patient
             {
-                Id = 1,
+                Id = patientId1,
                 FirstName = "John",
                 LastName = "Doe",
                 DateOfBirth = new DateTime(1980, 1, 1),
@@ -64,7 +83,7 @@ public class MyClinicDbContext : DbContext
             },
             new Patient
             {
-                Id = 2,
+                Id = patientId2,
                 FirstName = "Jane",
                 LastName = "Smith",
                 DateOfBirth = new DateTime(1985, 5, 15),
@@ -78,54 +97,54 @@ public class MyClinicDbContext : DbContext
         modelBuilder.Entity<Doctor>().HasData(
             new Doctor
             {
-                Id = 1,
+                Id = doctorId1,
                 FirstName = "Alice",
                 LastName = "Johnson",
                 DateOfBirth = new DateTime(1975, 2, 20),
                 Gender = "Female",
                 Email = "alice.johnson@example.com",
                 PhoneNumber = "555-555-5557",
-                DepartmentId = 1,
-                SpecializationId = 1
+                DepartmentId = departmentId1,
+                SpecializationId = specializationId1
             },
             new Doctor
             {
-                Id = 2,
+                Id = doctorId2,
                 FirstName = "Bob",
                 LastName = "Brown",
                 DateOfBirth = new DateTime(1980, 8, 30),
                 Gender = "Male",
                 Email = "bob.brown@example.com",
                 PhoneNumber = "555-555-5558",
-                DepartmentId = 2,
-                SpecializationId = 2
+                DepartmentId = departmentId1,
+                SpecializationId = specializationId2
             }
         );
 
         modelBuilder.Entity<Room>().HasData(
-            new Room { Id = 1, RoomNumber = "101", DepartmentId = 1 },
-            new Room { Id = 2, RoomNumber = "102", DepartmentId = 1 },
-            new Room { Id = 3, RoomNumber = "201", DepartmentId = 2 },
-            new Room { Id = 4, RoomNumber = "202", DepartmentId = 2 }
+            new Room { Id = roomId1, RoomNumber = "101", DepartmentId = departmentId1 },
+            new Room { Id = roomId2, RoomNumber = "102", DepartmentId = departmentId2 },
+            new Room { Id = roomId3, RoomNumber = "201", DepartmentId = departmentId1 },
+            new Room { Id = roomId4, RoomNumber = "202", DepartmentId = departmentId2 }
         );
 
         modelBuilder.Entity<Appointment>().HasData(
             new Appointment
             {
-                Id = 1,
-                PatientId = 1,
-                DoctorId = 1,
-                RoomId = 1,
+                Id = appointmentId1,
+                PatientId = patientId1,
+                DoctorId = doctorId2,
+                RoomId = roomId2,
                 Date = new DateTime(2024, 7, 1),
                 Time = new TimeSpan(10, 0, 0),
                 Reason = "Routine Checkup"
             },
             new Appointment
             {
-                Id = 2,
-                PatientId = 2,
-                DoctorId = 2,
-                RoomId = 3,
+                Id = appointmentId2,
+                PatientId = patientId2,
+                DoctorId = doctorId1,
+                RoomId = roomId1,
                 Date = new DateTime(2024, 7, 2),
                 Time = new TimeSpan(11, 0, 0),
                 Reason = "Neurological Consultation"
@@ -135,18 +154,18 @@ public class MyClinicDbContext : DbContext
         modelBuilder.Entity<MedicalRecord>().HasData(
             new MedicalRecord
             {
-                Id = 1,
-                PatientId = 1,
-                DoctorId = 1,
+                Id = mrId1,
+                PatientId = patientId1,
+                DoctorId = doctorId2,
                 Date = new DateTime(2024, 6, 1),
                 Diagnosis = "Hypertension",
                 Treatment = "Medication"
             },
             new MedicalRecord
             {
-                Id = 2,
-                PatientId = 2,
-                DoctorId = 2,
+                Id = mrId2,
+                PatientId = patientId2,
+                DoctorId = doctorId1,
                 Date = new DateTime(2024, 6, 15),
                 Diagnosis = "Migraine",
                 Treatment = "Rest and Medication"

@@ -3,9 +3,9 @@ namespace MediClubApp.Services.Base;
 
 public interface ILogService
 {
-    Task<Log?> GetLogAsync(int id);
+    Task<Log?> GetLogAsync(Guid id);
     Task<IEnumerable<Log>> GetAllLogsAsync();
     Task CreateLogAsync(Log newLog);
-    Task UpdateLogAsync(int id, Log newLog);
-    Task DeleteLogByIdAsync(int id);
+    Task UpdateLogAsync(Guid id, Log newLog);
+    Task DeleteLogByIdAsync(Guid id);
 }

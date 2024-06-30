@@ -17,11 +17,12 @@ public class MedicalRecordEFCoreRepository : IMedicalRecordRepository
 
     public async Task CreateAsync(MedicalRecord newMedicalRecord)
     {
+        newMedicalRecord.Id = Guid.NewGuid();
         await this._clinicDbContext.MedicalRecords.AddAsync(entity: newMedicalRecord);
         await this._clinicDbContext.SaveChangesAsync();
     }
 
-    public async Task DeleteByIdAsync(int id)
+    public async Task DeleteByIdAsync(Guid id)
     {
         var oldMedicalRecord = await this._clinicDbContext.MedicalRecords.FirstOrDefaultAsync(d => d.Id == id);
 
@@ -40,12 +41,12 @@ public class MedicalRecordEFCoreRepository : IMedicalRecordRepository
         return medicalRecords;
     }
 
-    public Task<MedicalRecord?> GetAsync(int id)
+    public Task<MedicalRecord?> GetAsync(Guid id)
     {
         return this._clinicDbContext.MedicalRecords.FirstOrDefaultAsync(d => d.Id == id);
     }
 
-    public async Task UpdateAsync(int id, MedicalRecord newMedicalRecord)
+    public async Task UpdateAsync(Guid id, MedicalRecord newMedicalRecord)
     {
         var oldMedicalRecord = await this._clinicDbContext.MedicalRecords.FirstOrDefaultAsync(d => d.Id == id);
         if (oldMedicalRecord is null) return;

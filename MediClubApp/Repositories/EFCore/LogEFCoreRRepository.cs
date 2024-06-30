@@ -16,11 +16,12 @@ public class LogEFCoreRRepository : ILogRepository
 
     public async Task CreateAsync(Log newLog)
     {
+        newLog.Id = Guid.NewGuid();
        await this._clinicDbContext.Logs.AddAsync(entity: newLog);
        await this._clinicDbContext.SaveChangesAsync();
     }
 
-    public async Task DeleteByIdAsync(int id)
+    public async Task DeleteByIdAsync(Guid id)
     {
         var oldLog = await this._clinicDbContext.Logs.FirstOrDefaultAsync(d => d.Id == id);
 
@@ -35,12 +36,12 @@ public class LogEFCoreRRepository : ILogRepository
         return this._clinicDbContext.Logs;
     }
 
-    public Task<Log?> GetAsync(int id)
+    public Task<Log?> GetAsync(Guid id)
     {
         return this._clinicDbContext.Logs.FirstOrDefaultAsync(d => d.Id == id);
     }
 
-    public async Task UpdateAsync(int id, Log newLog)
+    public async Task UpdateAsync(Guid id, Log newLog)
     {
         var oldLog = await this._clinicDbContext.Logs.FirstOrDefaultAsync(d => d.Id == id);
 

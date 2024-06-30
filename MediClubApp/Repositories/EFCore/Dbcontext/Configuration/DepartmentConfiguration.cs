@@ -9,6 +9,10 @@ public class DepartmentConfiguration : IEntityTypeConfiguration<Department>
     public void Configure(EntityTypeBuilder<Department> builder)
     {
         builder.HasKey(d => d.Id);
+        builder.Property(d => d.Id)
+                    .ValueGeneratedOnAdd()
+                    .IsRequired()
+                    .HasDefaultValueSql("NEWID()");
 
         builder.Property(d => d.Name)
             .IsRequired()

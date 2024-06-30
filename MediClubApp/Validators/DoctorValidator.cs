@@ -28,11 +28,9 @@ public class DoctorValidator : AbstractValidator<Doctor>
             .Matches(new Regex(@"(?:(?:\+?1\s*(?:[.-]\s*)?)?(?:(\s*([2-9]1[02-9]|[2-9][02-8]1|[2-9][02-8][02-9]‌​)\s*)|([2-9]1[02-9]|[2-9][02-8]1|[2-9][02-8][02-9]))\s*(?:[.-]\s*)?)([2-9]1[02-9]‌​|[2-9][02-9]1|[2-9][02-9]{2})\s*(?:[.-]\s*)?([0-9]{4})\s*(?:\s*(?:#|x\.?|ext\.?|extension)\s*(\d+)\s*)?$")).WithMessage("Invalid Phone Number format.");
  
         RuleFor(doctor => doctor.SpecializationId)
-            .NotEmpty().WithMessage("Department is required.")
-            .GreaterThan(0).WithMessage("Invalid Specialization Id.");
+            .NotEmpty().WithMessage("Department is required.");
 
         RuleFor(doctor => doctor.DepartmentId)
-            .NotEmpty().WithMessage("Department is required.")
-            .GreaterThan(0).WithMessage("Invalid Department Id.");
+            .NotEmpty().WithMessage("Department is required.");
     }
 }

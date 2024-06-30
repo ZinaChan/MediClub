@@ -3,9 +3,9 @@ namespace MediClubApp.Services.Base;
 
 public interface ISpecializationService
 {
-    Task<Specialization?> GetSpecializationAsync(int id);
+    Task<Specialization?> GetSpecializationAsync(Guid id);
     Task<IEnumerable<Specialization>> GetAllSpecializationsAsync();
     Task CreateSpecializationAsync(Specialization newSpecialization);
-    Task UpdateSpecializationAsync(int id, Specialization newSpecialization);
-    Task DeleteSpecializationByIdAsync(int id);
+    Task UpdateSpecializationAsync(Guid id, Specialization newSpecialization);
+    Task DeleteSpecializationByIdAsync(Guid id);
 }

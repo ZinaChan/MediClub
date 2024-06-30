@@ -17,11 +17,12 @@ public class PatientEFCoreRRepository : IPatientRepository
 
     public async Task CreateAsync(Patient newPatient)
     {
+        newPatient.Id = Guid.NewGuid();
         await this._clinicDbContext.Patients.AddAsync(entity: newPatient);
         await this._clinicDbContext.SaveChangesAsync();
     }
 
-    public async Task DeleteByIdAsync(int id)
+    public async Task DeleteByIdAsync(Guid id)
     {
         var oldPatient = await this._clinicDbContext.Patients.FirstOrDefaultAsync(d => d.Id == id);
 
@@ -40,12 +41,12 @@ public class PatientEFCoreRRepository : IPatientRepository
         return patients;
     }
 
-    public Task<Patient?> GetAsync(int id)
+    public Task<Patient?> GetAsync(Guid id)
     {
         return this._clinicDbContext.Patients.FirstOrDefaultAsync(d => d.Id == id);
     }
 
-    public async Task UpdateAsync(int id, Patient newPatient)
+    public async Task UpdateAsync(Guid id, Patient newPatient)
     {
         var oldPatient = await this._clinicDbContext.Patients.FirstOrDefaultAsync(d => d.Id == id);
 

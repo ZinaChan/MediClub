@@ -25,11 +25,11 @@ public class PatientService : IPatientService
     {
         return await this._patientRepository.GetAllAsync();
     }
-    public async Task<Patient?> GetPatientAsync(int id)
+    public async Task<Patient?> GetPatientAsync(Guid id)
     {
         return await this._patientRepository.GetAsync(id: id);
     }
-    public async Task UpdatePatientAsync(int id, Patient newPatient)
+    public async Task UpdatePatientAsync(Guid id, Patient newPatient)
     {
         if (newPatient is null || await this._patientRepository.GetAsync(id) is null)
         {
@@ -38,7 +38,7 @@ public class PatientService : IPatientService
 
         await this._patientRepository.UpdateAsync(id: id, newPatient: newPatient);
     }
-    public async Task DeletePatientByIdAsync(int id)
+    public async Task DeletePatientByIdAsync(Guid id)
     {
         if (await this._patientRepository.GetAsync(id) is null)
         {

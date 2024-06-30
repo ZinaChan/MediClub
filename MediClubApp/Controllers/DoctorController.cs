@@ -56,8 +56,8 @@ public class DoctorController : Controller
     }
 
     [HttpGet]
-    [Route("Json/{doctorId:int}")]
-    public async Task<IActionResult> GetDoctorJson(int doctorId)
+    [Route("Json/{doctorId:Guid}")]
+    public async Task<IActionResult> GetDoctorJson(Guid doctorId)
     {
         try
         {
@@ -71,8 +71,8 @@ public class DoctorController : Controller
     }
 
     [HttpGet]
-    [Route("/[controller]/{doctorId:int}")]
-    public async Task<IActionResult> DoctorInfo(int doctorId)
+    [Route("/[controller]/{doctorId:Guid}")]
+    public async Task<IActionResult> DoctorInfo(Guid doctorId)
     {
         try
         {
@@ -147,8 +147,8 @@ public class DoctorController : Controller
         }
     }
 
-    [HttpDelete("{doctorId:int}")]
-    public async Task<IActionResult> DeleteDoctor(int doctorId)
+    [HttpDelete("{doctorId:Guid}")]
+    public async Task<IActionResult> DeleteDoctor(Guid doctorId)
     {
         try
         {

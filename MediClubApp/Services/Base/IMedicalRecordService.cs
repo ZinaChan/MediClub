@@ -3,9 +3,9 @@ namespace MediClubApp.Services.Base;
 
 public interface IMedicalRecordService
 {
-    Task<MedicalRecord?> GetMedicalRecordAsync(int id);
+    Task<MedicalRecord?> GetMedicalRecordAsync(Guid id);
     Task<IEnumerable<MedicalRecord>> GetAllMedicalRecordsAsync();
     Task CreateMedicalRecordAsync(MedicalRecord newMedicalRecord);
-    Task UpdateMedicalRecordAsync(int id, MedicalRecord newMedicalRecord);
-    Task DeleteMedicalRecordByIdAsync(int id);
+    Task UpdateMedicalRecordAsync(Guid id, MedicalRecord newMedicalRecord);
+    Task DeleteMedicalRecordByIdAsync(Guid id);
 }

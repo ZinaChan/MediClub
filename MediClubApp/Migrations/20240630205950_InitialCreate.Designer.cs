@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MediClubApp.Migrations
 {
     [DbContext(typeof(MyClinicDbContext))]
-    [Migration("20240623204831_InitialCreate")]
+    [Migration("20240630205950_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -27,28 +27,27 @@ namespace MediClubApp.Migrations
 
             modelBuilder.Entity("MediClubApp.Models.Appointment", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                        .HasColumnType("uniqueidentifier")
+                        .HasDefaultValueSql("NEWID()");
 
                     b.Property<DateTime>("Date")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("DoctorId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("DoctorId")
+                        .HasColumnType("uniqueidentifier");
 
-                    b.Property<int>("PatientId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("PatientId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Reason")
                         .IsRequired()
                         .HasMaxLength(500)
                         .HasColumnType("nvarchar(500)");
 
-                    b.Property<int>("RoomId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("RoomId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<TimeSpan>("Time")
                         .HasColumnType("time");
@@ -66,33 +65,32 @@ namespace MediClubApp.Migrations
                     b.HasData(
                         new
                         {
-                            Id = 1,
+                            Id = new Guid("669424b8-df22-4024-b024-1074335ed14e"),
                             Date = new DateTime(2024, 7, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            DoctorId = 1,
-                            PatientId = 1,
+                            DoctorId = new Guid("e6f1e7de-c44a-4f93-9bb0-92f4430c4458"),
+                            PatientId = new Guid("d346cd2e-d64a-4854-ba70-8a79d413eda5"),
                             Reason = "Routine Checkup",
-                            RoomId = 1,
+                            RoomId = new Guid("1a640322-314a-4bee-8bd7-6d4d451f0707"),
                             Time = new TimeSpan(0, 10, 0, 0, 0)
                         },
                         new
                         {
-                            Id = 2,
+                            Id = new Guid("195f8087-0a0a-4347-99a3-30e9846ec974"),
                             Date = new DateTime(2024, 7, 2, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            DoctorId = 2,
-                            PatientId = 2,
+                            DoctorId = new Guid("a546b2d9-cc96-4cc8-911f-b23dee7257d4"),
+                            PatientId = new Guid("cd31ad1a-d2d9-4123-8a7c-7df5181c8980"),
                             Reason = "Neurological Consultation",
-                            RoomId = 3,
+                            RoomId = new Guid("2eee6487-7371-4aab-9507-47cddc964125"),
                             Time = new TimeSpan(0, 11, 0, 0, 0)
                         });
                 });
 
             modelBuilder.Entity("MediClubApp.Models.Department", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                        .HasColumnType("uniqueidentifier")
+                        .HasDefaultValueSql("NEWID()");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -106,52 +104,56 @@ namespace MediClubApp.Migrations
                     b.HasData(
                         new
                         {
-                            Id = 1,
+                            Id = new Guid("14d1db4e-0a98-44c8-92d8-2d7b04015e1b"),
                             Name = "Cardiology"
                         },
                         new
                         {
-                            Id = 2,
+                            Id = new Guid("f41d7f55-2538-48a5-a7d2-da1b242a9dd4"),
                             Name = "Neurology"
                         });
                 });
 
             modelBuilder.Entity("MediClubApp.Models.Doctor", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                        .HasColumnType("uniqueidentifier")
+                        .HasDefaultValueSql("NEWID()");
 
                     b.Property<DateTime>("DateOfBirth")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("DepartmentId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("DepartmentId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Email")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<string>("FirstName")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("Gender")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(10)
+                        .HasColumnType("nvarchar(10)");
 
                     b.Property<string>("LastName")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("PhoneNumber")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
 
-                    b.Property<int>("SpecializationId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("SpecializationId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
 
@@ -164,37 +166,35 @@ namespace MediClubApp.Migrations
                     b.HasData(
                         new
                         {
-                            Id = 1,
+                            Id = new Guid("a546b2d9-cc96-4cc8-911f-b23dee7257d4"),
                             DateOfBirth = new DateTime(1975, 2, 20, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            DepartmentId = 1,
+                            DepartmentId = new Guid("14d1db4e-0a98-44c8-92d8-2d7b04015e1b"),
                             Email = "alice.johnson@example.com",
                             FirstName = "Alice",
                             Gender = "Female",
                             LastName = "Johnson",
                             PhoneNumber = "555-555-5557",
-                            SpecializationId = 1
+                            SpecializationId = new Guid("f1536a01-dee9-479f-99bd-c2eb3cb96119")
                         },
                         new
                         {
-                            Id = 2,
+                            Id = new Guid("e6f1e7de-c44a-4f93-9bb0-92f4430c4458"),
                             DateOfBirth = new DateTime(1980, 8, 30, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            DepartmentId = 2,
+                            DepartmentId = new Guid("14d1db4e-0a98-44c8-92d8-2d7b04015e1b"),
                             Email = "bob.brown@example.com",
                             FirstName = "Bob",
                             Gender = "Male",
                             LastName = "Brown",
                             PhoneNumber = "555-555-5558",
-                            SpecializationId = 2
+                            SpecializationId = new Guid("e7e4d2a3-18f5-482b-8f8c-41321028d7bb")
                         });
                 });
 
             modelBuilder.Entity("MediClubApp.Models.Log", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("CreationDate")
                         .HasColumnType("datetime2");
@@ -224,11 +224,10 @@ namespace MediClubApp.Migrations
 
             modelBuilder.Entity("MediClubApp.Models.MedicalRecord", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                        .HasColumnType("uniqueidentifier")
+                        .HasDefaultValueSql("NEWID()");
 
                     b.Property<DateTime>("Date")
                         .HasColumnType("datetime2");
@@ -238,11 +237,11 @@ namespace MediClubApp.Migrations
                         .HasMaxLength(500)
                         .HasColumnType("nvarchar(500)");
 
-                    b.Property<int>("DoctorId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("DoctorId")
+                        .HasColumnType("uniqueidentifier");
 
-                    b.Property<int>("PatientId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("PatientId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Treatment")
                         .IsRequired()
@@ -260,31 +259,30 @@ namespace MediClubApp.Migrations
                     b.HasData(
                         new
                         {
-                            Id = 1,
+                            Id = new Guid("c51eaadc-5d76-4095-8136-53f1ba1eba67"),
                             Date = new DateTime(2024, 6, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Diagnosis = "Hypertension",
-                            DoctorId = 1,
-                            PatientId = 1,
+                            DoctorId = new Guid("e6f1e7de-c44a-4f93-9bb0-92f4430c4458"),
+                            PatientId = new Guid("d346cd2e-d64a-4854-ba70-8a79d413eda5"),
                             Treatment = "Medication"
                         },
                         new
                         {
-                            Id = 2,
+                            Id = new Guid("bb73e173-98df-49c6-86ae-53e3dfbf8975"),
                             Date = new DateTime(2024, 6, 15, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Diagnosis = "Migraine",
-                            DoctorId = 2,
-                            PatientId = 2,
+                            DoctorId = new Guid("a546b2d9-cc96-4cc8-911f-b23dee7257d4"),
+                            PatientId = new Guid("cd31ad1a-d2d9-4123-8a7c-7df5181c8980"),
                             Treatment = "Rest and Medication"
                         });
                 });
 
             modelBuilder.Entity("MediClubApp.Models.Patient", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                        .HasColumnType("uniqueidentifier")
+                        .HasDefaultValueSql("NEWID()");
 
                     b.Property<string>("Address")
                         .IsRequired()
@@ -326,7 +324,7 @@ namespace MediClubApp.Migrations
                     b.HasData(
                         new
                         {
-                            Id = 1,
+                            Id = new Guid("d346cd2e-d64a-4854-ba70-8a79d413eda5"),
                             Address = "123 Main St",
                             DateOfBirth = new DateTime(1980, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Email = "john.doe@example.com",
@@ -337,7 +335,7 @@ namespace MediClubApp.Migrations
                         },
                         new
                         {
-                            Id = 2,
+                            Id = new Guid("cd31ad1a-d2d9-4123-8a7c-7df5181c8980"),
                             Address = "456 Elm St",
                             DateOfBirth = new DateTime(1985, 5, 15, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Email = "jane.smith@example.com",
@@ -350,14 +348,13 @@ namespace MediClubApp.Migrations
 
             modelBuilder.Entity("MediClubApp.Models.Room", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .HasColumnType("uniqueidentifier")
+                        .HasDefaultValueSql("NEWID()");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("DepartmentId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("DepartmentId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("RoomNumber")
                         .IsRequired()
@@ -373,40 +370,39 @@ namespace MediClubApp.Migrations
                     b.HasData(
                         new
                         {
-                            Id = 1,
-                            DepartmentId = 1,
+                            Id = new Guid("2eee6487-7371-4aab-9507-47cddc964125"),
+                            DepartmentId = new Guid("14d1db4e-0a98-44c8-92d8-2d7b04015e1b"),
                             RoomNumber = "101"
                         },
                         new
                         {
-                            Id = 2,
-                            DepartmentId = 1,
+                            Id = new Guid("1a640322-314a-4bee-8bd7-6d4d451f0707"),
+                            DepartmentId = new Guid("f41d7f55-2538-48a5-a7d2-da1b242a9dd4"),
                             RoomNumber = "102"
                         },
                         new
                         {
-                            Id = 3,
-                            DepartmentId = 2,
+                            Id = new Guid("e53e51ad-d681-46a7-a215-12929688ce47"),
+                            DepartmentId = new Guid("14d1db4e-0a98-44c8-92d8-2d7b04015e1b"),
                             RoomNumber = "201"
                         },
                         new
                         {
-                            Id = 4,
-                            DepartmentId = 2,
+                            Id = new Guid("0ef7ac9f-618e-49a1-8fa5-0f56bbe35c6f"),
+                            DepartmentId = new Guid("f41d7f55-2538-48a5-a7d2-da1b242a9dd4"),
                             RoomNumber = "202"
                         });
                 });
 
             modelBuilder.Entity("MediClubApp.Models.Specialization", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .HasColumnType("uniqueidentifier")
+                        .HasDefaultValueSql("NEWID()");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("DepartmentId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("DepartmentId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -422,16 +418,55 @@ namespace MediClubApp.Migrations
                     b.HasData(
                         new
                         {
-                            Id = 1,
-                            DepartmentId = 1,
+                            Id = new Guid("f1536a01-dee9-479f-99bd-c2eb3cb96119"),
+                            DepartmentId = new Guid("14d1db4e-0a98-44c8-92d8-2d7b04015e1b"),
                             Name = "Cardiologist"
                         },
                         new
                         {
-                            Id = 2,
-                            DepartmentId = 2,
+                            Id = new Guid("e7e4d2a3-18f5-482b-8f8c-41321028d7bb"),
+                            DepartmentId = new Guid("f41d7f55-2538-48a5-a7d2-da1b242a9dd4"),
                             Name = "Neurologist"
                         });
+                });
+
+            modelBuilder.Entity("MediClubApp.Models.User", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier")
+                        .HasDefaultValueSql("NEWID()");
+
+                    b.Property<string>("AvatarUrl")
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("Login")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
+
+                    b.Property<string>("Password")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
+
+                    b.Property<int>("Role")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Username")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Users");
                 });
 
             modelBuilder.Entity("MediClubApp.Models.Appointment", b =>
@@ -470,9 +505,9 @@ namespace MediClubApp.Migrations
                         .IsRequired();
 
                     b.HasOne("MediClubApp.Models.Specialization", "Specialization")
-                        .WithMany()
+                        .WithMany("Doctors")
                         .HasForeignKey("SpecializationId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Department");
@@ -547,6 +582,11 @@ namespace MediClubApp.Migrations
             modelBuilder.Entity("MediClubApp.Models.Room", b =>
                 {
                     b.Navigation("Appointments");
+                });
+
+            modelBuilder.Entity("MediClubApp.Models.Specialization", b =>
+                {
+                    b.Navigation("Doctors");
                 });
 #pragma warning restore 612, 618
         }

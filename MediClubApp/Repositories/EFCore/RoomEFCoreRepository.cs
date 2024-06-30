@@ -17,11 +17,12 @@ public class RoomEFCoreRepository : IRoomRepository
 
     public async Task CreateAsync(Room newRoom)
     {
+        newRoom.Id = Guid.NewGuid();
         await this._clinicDbContext.Rooms.AddAsync(entity: newRoom);
         await this._clinicDbContext.SaveChangesAsync();
     }
 
-    public async Task DeleteByIdAsync(int id)
+    public async Task DeleteByIdAsync(Guid id)
     {
         var oldRoom = await this._clinicDbContext.Rooms.FirstOrDefaultAsync(d => d.Id == id);
 
@@ -38,12 +39,12 @@ public class RoomEFCoreRepository : IRoomRepository
         return rooms;
     }
 
-    public Task<Room?> GetAsync(int id)
+    public Task<Room?> GetAsync(Guid id)
     {
         return this._clinicDbContext.Rooms.FirstOrDefaultAsync(d => d.Id == id);
     }
 
-    public async Task UpdateAsync(int id, Room newRoom)
+    public async Task UpdateAsync(Guid id, Room newRoom)
     {
         var oldRoom = await this._clinicDbContext.Rooms.FirstOrDefaultAsync(d => d.Id == id);
         if (oldRoom is null) return;

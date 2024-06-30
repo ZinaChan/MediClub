@@ -25,11 +25,11 @@ public class DoctorService : IDoctorService
     {
         return await _doctorRepository.GetAllAsync();
     }
-    public async Task<Doctor?> GetDoctorAsync(int id)
+    public async Task<Doctor?> GetDoctorAsync(Guid id)
     {
         return await this._doctorRepository.GetAsync(id: id);
     }
-    public async Task UpdateDoctorAsync(int id, Doctor newDoctor)
+    public async Task UpdateDoctorAsync(Guid id, Doctor newDoctor)
     {
 
         if (newDoctor is null || await this._doctorRepository.GetAsync(id) is null)
@@ -39,7 +39,7 @@ public class DoctorService : IDoctorService
 
         await _doctorRepository.UpdateAsync(id: id, newDoctor: newDoctor);
     }
-    public async Task DeleteDoctorByIdAsync(int id)
+    public async Task DeleteDoctorByIdAsync(Guid id)
     {
         if (await this._doctorRepository.GetAsync(id) is null)
         {

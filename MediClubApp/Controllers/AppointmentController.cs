@@ -60,8 +60,8 @@ public class AppointmentController : Controller
     }
 
     [HttpGet]
-    [Route("Json/{appointmentId:int}")]
-    public async Task<IActionResult> GetAppointmentJson(int appointmentId)
+    [Route("Json/{appointmentId:Guid}")]
+    public async Task<IActionResult> GetAppointmentJson(Guid appointmentId)
     {
         try
         {
@@ -75,8 +75,8 @@ public class AppointmentController : Controller
     }
 
     [HttpGet]
-    [Route("/[controller]/{appointmentId:int}")]
-    public async Task<IActionResult> AppointmentInfo(int appointmentId)
+    [Route("/[controller]/{appointmentId:Guid}")]
+    public async Task<IActionResult> AppointmentInfo(Guid appointmentId)
     {
         try
         {
@@ -162,8 +162,8 @@ public class AppointmentController : Controller
         }
     }
 
-    [HttpDelete("{appointmentId:int}")]
-    public async Task<IActionResult> DeleteAppointment(int appointmentId)
+    [HttpDelete("{appointmentId:Guid}")]
+    public async Task<IActionResult> DeleteAppointment(Guid appointmentId)
     {
         try
         {

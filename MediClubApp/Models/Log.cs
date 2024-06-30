@@ -1,10 +1,13 @@
 #pragma warning disable CS8618
 
+using System.ComponentModel.DataAnnotations;
+
 namespace MediClubApp.Models;
 
 public class Log
 {
-    public int Id { get; set; }
+    [Key]
+    public Guid Id { get; set; }
     public string? Url { get; set; }
     public string? RequestBody { get; set; }
     public string? ResponsetBody { get; set; }
