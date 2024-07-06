@@ -1,26 +1,181 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
+﻿<section class="department_section layout_padding">
+    <div class="department_container">
+        <div class="container ">
+            <div class="heading_container heading_center">
+                <h2>
+                    Our Departments
+                </h2>
+                <p>
+                    Asperiores sunt consectetur impedit nulla molestiae delectus repellat laborum dolores doloremque
+                    accusantium
+                </p>
+            </div>
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="box ">
+                        <div class="img-box">
+                            <img src="images/s1.png" alt="">
+                        </div>
+                        <div class="detail-box">
+                            <h5>
+                                Cardiology
+                            </h5>
+                            <p>
+                                fact that a reader will be distracted by the readable page when looking at its layout.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="box ">
+                        <div class="img-box">
+                            <img src="images/s2.png" alt="">
+                        </div>
+                        <div class="detail-box">
+                            <h5>
+                                Diagnosis
+                            </h5>
+                            <p>
+                                fact that a reader will be distracted by the readable page when looking at its layout.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="box ">
+                        <div class="img-box">
+                            <img src="images/s3.png" alt="">
+                        </div>
+                        <div class="detail-box">
+                            <h5>
+                                Surgery
+                            </h5>
+                            <p>
+                                fact that a reader will be distracted by the readable page when looking at its layout.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="box ">
+                        <div class="img-box">
+                            <img src="images/s4.png" alt="">
+                        </div>
+                        <div class="detail-box">
+                            <h5>
+                                First Aid
+                            </h5>
+                            <p>
+                                fact that a reader will be distracted by the readable page when looking at its layout.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
 
-    var firstnameCookie = base.User.Claims.FirstOrDefault(claim => claim.Type == ClaimTypes.Name);
-    var lastnameCookie = base.User.Claims.FirstOrDefault(claim => claim.Type == ClaimTypes.Surname);
+<section id="about" class="about_section layout_margin-bottom">
+    <div class="container  ">
+        <div class="row">
+            <div class="col-md-6 ">
+                <div class="img-box">
+                    <img src="images/about-img.jpg" alt="">
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="detail-box">
+                    <div class="heading_container">
+                        <h2>
+                            About <span>Us</span>
+                        </h2>
+                    </div>
+                    <p>
+                        There are many variations of passages of Lorem Ipsum available, but the majority have suffered
+                        alteration
+                        in some form, by injected humour, or randomised words which don't look even slightly believable.
+                        If you
+                        are going to use a passage of Lorem Ipsum, you need to be sure there isn't anything embarrassing
+                        hidden in
+                        the middle of text. All
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
 
-        var IsAuthenticated = base.User.Identity?.IsAuthenticated ?? false;
 
+<section id="contact" class="contact_section layout_padding">
+    <div class="container">
+        <div class="heading_container">
+            <h2>
+                Get In Touch
+            </h2>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form_container contact-form">
+                    <form action="">
+                        <div class="form-row">
+                            <div class="col-lg-6">
+                                <div>
+                                    <input type="text" placeholder="Your Name" />
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div>
+                                    <input type="text" placeholder="Phone Number" />
+                                </div>
+                            </div>
+                        </div>
+                        <div>
+                            <input type="email" placeholder="Email" />
+                        </div>
+                        <div>
+                            <input type="text" class="message-box" placeholder="Message" />
+                        </div>
+                        <div class="btn_box">
+                            <button>
+                                SEND
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="map_container">
+                    <div class="map">
+                        <div id="googleMap"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+
+@section Scripts
+{
+
+    <script type="text/javascript" src="js/jquery-3.4.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+        integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous">
+        </script>
+    <script type="text/javascript" src="js/bootstrap.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js">
+    </script>
+    <script type="text/javascript" src="js/custom.js"></script>
+    <script
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCh39n5U-4IoWpsVGUHWdqB6puEkhRLdmI&callback=myMap"></script>
+
+    <link rel="stylesheet" type="text/css" href="css/bootstrap.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" type="text/css"
+        href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css" />
+    <link href="css/font-awesome.min.css" rel="stylesheet" />
+    <link href="css/style.css" rel="stylesheet" />
+    <link href="css/responsive.css" rel="stylesheet" />
 }
-
-<div class="text-center">
-        <h1 class="display-4">Welcome
-            @if(IsAuthenticated)
-            {
-               <p>,  @firstnameCookie.Value <p></p> @lastnameCookie.Value </p>
-            }
-        </h1>
-            <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
-
-
-<style>
-    p{
-        display: contents;
-    }
-</style>
