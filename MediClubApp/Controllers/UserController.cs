@@ -2,10 +2,13 @@ using System.Text.Json;
 using FluentValidation;
 using MediClubApp.Models;
 using MediClubApp.Services.Base;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace MediClubApp.Controllers;
 
+
+[Authorize]
 [Route("[controller]")]
 public class UserController : Controller
 {
@@ -24,7 +27,7 @@ public class UserController : Controller
     {
         var users = await this._userService.GetAllUsersAsync();
 
-        return base.View(null);
+        return base.View(users);
     }
 
     [HttpGet("Json")]
@@ -70,7 +73,7 @@ public class UserController : Controller
             return base.StatusCode(statusCode: StatusCodes.Status500InternalServerError, value: ex.Message);
         }
     }
-
+ 
     [HttpGet]
     [Route("[action]", Name = "CreateUserPage")]
     public IActionResult Create()
@@ -78,31 +81,7 @@ public class UserController : Controller
         return base.View();
     }
 
-    [HttpPost]
-    [Route("[action]", Name = "CreateUserApi")]
-    public async Task<IActionResult> Create(User newUser)
-    {
-        try
-        {
-            var validatorResult = this._validator.Validate(instance: newUser);
-            if (!validatorResult.IsValid)
-            {
-                foreach (var error in validatorResult.Errors)
-                {
-                    base.ModelState.AddModelError(key: error.PropertyName, errorMessage: error.ErrorMessage);
-                }
-
-                return base.View(viewName: "Create");
-            }
-
-            await this._userService.CreateUserAsync(newUser: newUser);
-            return base.RedirectToAction(actionName: "Index");
-        }
-        catch (System.Exception ex)
-        {
-            return base.StatusCode(statusCode: StatusCodes.Status500InternalServerError, value: ex.Message);
-        }
-    }
+    
 
     [HttpPut]
     public async Task<IActionResult> UpdateDoctor([FromBody] User user)

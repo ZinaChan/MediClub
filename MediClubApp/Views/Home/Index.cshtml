@@ -1,8 +1,26 @@
 ﻿@{
     ViewData["Title"] = "Home Page";
+
+    var firstnameCookie = base.User.Claims.FirstOrDefault(claim => claim.Type == ClaimTypes.Name);
+    var lastnameCookie = base.User.Claims.FirstOrDefault(claim => claim.Type == ClaimTypes.Surname);
+
+        var IsAuthenticated = base.User.Identity?.IsAuthenticated ?? false;
+
 }
 
 <div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+        <h1 class="display-4">Welcome
+            @if(IsAuthenticated)
+            {
+               <p>,  @firstnameCookie.Value <p></p> @lastnameCookie.Value </p>
+            }
+        </h1>
+            <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
 </div>
+
+
+<style>
+    p{
+        display: contents;
+    }
+</style>

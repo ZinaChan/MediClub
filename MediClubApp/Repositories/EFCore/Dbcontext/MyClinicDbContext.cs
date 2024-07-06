@@ -37,27 +37,33 @@ public class MyClinicDbContext : DbContext
         modelBuilder.ApplyConfiguration(new MedicalRecordConfiguration());
         modelBuilder.ApplyConfiguration(new UserConfiguration());
 
-        this.SeedDefaultData(modelBuilder);
+        modelBuilder.Entity<User>()
+            .HasDiscriminator<string>("Role")
+            .HasValue<Patient>("Patient")
+            .HasValue<Doctor>("Doctor")
+            .HasValue<User>("Admin");
+
+       // this.SeedDefaultData(modelBuilder);
     }
 
     private void SeedDefaultData(ModelBuilder modelBuilder)
     {
-            var departmentId1 = Guid.NewGuid();
-            var departmentId2 = Guid.NewGuid();
-            var specializationId1 = Guid.NewGuid();
-            var specializationId2 = Guid.NewGuid();
-            var doctorId1 = Guid.NewGuid();
-            var doctorId2 = Guid.NewGuid();
-            var patientId1 = Guid.NewGuid();
-            var patientId2 = Guid.NewGuid();
-            var roomId1 = Guid.NewGuid();
-            var roomId2 = Guid.NewGuid();
-            var roomId3 = Guid.NewGuid();
-            var roomId4 = Guid.NewGuid();
-            var appointmentId1 = Guid.NewGuid();
-            var appointmentId2 = Guid.NewGuid();
-            var mrId1 = Guid.NewGuid();
-            var mrId2 = Guid.NewGuid();
+        var departmentId1 = Guid.NewGuid();
+        var departmentId2 = Guid.NewGuid();
+        var specializationId1 = Guid.NewGuid();
+        var specializationId2 = Guid.NewGuid();
+        var doctorId1 = Guid.NewGuid();
+        var doctorId2 = Guid.NewGuid();
+        var patientId1 = Guid.NewGuid();
+        var patientId2 = Guid.NewGuid();
+        var roomId1 = Guid.NewGuid();
+        var roomId2 = Guid.NewGuid();
+        var roomId3 = Guid.NewGuid();
+        var roomId4 = Guid.NewGuid();
+        var appointmentId1 = Guid.NewGuid();
+        var appointmentId2 = Guid.NewGuid();
+        var mrId1 = Guid.NewGuid();
+        var mrId2 = Guid.NewGuid();
 
         modelBuilder.Entity<Department>().HasData(
             new Department { Id = departmentId1, Name = "Cardiology" },
@@ -69,8 +75,8 @@ public class MyClinicDbContext : DbContext
             new Specialization { Id = specializationId2, Name = "Neurologist", DepartmentId = departmentId2 }
         );
 
-        modelBuilder.Entity<Patient>().HasData(
-            new Patient
+        modelBuilder.Entity<User>().HasData(
+            new User
             {
                 Id = patientId1,
                 FirstName = "John",
@@ -79,9 +85,11 @@ public class MyClinicDbContext : DbContext
                 Gender = "Male",
                 Address = "123 Main St",
                 PhoneNumber = "555-555-5555",
-                Email = "john.doe@example.com"
+                Email = "john.doe@example.com",
+                Password = "Password123",
+                Role = "Patient"
             },
-            new Patient
+            new User
             {
                 Id = patientId2,
                 FirstName = "Jane",
@@ -90,34 +98,35 @@ public class MyClinicDbContext : DbContext
                 Gender = "Female",
                 Address = "456 Elm St",
                 PhoneNumber = "555-555-5556",
-                Email = "jane.smith@example.com"
-            }
-        );
-
-        modelBuilder.Entity<Doctor>().HasData(
-            new Doctor
+                Email = "jane.smith@example.com",
+                Password = "Password123",
+                Role = "Patient"
+            },
+            new User
             {
                 Id = doctorId1,
                 FirstName = "Alice",
                 LastName = "Johnson",
                 DateOfBirth = new DateTime(1975, 2, 20),
                 Gender = "Female",
-                Email = "alice.johnson@example.com",
+                Address = "789 Oak St",
                 PhoneNumber = "555-555-5557",
-                DepartmentId = departmentId1,
-                SpecializationId = specializationId1
+                Email = "alice.johnson@example.com",
+                Password = "Password123",
+                Role = "Doctor"
             },
-            new Doctor
+            new User
             {
                 Id = doctorId2,
                 FirstName = "Bob",
                 LastName = "Brown",
                 DateOfBirth = new DateTime(1980, 8, 30),
                 Gender = "Male",
-                Email = "bob.brown@example.com",
+                Address = "321 Pine St",
                 PhoneNumber = "555-555-5558",
-                DepartmentId = departmentId1,
-                SpecializationId = specializationId2
+                Email = "bob.brown@example.com",
+                Password = "Password123",
+                Role = "Doctor"
             }
         );
 
@@ -172,6 +181,7 @@ public class MyClinicDbContext : DbContext
             }
         );
     }
+    public DbSet<User> Users { get; set; }
     public DbSet<Patient> Patients { get; set; }
     public DbSet<Doctor> Doctors { get; set; }
     public DbSet<Department> Departments { get; set; }

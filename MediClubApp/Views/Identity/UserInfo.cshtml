@@ -1,16 +1,16 @@
 ﻿@model User;
 @{
     ViewData["Title"] = "User Info Page";
+    string url = "../" + @Model.AvatarUrl;
 }
 
 
 <div class="infoContainer"> 
+    <img src="@url" alt="User Logo" class="logo">
     <div class="profile-details">
-        <p>Login: @Model.Login</p>
-        <p>Password: @Model.Password</p>
-        <p>Email: @Model.Email </p>
-        <p>Username: @Model.Username</p>
-        <p>AvatarUrl: @Model.AvatarUrl</p>
+        <p>FirstName: @Model.FirstName</p>
+        <p>LastName: @Model.LastName</p>
+        <p>Email: @Model.Email </p> 
     </div>
 </div>
 
@@ -54,3 +54,8 @@
         color: #88ff00;
     }
 </style>
+
+@section Scripts {
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+}

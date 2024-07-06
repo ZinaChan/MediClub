@@ -1,29 +1,16 @@
-﻿@model Doctor;
+﻿@model User;
 @{
-    ViewData["Title"] = "Doctor Info Page";
+    ViewData["Title"] = "User Info Page";
 }
 
 
-<div class="infoContainer">
-    @if (@Model.Gender == nameof(Gender.Male))
-    {
-        <img src="/images/anonymous-man.png" alt="User Logo" class="logo">
-    }
-    else if (@Model.Gender == nameof(Gender.Female))
-    {
-        <img src="/images/anonymous-woman.png" alt="User Logo" class="logo">
-    }
-    else
-    {
-        <img src="/images/anonymous.png" alt="User Logo" class="logo">
-    } <div class="profile-details">
-        <h2 class="accent-color">@Model.FirstName @Model.LastName</h2>
-        <p>Date of Birth: @Model.DateOfBirth.ToString("dd.MM.yyyy")</p>
-        <p>Gender: @Model.Gender</p>
-        <p>Email: @Model.Email</p>
-        <p>Phone Number: @Model.PhoneNumber</p>
-        <p>Specialization: @Model.Specialization.Name</p>
-        <p>Department Name: @Model?.Department.Name</p>
+<div class="infoContainer"> 
+    <img src=@Model.AvatarUrl alt="User Logo" class="logo">
+    <div class="profile-details">
+        <p>FirstName: @Model.FirstName</p>
+        <p>LastName: @Model.LastName</p>
+        <p>Email: @Model.Email </p>
+        <p>Password: @Model.Password</p>
     </div>
 </div>
 
@@ -32,7 +19,7 @@
         width: 80%;
         margin: auto;
         background-color: #fff;
-        padding: 20px;
+        padding: 25px;
         box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         border-radius: 10px;
         margin-top: 50px;
@@ -48,6 +35,7 @@
     }
 
     .profile-details {
+        margin-left: 30px;
         flex-grow: 1;
         padding-right: 20px;
     }

@@ -2,10 +2,12 @@ using FluentValidation;
 using MediClubApp.Models;
 using MediClubApp.Services.Base;
 using MediClubApp.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace MediClubApp.Controllers;
 
+[Authorize(Roles = "Admin")]
 [Route("[controller]")]
 public class DoctorController : Controller
 {
@@ -31,7 +33,7 @@ public class DoctorController : Controller
             Departments = await this._departmentService.GetAllDepartmentsAsync(),
             Specializations = await this._specializationService.GetAllSpecializationsAsync(),
             Doctors = await this._doctorService.GetAllDoctorsAsync()
-        }; 
+        };
         return base.View(model);
     }
 

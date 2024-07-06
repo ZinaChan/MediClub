@@ -8,6 +8,8 @@ using MediClubApp.Repositories.EFCore;
 using MediClubApp.Repositories.EFCore.Dbcontext;
 using MediClubApp.Services;
 using MediClubApp.Services.Base;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.Extensions.FileProviders;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -41,6 +43,22 @@ builder.Services.AddScoped<LogMiddleware>();
 var connectionStringSection = builder.Configuration.GetSection("Connections:MediClubDb");
 builder.Services.Configure<MsSqlConnectionOption>(config: connectionStringSection);
 
+builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+    .AddCookie(options =>
+    {
+        options.LoginPath = "/Identity/Login";
+        options.LogoutPath = "/Identity/Logout";
+    });
+
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("MediClubPolicyWithRoles", policyBuilder =>
+    {
+        policyBuilder.RequireRole("Admin", "Doctor","Patient");
+        policyBuilder.RequireAuthenticatedUser();
+    });
+});
+
 var app = builder.Build();
 
 if (!app.Environment.IsDevelopment())
@@ -50,13 +68,12 @@ if (!app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-app.UseStaticFiles();
-
-app.UseRouting();
-
-app.UseAuthorization();
+app.UseStaticFiles(); 
+app.UseRouting(); 
 
 app.UseMiddleware<LogMiddleware>();
+app.UseAuthentication();
+app.UseAuthorization();
 
 app.MapControllerRoute(
     name: "default",
