@@ -16,9 +16,7 @@ public class IdentityController : Controller
 {
     public IUserService _userService;
     private readonly IDataProtector _dataProtector;
-    private readonly IValidator<User> _userValidator;
-    private User _currentUser;
-
+    private readonly IValidator<User> _userValidator; 
     public IdentityController(IValidator<User> userValidator, IUserService userService, IDataProtectionProvider dataProtectionProvider)
     {
         this._userService = userService;
@@ -82,9 +80,7 @@ public class IdentityController : Controller
             if (!string.IsNullOrWhiteSpace(loginDto.ReturnUrl))
             {
                 return base.Redirect(loginDto.ReturnUrl);
-            }
-
-            _currentUser = foundUser;
+            } 
 
             return base.RedirectToAction(controllerName: "Home", actionName: "Index");
         }
@@ -153,8 +149,7 @@ public class IdentityController : Controller
     {
 
         await base.HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
-        _currentUser = new();
-        return base.RedirectToRoute("LoginView", new
+         return base.RedirectToRoute("LoginView", new
         {
             ReturnUrl
         });
