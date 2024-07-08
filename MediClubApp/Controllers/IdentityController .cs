@@ -16,7 +16,7 @@ public class IdentityController : Controller
 {
     public IUserService _userService;
     private readonly IDataProtector _dataProtector;
-    private readonly IValidator<User> _userValidator; 
+    private readonly IValidator<User> _userValidator;
     public IdentityController(IValidator<User> userValidator, IUserService userService, IDataProtectionProvider dataProtectionProvider)
     {
         this._userService = userService;
@@ -80,9 +80,9 @@ public class IdentityController : Controller
             if (!string.IsNullOrWhiteSpace(loginDto.ReturnUrl))
             {
                 return base.Redirect(loginDto.ReturnUrl);
-            } 
+            }
 
-            return base.RedirectToAction(controllerName: "Home", actionName: "Index");
+            return base.RedirectToAction(controllerName: "Patient", actionName: "Index");
         }
         catch (System.Exception ex)
         {
@@ -143,13 +143,14 @@ public class IdentityController : Controller
         return base.RedirectToRoute("LoginView");
     }
 
+    [Authorize]
     [HttpGet]
     [Route("[action]", Name = "LogOut")]
     public async Task<IActionResult> Logout(string? ReturnUrl)
     {
 
         await base.HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
-         return base.RedirectToRoute("LoginView", new
+        return base.RedirectToRoute("LoginView", new
         {
             ReturnUrl
         });

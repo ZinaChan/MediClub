@@ -2,10 +2,12 @@ using FluentValidation;
 using MediClubApp.Models;
 using MediClubApp.Services.Base;
 using MediClubApp.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace MediClubApp.Controllers;
 
+[Authorize]
 [Route("[controller]")]
 public class MedicalRecordController : Controller
 {
@@ -31,7 +33,7 @@ public class MedicalRecordController : Controller
             Patients = await this._patientService.GetAllPatientsAsync(),
             Doctors = await this._doctorService.GetAllDoctorsAsync(),
             MedicalRecords = await this._medicalRecordService.GetAllMedicalRecordsAsync()
-        }; 
+        };
         return base.View(model);
     }
 
@@ -88,6 +90,8 @@ public class MedicalRecordController : Controller
         }
     }
 
+
+    [Authorize(Roles = "Admin")]
     [HttpGet]
     [Route("[action]", Name = "CreateMedicalRecordPage")]
     public async Task<IActionResult> Create()
@@ -105,6 +109,7 @@ public class MedicalRecordController : Controller
         return base.View(model: model);
     }
 
+    [Authorize(Roles = "Admin")]
     [HttpPost(Name = "CreateMedicalRecordApi")]
     public async Task<IActionResult> Create(MedicalRecordViewModel model)
     {
@@ -137,6 +142,7 @@ public class MedicalRecordController : Controller
     }
 
 
+    [Authorize(Roles = "Admin")]
     [HttpPut]
     public async Task<IActionResult> UpdateMedicalRecord([FromBody] MedicalRecord medicalRecord)
     {
@@ -151,6 +157,7 @@ public class MedicalRecordController : Controller
         }
     }
 
+    [Authorize(Roles = "Admin")]
     [HttpDelete("{medicalRecordId:Guid}")]
     public async Task<IActionResult> DeleteMedicalRecord(Guid medicalRecordId)
     {

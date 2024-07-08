@@ -1,0 +1,263 @@
+﻿@{
+    var IsAuthenticated = base.User.Identity?.IsAuthenticated ?? false;
+    var IsAdmin = base.User.IsInRole("Admin");
+    var IsDoctor = base.User.IsInRole("Doctor");
+
+    var firstnameCookie = base.User.Claims.FirstOrDefault(claim => claim.Type == ClaimTypes.Name);
+}
+
+@if (IsAuthenticated)
+{
+    <!DOCTYPE html>
+    <html lang="en">
+
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>@ViewData["Title"] - MediClubApp</title>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css" />
+        <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700;900&display=swap" rel="stylesheet">
+        <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+        <link rel="stylesheet" href="~/MediClubApp.styles.css" asp-append-version="true" />
+        <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+        <link rel="stylesheet" href="~/lib/font-awesome/css/font-awesome.css" />
+        <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+        <link rel="stylesheet" href="~/css/style.css">
+        <link href="~/css/style.css" rel="stylesheet" />
+        <link href="~/css/responsive.css" rel="stylesheet" />
+    </head>
+
+    <body>
+        @if (IsAdmin)
+        {
+            <header>
+                <div class="hero_area2">
+                    <div class="hero_bg_box" style="background-color: black;">
+                        <div class="container">
+                            <nav class="navbar navbar-expand-lg custom_nav-container">
+                                <a class="navbar-brand" asp-controller="Home">
+                                    <span> MediClub </span>
+                                </a>
+
+                                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                                    <ul class="navbar-nav">
+                                        <li class="nav-item active">
+                                            <a class="nav-link" asp-controller="Home" asp-action="Index">Home</a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link" asp-controller="Dashboard" asp-action="Index">Dashboard</a>
+                                        </li> 
+                                        <li class="nav-item dropdown">
+                                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
+                                                aria-expanded="false">
+                                                Dashboard
+                                            </a>
+                                            <ul class="dropdown-menu">
+                                                <li>
+                                                    <label for="searchInput" style="margin: 13px">Users</label>
+                                                    <hr class="dropdown-divider">
+                                                </li>
+                                                <li><a class="dropdown-item" asp-controller="User" asp-action="Index">User</a> </li>
+                                                <li><a class="dropdown-item" asp-controller="Doctor" asp-action="Index">Doctor</a> </li>
+                                                <li><a class="dropdown-item" asp-controller="Patient" asp-action="Index">Patient</a> </li>
+                                                <li>
+                                                    <hr class="dropdown-divider">
+                                                    <label for="searchInput" style="margin: 13px">Clinic</label>
+                                                    <hr class="dropdown-divider">
+                                                </li>
+                                                <li><a class="dropdown-item" asp-controller="Department" asp-action="Index">Department</a> </li>
+                                                <li><a class="dropdown-item" asp-controller="Specialization" asp-action="Index"> Specialization</a> </li>
+                                                <li><a class="dropdown-item" asp-controller="Room" asp-action="Index">Room</a> </li>
+                                                <li>
+                                                    <hr class="dropdown-divider">
+                                                    <label for="searchInput" style="margin: 13px">Record</label>
+                                                    <hr class="dropdown-divider">
+                                                </li>
+                                                <li><a class="dropdown-item" asp-controller="MedicalRecord" asp-action="Index">MedicalRecord</a> </li>
+                                                <li><a class="dropdown-item" asp-controller="Appointment" asp-action="Index"> Appointment</a> </li> 
+                                            </ul>
+                                        </li>
+                                        <li class="nav-item dropdown">
+                                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
+                                                aria-expanded="false">
+                                                Welcome, @firstnameCookie.Value
+                                            </a>
+                                            <ul class="dropdown-menu">
+                                                <li><a class="dropdown-item" asp-route="UserInfo">Account</a> </li>
+                                                <li>
+                                                    <hr class="dropdown-divider">
+                                                </li>
+                                                <li><a class="dropdown-item" asp-route="LogOut">Logout</a></li>
+                                            </ul>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </nav>
+                        </div>
+                    </div>
+                </div>
+            </header>
+        }
+        else if (IsDoctor)
+        {
+            <header>
+                <div class="hero_area2">
+                    <div class="hero_bg_box" style="background-color: #174a80;">
+                        <div class="container">
+                            <nav class="navbar navbar-expand-lg custom_nav-container">
+                                <a class="navbar-brand" asp-controller="Home">
+                                    <span> MediClub </span>
+                                </a>
+
+                                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                                    <ul class="navbar-nav">
+                                        <li class="nav-item active">
+                                            <a class="nav-link" asp-controller="Home" asp-action="Index">Home</a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link" asp-controller="Patient" asp-action="Index">Patients</a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link" asp-controller="Department" asp-action="Index">Department</a>
+                                        </li>
+                                        <li class="nav-item dropdown">
+                                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
+                                                aria-expanded="false">
+                                                Welcome, @firstnameCookie.Value
+                                            </a>
+                                            <ul class="dropdown-menu">
+                                                <li><a class="dropdown-item" asp-route="UserInfo">Account</a> </li>
+                                                <li>
+                                                    <hr class="dropdown-divider">
+                                                </li>
+                                                <li><a class="dropdown-item" asp-route="LogOut">Logout</a></li>
+                                            </ul>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </nav>
+                        </div>
+                    </div>
+                </div>
+            </header>
+        }
+        else
+        {
+            <header>
+                <div class="hero_area2">
+                    <div class="hero_bg_box" style="background-color: #178066;">
+                        <div class="container">
+                            <nav class="navbar navbar-expand-lg custom_nav-container">
+                                <a class="navbar-brand" asp-controller="Home">
+                                    <span> MediClub </span>
+                                </a>
+
+                                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                                    <ul class="navbar-nav">
+                                        <li class="nav-item active">
+                                            <a class="nav-link" asp-controller="Home" asp-action="Index">Home</a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link" asp-controller="Doctor" asp-action="Index">Doctor</a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link" asp-controller="Department" asp-action="Index">Department</a>
+                                        </li>
+                                        <li class="nav-item dropdown">
+                                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
+                                                aria-expanded="false">
+                                                Welcome, @firstnameCookie.Value
+                                            </a>
+                                            <ul class="dropdown-menu">
+                                                <li><a class="dropdown-item" asp-route="UserInfo">Account</a> </li>
+                                                <li>
+                                                    <hr class="dropdown-divider">
+                                                </li>
+                                                <li><a class="dropdown-item" asp-route="LogOut">Logout</a></li>
+                                            </ul>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </nav>
+                        </div>
+                    </div>
+                </div>
+            </header>
+        }
+
+        <div class="container">
+            <main role="main" class="pb-3">
+                @RenderBody()
+            </main>
+        </div>
+
+        <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+        <script type="text/javascript" src="~/js/jquery-3.4.1.min.js"></script>
+        <script type="text/javascript" src="~/js/custom.js"></script>
+        <script src="~/lib/jquery/dist/jquery.min.js"></script>
+
+        @await RenderSectionAsync("Scripts", required: false)
+    </body>
+
+    <footer class="footer_section">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6 col-lg-6 footer_col">
+                    <div class="footer_contact">
+                        <div class="contact_link_box">
+                            <a href="">
+                                <i class="fa fa-map-marker" aria-hidden="true"></i>
+                                <span>Location</span>
+                            </a>
+                            <a href="">
+                                <i class="fa fa-phone" aria-hidden="true"></i>
+                                <span>Call +9940514556860</span>
+                            </a>
+                            <a href="">
+                                <i class="fa fa-envelope" aria-hidden="true"></i>
+                                <span>mahammadova03@gmail.com</span>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="footer_social">
+                        <a href="">
+                            <i class="fa fa-facebook" aria-hidden="true"></i>
+                        </a>
+                        <a href="">
+                            <i class="fa fa-twitter" aria-hidden="true"></i>
+                        </a>
+                        <a href="">
+                            <i class="fa fa-linkedin" aria-hidden="true"></i>
+                        </a>
+                        <a href="">
+                            <i class="fa fa-instagram" aria-hidden="true"></i>
+                        </a>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-6 footer_col">
+                    <div class="footer_detail">
+                        <h4>About</h4>
+                        <p>Beatae provident nobis mollitia magnam voluptatum, unde dicta facilis minima veniam
+                            corporis laudantium alias tenetur eveniet illum reprehenderit fugit a delectus officiis
+                            blanditiis ea.</p>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-6 footer_col">
+                    <div class="container">
+                        &copy; 2024 - MediClubApp
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    </html>
+
+}
+
+<style>
+    main {
+        min-height: 100vh;
+        margin: 11px;
+    }
+</style>

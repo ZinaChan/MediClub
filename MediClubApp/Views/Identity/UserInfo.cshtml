@@ -1,16 +1,18 @@
 ﻿@model User;
 @{
+    Layout = "~/Views/Shared/_LayoutAuth.cshtml";
+
     ViewData["Title"] = "User Info Page";
     string url = "../" + @Model.AvatarUrl;
 }
 
 
-<div class="infoContainer"> 
+<div class="infoContainer">
     <img src="@url" alt="User Logo" class="logo">
     <div class="profile-details">
         <p>FirstName: @Model.FirstName</p>
         <p>LastName: @Model.LastName</p>
-        <p>Email: @Model.Email </p> 
+        <p>Email: @Model.Email </p>
     </div>
 </div>
 

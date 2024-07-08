@@ -2,10 +2,12 @@ using FluentValidation;
 using MediClubApp.Models;
 using MediClubApp.Services.Base;
 using MediClubApp.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace MediClubApp.Controllers;
 
+[Authorize]
 [Route("[controller]")]
 public class AppointmentController : Controller
 {
@@ -34,7 +36,7 @@ public class AppointmentController : Controller
             Doctors = await this._doctorService.GetAllDoctorsAsync(),
             Patients = await this._patientService.GetAllPatientsAsync(),
             Rooms = await this._roomService.GetAllRoomsAsync()
-        }; 
+        };
         return base.View(model);
     }
 
@@ -93,6 +95,7 @@ public class AppointmentController : Controller
         }
     }
 
+    [Authorize(Roles = "Admin")]
     [HttpGet]
     [Route("[action]", Name = "CreateAppointmentPage")]
     public async Task<IActionResult> Create()
@@ -112,6 +115,7 @@ public class AppointmentController : Controller
         return base.View(model);
     }
 
+    [Authorize(Roles = "Admin")]
     [HttpPost(Name = "CreateAppointmentApi")]
     public async Task<IActionResult> Create(AppointmentViewModel model)
     {
@@ -148,6 +152,7 @@ public class AppointmentController : Controller
         }
     }
 
+    [Authorize(Roles = "Admin")]
     [HttpPut]
     public async Task<IActionResult> UpdateAppointment([FromBody] Appointment appointment)
     {
@@ -162,6 +167,7 @@ public class AppointmentController : Controller
         }
     }
 
+    [Authorize(Roles = "Admin")]
     [HttpDelete("{appointmentId:Guid}")]
     public async Task<IActionResult> DeleteAppointment(Guid appointmentId)
     {

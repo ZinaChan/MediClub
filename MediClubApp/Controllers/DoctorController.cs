@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace MediClubApp.Controllers;
 
-[Authorize(Roles = "Admin")]
+[Authorize]
 [Route("[controller]")]
 public class DoctorController : Controller
 {
@@ -90,6 +90,7 @@ public class DoctorController : Controller
         }
     }
 
+    [Authorize(Roles = "Admin")]
     [HttpGet]
     [Route("[action]", Name = "CreateDoctorPage")]
     public async Task<IActionResult> Create()
@@ -104,6 +105,7 @@ public class DoctorController : Controller
         return base.View(model: model);
     }
 
+    [Authorize(Roles = "Admin")]
     [HttpPost(Name = "CreateDoctorApi")]
     public async Task<IActionResult> Create(DoctorViewModel model)
     {
@@ -135,6 +137,7 @@ public class DoctorController : Controller
         }
     }
 
+    [Authorize(Roles = "Admin")]
     [HttpPut]
     public async Task<IActionResult> UpdateDoctor([FromBody] Doctor doctor)
     {
@@ -149,6 +152,7 @@ public class DoctorController : Controller
         }
     }
 
+    [Authorize(Roles = "Admin")]
     [HttpDelete("{doctorId:Guid}")]
     public async Task<IActionResult> DeleteDoctor(Guid doctorId)
     {

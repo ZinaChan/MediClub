@@ -2,10 +2,12 @@ using FluentValidation;
 using MediClubApp.Models;
 using MediClubApp.Services.Base;
 using MediClubApp.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace MediClubApp.Controllers;
 
+[Authorize]
 [Route("[controller]")]
 public class SpecializationController : Controller
 {
@@ -28,8 +30,8 @@ public class SpecializationController : Controller
         {
             Departments = await this._departmenttService.GetAllDepartmentsAsync(),
             Specializations = await this._specializationService.GetAllSpecializationsAsync()
-        }; 
-        return base.View(model); 
+        };
+        return base.View(model);
     }
 
     [HttpGet]
@@ -83,6 +85,8 @@ public class SpecializationController : Controller
         }
     }
 
+
+    [Authorize(Roles = "Admin")]
     [HttpGet]
     [Route("[action]", Name = "CreateSpecializationPage")]
     public async Task<IActionResult> Create()
@@ -98,6 +102,7 @@ public class SpecializationController : Controller
         return base.View(model);
     }
 
+    [Authorize(Roles = "Admin")]
     [HttpPost(Name = "CreateSpecializationApi")]
     public async Task<IActionResult> Create(SpecializationViewModel model)
     {
@@ -128,6 +133,7 @@ public class SpecializationController : Controller
         }
     }
 
+    [Authorize(Roles = "Admin")]
     [HttpPut]
     public async Task<IActionResult> UpdateSpecialization([FromBody] Specialization specialization)
     {
@@ -142,6 +148,7 @@ public class SpecializationController : Controller
         }
     }
 
+    [Authorize(Roles = "Admin")]
     [HttpDelete("{specializationId:Guid}")]
     public async Task<IActionResult> DeleteSpecialization(Guid specializationId)
     {

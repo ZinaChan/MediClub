@@ -2,10 +2,12 @@ using FluentValidation;
 using MediClubApp.Models;
 using MediClubApp.Services.Base;
 using MediClubApp.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace MediClubApp.Controllers;
 
+[Authorize]
 [Route("[controller]")]
 public class RoomController : Controller
 {
@@ -28,7 +30,7 @@ public class RoomController : Controller
         {
             Departments = await this._departmenttService.GetAllDepartmentsAsync(),
             Rooms = await this._roomService.GetAllRoomsAsync()
-        }; 
+        };
         return base.View(model);
     }
 
@@ -83,6 +85,7 @@ public class RoomController : Controller
         }
     }
 
+    [Authorize(Roles = "Admin")]
     [HttpGet]
     [Route("[action]", Name = "CreateRoomPage")]
     public async Task<IActionResult> Create()
@@ -98,6 +101,7 @@ public class RoomController : Controller
         return base.View(model);
     }
 
+    [Authorize(Roles = "Admin")]
     [HttpPost(Name = "CreateRoomApi")]
     public async Task<IActionResult> Create(RoomViewModel model)
     {
@@ -129,6 +133,7 @@ public class RoomController : Controller
     }
 
     [HttpPut]
+    [Authorize(Roles = "Admin")]
     public async Task<IActionResult> UpdateRoom([FromBody] Room room)
     {
         try
@@ -142,6 +147,7 @@ public class RoomController : Controller
         }
     }
 
+    [Authorize(Roles = "Admin")]
     [HttpDelete("{roomId:Guid}")]
     public async Task<IActionResult> DeleteRoom(Guid roomId)
     {

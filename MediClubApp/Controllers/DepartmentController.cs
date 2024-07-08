@@ -2,10 +2,12 @@ using FluentValidation;
 using MediClubApp.Models;
 using MediClubApp.Services.Base;
 using MediClubApp.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace MediClubApp.Controllers;
 
+[Authorize]
 [Route("[controller]")]
 public class DepartmentController : Controller
 {
@@ -76,6 +78,7 @@ public class DepartmentController : Controller
         }
     }
 
+    [Authorize(Roles = "Admin")]
     [HttpGet]
     [Route("[action]", Name = "CreateDepartmentPage")]
     public IActionResult Create()
@@ -83,6 +86,7 @@ public class DepartmentController : Controller
         return base.View();
     }
 
+    [Authorize(Roles = "Admin")]
     [HttpPost(Name = "CreateDepartmentApi")]
     public async Task<IActionResult> Create(Department department)
     {
@@ -107,6 +111,7 @@ public class DepartmentController : Controller
         }
     }
 
+    [Authorize(Roles = "Admin")]
     [HttpPut]
     public async Task<IActionResult> UpdateDepartment([FromBody] Department department)
     {
@@ -121,6 +126,7 @@ public class DepartmentController : Controller
         }
     }
 
+    [Authorize(Roles = "Admin")]
     [HttpDelete("{departmentId:Guid}")]
     public async Task<IActionResult> DeleteDepartment(Guid departmentId)
     {

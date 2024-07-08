@@ -1,4 +1,4 @@
-﻿@model IEnumerable<User>;
+﻿@model DashboardViewModel;
 @{
     Layout = "~/Views/Shared/_LayoutAuth.cshtml";
     ViewData["Title"] = "User Page";
@@ -6,11 +6,34 @@
 
 <h1> Users List</h1>
 <hr />
+<div class="column justify-content-center">
+    <div class="row-12 row-md-8">
+        <div class="input-group mb-3">
+            <input type="text" id="searchInput" class="form-control" placeholder="Search The smth..." autocomplete="off"
+                autofocus="autofocus" required>
+            <button id="searchButton" class="btn btn-primary">
+                <span id="searchText">Search</span>
+                @* <div id="loadingSpinner" class="spinner-border spinner-border-sm btn-search-spinner" role="status">
+                </div> *@
+            </button>
+        </div>
+        @* <div class="input-group mb-1">
+        <select class="form-select ml-2 m-1">
+        <option value="title">Sort by Title</option>
+        <option value="date">Sort by Date</option>
+        </select>
+        <div class="btn-group ml-2 m-1" role="group" aria-label="View toggle">
+        <button type="button" class="btn btn-outline-secondary" id="rowViewButton">Row</button>
+        <button type="button" class="btn btn-outline-secondary active" id="columnViewButton">Column</button>
+        </div>
+        </div> *@
+    </div>
+</div>
 <a asp-route="CreateUserPage"> <button class="btn-modern">Create new User</button> </a>
 <br />
 <br />
 
-@if (!Model.Any())
+@if (!Model.Users.Any())
 {
     <div class="no-users">
         <img src="/images/sad-star.png" alt="No users" class="sad-face" />
@@ -20,9 +43,8 @@
 else
 {
     <ol class="card-list">
-        @foreach (var user in Model)
+        @foreach (var user in Model.Users)
         {
-
             <li class="user-item">
                 <a class="nav-link" asp-controller="User" asp-action="UserInfo" asp-route-userId="@user?.Id">
                     <div class="user-details">
@@ -43,35 +65,35 @@ else
     </ol>
 }
 
-<div id="updateForm" class="update-form" style="display:none;">
-    <h3>Update User</h3>
-    <input type="hidden" id="userId">
-    <div>
-        <label for="newLogin">Login:</label>
-        <input type="text" id="newLogin">
-    </div>
-    <div>
-        <label for="newPassword">Password:</label>
-        <input type="text" id="newPassword">
-    </div>
-    <div>
-        <label for="newEmail">Email:</label>
-        <input type="email" id="newEmail">
-    </div>
-    <div>
-        <label for="newUsername">Username:</label>
-        <input type="text" id="newUsername">
-    </div>
-    <div>
-        <label for="newAvatarUrl">AvatarUrl:</label>
-        <input type="text" id="newAvatarUrl">
-    </div>
-    <br />
-    <div class="user-actions">
-        <button onclick="updateUser()">Save</button>
-        <button onclick="hideUpdateForm()">Cancel</button>
-    </div>
+@* <div id="updateForm" class="update-form" style="display:none;">
+<h3>Update User</h3>
+<input type="hidden" id="userId">
+<div>
+<label for="newLogin">Login:</label>
+<input type="text" id="newLogin">
 </div>
+<div>
+<label for="newPassword">Password:</label>
+<input type="text" id="newPassword">
+</div>
+<div>
+<label for="newEmail">Email:</label>
+<input type="email" id="newEmail">
+</div>
+<div>
+<label for="newUsername">Username:</label>
+<input type="text" id="newUsername">
+</div>
+<div>
+<label for="newAvatarUrl">AvatarUrl:</label>
+<input type="text" id="newAvatarUrl">
+</div>
+<br />
+<div class="user-actions">
+<button onclick="updateUser()">Save</button>
+<button onclick="hideUpdateForm()">Cancel</button>
+</div>
+</div> *@
 
 
 <script>

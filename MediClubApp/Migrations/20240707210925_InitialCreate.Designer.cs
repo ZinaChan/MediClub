@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MediClubApp.Migrations
 {
     [DbContext(typeof(MyClinicDbContext))]
-    [Migration("20240706162137_Initial")]
-    partial class Initial
+    [Migration("20240707210925_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

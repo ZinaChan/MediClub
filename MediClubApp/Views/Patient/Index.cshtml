@@ -1,5 +1,6 @@
 ﻿@model IEnumerable<Patient>;
 @{
+    Layout = "~/Views/Shared/_LayoutAuth.cshtml";
     ViewData["Title"] = "Patient Page";
 }
 
@@ -32,7 +33,6 @@ else
                         <p><strong>Email:</strong> @(patient?.Email ?? "UNKNOWN")</p>
                         <p><strong>Phone Number:</strong> @(patient?.PhoneNumber ?? "UNKNOWN")</p>
                         <p><strong>Address:</strong> @(patient?.Address ?? "UNKNOWN")</p>
-                        @* <p><strong>MedicalHistory:</strong> @(patient?.MedicalHistory ?? "UNKNOWN")</p> *@
                     </div>
                 </a>
                 <br>
@@ -84,10 +84,6 @@ else
         <label for="newPhoneNumber">Phone Number:</label>
         <input type="text" id="newPhoneNumber">
     </div>
-    @* <div>
-    <label for="newMedicalHistory">MedicalHistory:</label>
-    <input type="text" id="newMedicalHistory">
-    </div> *@
     <br />
     <div class="patient-actions">
         <button onclick="updatePatient()">Save</button>
@@ -125,8 +121,7 @@ else
         document.getElementById('newEmail').value = data.email;
         document.getElementById('newPhoneNumber').value = data.phoneNumber;
         document.getElementById('newAddress').value = data.address;
-    @* document.getElementById('newMedicalHistory').value = data.medicalHistory; *@
-            document.getElementById('updateForm').style.display = 'block';
+        document.getElementById('updateForm').style.display = 'block';
     }
 
     function hideUpdateForm() {
@@ -142,7 +137,6 @@ else
         const email = document.getElementById('newEmail').value;
         const phoneNumber = document.getElementById('newPhoneNumber').value;
         const address = document.getElementById('newAddress').value;
-    @* const medicalHistory = document.getElementById('newMedicalHistory').value; *@
 
         const updatedPatient = {
             id: patientId,
@@ -153,27 +147,26 @@ else
             address: address,
             phoneNumber: phoneNumber,
             email: email,
-    @* medicalHistory: medicalHistory *@
         };
 
-    fetch(`/Patient`, {
-        method: 'PUT',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(updatedPatient)
-    })
-        .then(response => {
-            if (response.ok) {
-                alert('Patient updated successfully!');
-                hideUpdateForm();
-                window.location.reload();
-
-            } else {
-                alert('Failed to update patient.');
-            }
+        fetch(`/Patient`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(updatedPatient)
         })
-        .catch(error => console.error('Error updating patient:', error));
+            .then(response => {
+                if (response.ok) {
+                    alert('Patient updated successfully!');
+                    hideUpdateForm();
+                    window.location.reload();
+
+                } else {
+                    alert('Failed to update patient.');
+                }
+            })
+            .catch(error => console.error('Error updating patient:', error));
     }
 
     function deletePatient(id) {

@@ -1,10 +1,22 @@
 ﻿@model IEnumerable<Department>;
 @{
+    Layout = "~/Views/Shared/_LayoutAuth.cshtml";
     ViewData["Title"] = "Department Page";
 }
 
 <h1> Departments List</h1>
 <hr />
+<div class="column justify-content-center">
+    <div class="row-12 row-md-8">
+        <div class="input-group mb-3">
+            <input type="text" id="searchInput" class="form-control" placeholder="Search The smth..." autocomplete="off"
+                autofocus="autofocus" required>
+            <button id="searchButton" class="btn btn-primary">
+                <span id="searchText">Search</span>
+            </button>
+        </div>
+    </div>
+</div>
 <a asp-route="CreateDepartmentPage"> <button class="btn-modern">Create new Department</button> </a>
 <br />
 <br />
@@ -36,7 +48,6 @@ else
                     <button class="delete-btn btn-danger" onclick="deleteDepartment('@department!.Id')">Delete</button>
                 </div>
             </li>
-            <hr class="divider" />
         }
     </ol>
 }
@@ -46,7 +57,7 @@ else
     <div>
         <label for="newName">Department Name:</label>
         <input type="text" id="newName">
-    </div> 
+    </div>
     <div class="department-actions">
         <button onclick="updateDepartment()">Save</button>
         <button onclick="hideUpdateForm()">Cancel</button>
@@ -54,6 +65,33 @@ else
 </div>
 
 <script>
+
+    document.getElementById('searchButton').addEventListener('click', function () {
+        filterDepartments();
+    }); 
+
+    document.getElementById('searchInput').addEventListener('keyup', function (event) {
+        if (event.key === 'Enter') {
+            filterDepartments();
+        }
+    });
+    document.getElementById('searchInput').addEventListener('change', function (event) {
+            filterDepartments();
+    });
+
+    function filterDepartments() {
+        var input = document.getElementById('searchInput').value.toLowerCase();
+        var items = document.querySelectorAll('.department-item');
+
+        items.forEach(function (item) {
+            var departmentName = item.querySelector('.department-details p').textContent.split(':')[1]?.trim().toLowerCase() || '';
+            if (departmentName.includes(input)) {
+                item.style.display = '';
+            } else {
+                item.style.display = 'none';
+            }
+        });
+    }
     function showUpdateForm(id) {
         fetchDepartmentAndUpdateForm(id);
     }
@@ -75,7 +113,7 @@ else
     function updateFormWithDepartmentData(data) {
         document.getElementById('departmentId').value = data.id;
         document.getElementById('newName').value = data.name;
-         document.getElementById('updateForm').style.display = 'block';
+        document.getElementById('updateForm').style.display = 'block';
     }
 
     function hideUpdateForm() {

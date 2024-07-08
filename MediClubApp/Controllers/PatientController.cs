@@ -2,10 +2,13 @@ using System.Text.Json;
 using FluentValidation;
 using MediClubApp.Models;
 using MediClubApp.Services.Base;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace MediClubApp.Controllers;
 
+
+[Authorize]
 [Route("[controller]")]
 public class PatientController : Controller
 {
@@ -19,7 +22,7 @@ public class PatientController : Controller
     }
 
     [HttpGet]
-    [Route("/[controller]")]
+    [Route("/[controller]", Name = "Services")]
     public async Task<IActionResult> Index()
     {
         var patients = await this._patientService.GetAllPatientsAsync();
@@ -76,6 +79,7 @@ public class PatientController : Controller
         }
     }
 
+    [Authorize(Roles = "Admin")]
     [HttpGet]
     [Route("[action]", Name = "CreatePatientPage")]
     public IActionResult Create()
@@ -83,6 +87,7 @@ public class PatientController : Controller
         return base.View();
     }
 
+    [Authorize(Roles = "Admin")]
     [HttpPost]
     [Route("[action]", Name = "CreatePatientApi")]
     public async Task<IActionResult> Create(Patient newPatient)
@@ -109,6 +114,8 @@ public class PatientController : Controller
         }
     }
 
+
+    [Authorize(Roles = "Admin")]
     [HttpPut]
     public async Task<IActionResult> UpdateDoctor([FromBody] Patient patient)
     {
@@ -123,6 +130,7 @@ public class PatientController : Controller
         }
     }
 
+    [Authorize(Roles = "Admin")]
     [HttpDelete("{patientId:Guid}")]
     public async Task<IActionResult> DeleteDoctor(Guid patientId)
     {
@@ -137,3 +145,4 @@ public class PatientController : Controller
         }
     }
 }
+

@@ -1,10 +1,9 @@
 ﻿@model DoctorViewModel;
 @{
-    Layout = "~/Views/Shared/_LayoutAuth.cshtml";
-
     ViewData["Title"] = "Doctor Page";
 }
 
+@* Link to create view *@
 <h1> Doctors List</h1>
 <hr />
 <a asp-route="CreateDoctorPage"> <button class="btn-modern">Create new Doctor</button> </a>
@@ -54,7 +53,7 @@ else
     <input type="hidden" id="doctorId">
     <div>
         <label for="newFirstName">First Name:</label>
-        <input type="text" id="newFirstName">
+        <input type="text" id="newFirstName"> 
     </div>
     <div>
         <label for="newLastName">Last Name:</label>
