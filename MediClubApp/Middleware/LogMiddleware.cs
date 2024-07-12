@@ -11,13 +11,14 @@ public class LogMiddleware : IMiddleware
     public LogMiddleware(ILogService logService, IConfiguration configuration)
     {
         _logService = logService;
-        isLogging = configuration.GetSection("LogOptions:isLogging")?.Get<bool>() is null ? false : true;
+        isLogging = configuration.GetSection("LogOptions:isLogging")?.Get<bool>() ?? false;
     }
     public async Task InvokeAsync(HttpContext context, RequestDelegate next)
     {
         if (!isLogging)
         {
             await next.Invoke(context: context);
+            return;
         }
 
         var newLog = new Log();
@@ -45,7 +46,7 @@ public class LogMiddleware : IMiddleware
             System.Console.WriteLine(ex.Message);
         }
     }
-    
+
     private async void InitializeLog(HttpContext context, Log log)
     {
         if (log is null)
@@ -99,4 +100,3 @@ public class LogMiddleware : IMiddleware
     }
 }
 
- 

@@ -1,0 +1,110 @@
+@model Patient
+@{
+    ViewData["Title"] = "Create Patient Page";
+}
+
+<form asp-route="CreatePatientApi" method="post">
+   <div>
+        <label asp-for="FirstName">First Name:</label>
+        <input asp-for="FirstName" type="text"  />
+        <span class="text-danger" asp-validation-for="FirstName"></span>
+    </div>
+    <div>
+        <label asp-for="LastName">Last Name:</label>
+        <input asp-for="LastName" type="text"  />
+        <span class="text-danger" asp-validation-for="LastName"></span>
+    </div>
+    <div>
+        <label asp-for="DateOfBirth">Date of Birth:</label>
+        <input asp-for="DateOfBirth" type="date"  />
+        <span class="text-danger" asp-validation-for="DateOfBirth"></span>
+    </div>
+    <div>
+        <label asp-for="Gender">Gender:</label>
+        <select asp-for="Gender" >
+            <option value="">Select Gender</option>
+
+            @foreach (Gender gender in Enum.GetValues(typeof(Gender)))
+            {
+                <option value="@gender">@gender</option>
+            }
+        </select>
+        <span class="text-danger" asp-validation-for="Gender"></span>
+    </div>
+    <div>
+        <label asp-for="Email">Email:</label>
+        <input asp-for="Email" type="email"  />
+        <span class="text-danger" asp-validation-for="Email"></span>
+    </div>
+    <div>
+        <label asp-for="PhoneNumber">Phone Number:</label>
+        <input asp-for="PhoneNumber" type="tel"  />
+        <br/>
+        <span class="text-danger" asp-validation-for="PhoneNumber"></span>
+    </div>
+     <div>
+        <label asp-for="Address">Address:</label>
+        <input asp-for="Address" type="tel"  />
+        <br/>
+        <span class="text-danger" asp-validation-for="Address"></span>
+    </div> 
+    @* <div>
+        <label asp-for="MedicalHistory">Medical History:</label>
+        <textarea asp-for="MedicalHistory" rows="4"></textarea>
+    </div> *@
+    <button type="submit">Add Patient</button>
+</form>
+
+<style> 
+     h1 {
+        color: #333;
+    }
+
+    form {
+        background-color: #fff;
+        padding: 20px;
+        border-radius: 5px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        margin-bottom: 20px;
+    }
+
+    form div {
+        margin-bottom: 15px;
+    }
+
+    label {
+        display: block;
+        margin-bottom: 5px;
+        font-weight: bold;
+    }
+
+    input[type="text"],
+    input[type="date"],
+    input[type="email"],
+    select,
+    textarea {
+        width: 100%;
+        padding: 8px;
+        box-sizing: border-box;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+    }
+
+    button {
+        background-color: #5cb85c;
+        color: white;
+        border: none;
+        padding: 10px 15px;
+        border-radius: 4px;
+        cursor: pointer;
+    }
+
+    button:hover {
+        background-color: #4cae4c;
+    }
+</style>
+
+@section Scripts {
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+}

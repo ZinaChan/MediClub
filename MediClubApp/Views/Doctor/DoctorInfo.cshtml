@@ -22,8 +22,8 @@
         <p>Gender: @Model.Gender</p>
         <p>Email: @Model.Email</p>
         <p>Phone Number: @Model.PhoneNumber</p>
-        <p>Specialization: @Model.Specialization</p>
-        <p>Department: @Model.Department</p>
+        <p>Specialization: @Model.Specialization.Name</p>
+        <p>Department Name: @Model?.Department.Name</p>
     </div>
 </div>
 
@@ -66,3 +66,8 @@
         color: #88ff00;
     }
 </style>
+
+@section Scripts {
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+}

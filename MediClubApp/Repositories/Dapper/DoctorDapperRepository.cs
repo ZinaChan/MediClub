@@ -15,7 +15,7 @@ public class DoctorDapperRepository : IDoctorRepository
         this._connectionStringOption = options.Value;
     }
 
-    public async Task<Doctor?> GetAsync(int id)
+    public async Task<Doctor?> GetAsync(Guid id)
     {
         using var connection = new SqlConnection(this._connectionStringOption.ConnectionString);
 
@@ -35,7 +35,7 @@ public class DoctorDapperRepository : IDoctorRepository
         }
 
         using var connection = new SqlConnection(this._connectionStringOption.ConnectionString);
-
+        newDoctor.Id = new Guid();
         var numberOfRows = await connection.ExecuteAsync(
             sql: $@"INSERT INTO Doctors (FirstName, LastName, DateOfBirth, Gender, Email, PhoneNumber, Specialization, Department )
                         VALUES(@FirstName, @LastName, @DateOfBirth, @Gender, @Email, @PhoneNumber, @Specialization, @Department)",
@@ -45,7 +45,7 @@ public class DoctorDapperRepository : IDoctorRepository
         if (numberOfRows <= 0) throw new ArgumentException("Unsuccsess insert!");
 
     }
-    public async Task UpdateAsync(int id, Doctor newDoctor)
+    public async Task UpdateAsync(Guid id, Doctor newDoctor)
     {
         using var connection = new SqlConnection(this._connectionStringOption.ConnectionString);
 
@@ -54,7 +54,7 @@ public class DoctorDapperRepository : IDoctorRepository
                         WHERE Id = @Id",
             param: newDoctor);
     }
-    public async Task DeleteByIdAsync(int id)
+    public async Task DeleteByIdAsync(Guid id)
     {
         using var connection = new SqlConnection(this._connectionStringOption.ConnectionString);
 

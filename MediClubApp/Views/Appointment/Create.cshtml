@@ -1,0 +1,114 @@
+@model AppointmentViewModel
+@{
+    ViewData["Title"] = "Create Appointment Page";
+}
+
+<form asp-route="CreateAppointmentApi" method="post">
+    <div>
+        <label asp-for="Appointment.DoctorId">Doctor:</label>
+        <select asp-for="Appointment.DoctorId">
+            <option value="">Select Doctor</option>
+
+            @foreach (Doctor doctor in Model.Doctors)
+            {
+                <option value="@doctor.Id">@doctor.FirstName @doctor.LastName</option>
+            }
+        </select>
+        <span class="text-danger" asp-validation-for="Appointment.DoctorId"></span>
+    </div>
+    <div>
+        <label asp-for="Appointment.PatientId">Patient:</label>
+        <select asp-for="Appointment.PatientId">
+            <option value="">Select Patient</option>
+
+            @foreach (Patient patient in Model.Patients)
+            {
+                <option value="@patient.Id">@patient.FirstName @patient.LastName</option>
+            }
+        </select>
+        <span class="text-danger" asp-validation-for="Appointment.PatientId"></span>
+    </div>
+    <div>
+        <label asp-for="Appointment.RoomId">Room:</label>
+        <select asp-for="Appointment.RoomId">
+            <option value="">Select Room</option>
+
+            @foreach (Room room in Model.Rooms)
+            {
+                <option value="@room.Id">@room.RoomNumber</option>
+            }
+        </select>
+        <span class="text-danger" asp-validation-for="Appointment.RoomId"></span>
+    </div>
+    <div>
+        <label asp-for="Appointment.Date">Date:</label>
+        <input asp-for="Appointment.Date" type="date" />
+        <span class="text-danger" asp-validation-for="Appointment.Date"></span>
+    </div>
+    <div>
+        <label asp-for="Appointment.Time">Time:</label>
+        <input asp-for="Appointment.Time" type="datetime" />
+        <span class="text-danger" asp-validation-for="Appointment.Time"></span>
+    </div>
+    <div>
+        <label asp-for="Appointment.Reason">Reason:</label>
+        <input asp-for="Appointment.Reason" type="text" />
+        <span class="text-danger" asp-validation-for="Appointment.Reason"></span>
+    </div>
+
+    <button type="submit">Add Appointment</button>
+</form>
+
+<style>
+    h1 {
+        color: #333;
+    }
+
+    form {
+        background-color: #fff;
+        padding: 20px;
+        border-radius: 5px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        margin-bottom: 20px;
+    }
+
+    form div {
+        margin-bottom: 15px;
+    }
+
+    label {
+        display: block;
+        margin-bottom: 5px;
+        font-weight: bold;
+    }
+
+    input[type="text"],
+    input[type="date"],
+    input[type="email"],
+    select,
+    textarea {
+        width: 100%;
+        padding: 8px;
+        box-sizing: border-box;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+    }
+
+    button {
+        background-color: #5cb85c;
+        color: white;
+        border: none;
+        padding: 10px 15px;
+        border-radius: 4px;
+        cursor: pointer;
+    }
+
+    button:hover {
+        background-color: #4cae4c;
+    }
+</style>
+
+@* @section Scripts {
+<script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+<script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+} *@

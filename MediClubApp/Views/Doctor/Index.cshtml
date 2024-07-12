@@ -1,67 +1,17 @@
-﻿@model IEnumerable<Doctor>;
+﻿@model DoctorViewModel;
 @{
     ViewData["Title"] = "Doctor Page";
 }
 
-<form asp-action="CreateDoctor" method="post">
-    <div>
-        <label for="FirstName">First Name:</label>
-        <input type="text" id="FirstName" name="FirstName" required />
-    </div>
-    <div>
-        <label for="LastName">Last Name:</label>
-        <input type="text" id="LastName" name="LastName" required />
-    </div>
-    <div>
-        <label for="DateOfBirth">Date of Birth:</label>
-        <input type="date" id="DateOfBirth" name="DateOfBirth" required />
-    </div>
-    <div>
-        <label for="Gender">Gender:</label>
-        <select id="Gender" name="Gender" required>
-            <option value="">Select Gender</option>
-
-            @foreach (Gender gender in Enum.GetValues(typeof(Gender)))
-            {
-                <option value="@gender">@gender</option>
-            }
-        </select>
-    </div>
-    <div>
-        <label for="Email">Email:</label>
-        <input type="email" id="Email" name="Email" required />
-    </div>
-    <div>
-        <label for="PhoneNumber">Phone Number:</label>
-        <input type="tel" id="PhoneNumber" name="PhoneNumber" required />
-    </div>
-    <div>
-        <label for="Specialization">Specialization:</label>
-        <select id="Specialization" name="Specialization" required>
-            <option value="">Select Specialization</option>
-            @foreach (Specialization specialization in Enum.GetValues(typeof(Specialization)))
-            {
-                <option value="@specialization">@specialization</option>
-            }
-        </select>
-    </div>
-    <div>
-        <label for="Department">Department:</label>
-        <select id="Department" name="Department" required>
-            <option value="">Select Department</option>
-
-            @foreach (Department department in Enum.GetValues(typeof(Department)))
-            {
-                <option value="@department">@department</option>
-            }
-        </select>
-    </div>
-    <button type="submit">Add Doctor</button>
-</form>
-
+@* Link to create view *@
 <h1> Doctors List</h1>
 <hr />
-@if (!Model.Any() || Model is null)
+<a asp-route="CreateDoctorPage"> <button class="btn-modern">Create new Doctor</button> </a>
+<br />
+<br />
+
+@* All Doctors *@
+@if (!Model.Doctors.Any() || Model.Doctors is null)
 {
     <div class="no-doctors">
         <img src="/images/sad-star.png" alt="No Doctors" class="sad-face" />
@@ -72,23 +22,25 @@ else
 {
     <ol class="card-list">
 
-        @foreach (var doctor in Model)
+        @foreach (var doctor in Model.Doctors)
         {
             <li class="doctor-item">
-                <div class="doctor-details">
-                    <p><strong>First Name:</strong> @(doctor?.FirstName ?? "UNKNOWN")</p>
-                    <p><strong>Last Name:</strong> @(doctor?.LastName ?? "UNKNOWN")</p>
-                    <p><strong>Date of Birth:</strong> @doctor?.DateOfBirth </p>
-                    <p><strong>Gender:</strong> @(doctor?.Gender ?? "UNKNOWN")</p>
-                    <p><strong>Email:</strong> @(doctor?.Email ?? "UNKNOWN")</p>
-                    <p><strong>Phone Number:</strong> @(doctor?.PhoneNumber ?? "UNKNOWN")</p>
-                    <p><strong>Specialization:</strong> @(doctor?.Specialization ?? "UNKNOWN")</p>
-                    <p><strong>Department:</strong> @(doctor?.Department ?? "UNKNOWN")</p>
-                </div>
+                <a class="nav-link" asp-controller="Doctor" asp-action="DoctorInfo" asp-route-doctorId="@doctor?.Id">
+                    <div class="doctor-details">
+                        <p><strong>First Name:</strong> @(doctor?.FirstName ?? "UNKNOWN")</p>
+                        <p><strong>Last Name:</strong> @(doctor?.LastName ?? "UNKNOWN")</p>
+                        <p><strong>Date of Birth:</strong> @doctor?.DateOfBirth </p>
+                        <p><strong>Gender:</strong> @(doctor?.Gender ?? "UNKNOWN")</p>
+                        <p><strong>Email:</strong> @(doctor?.Email ?? "UNKNOWN")</p>
+                        <p><strong>Phone Number:</strong> @(doctor?.PhoneNumber ?? "UNKNOWN")</p>
+                        <p><strong>Department Name:</strong> @(doctor?.Department.Name ?? "UNKNOWN")</p>
+                        <p><strong>Specialization:</strong> @(doctor?.Specialization.Name ?? "UNKNOWN")</p>
+                    </div>
+                </a>
                 <br>
                 <div class="doctor-actions">
-                    <button class="update-btn" onclick="showUpdateForm('@doctor!.Id')">Update</button>
-                    <button class="delete-btn" onclick="deleteDoctor('@doctor!.Id')">Delete</button>
+                    <button class="update-btn btn-close-white" onclick="showUpdateForm('@doctor!.Id')">Update</button>
+                    <button class="delete-btn btn-danger" onclick="deleteDoctor('@doctor!.Id')">Delete</button>
                 </div>
             </li>
             <hr class="divider" />
@@ -101,7 +53,7 @@ else
     <input type="hidden" id="doctorId">
     <div>
         <label for="newFirstName">First Name:</label>
-        <input type="text" id="newFirstName">
+        <input type="text" id="newFirstName"> 
     </div>
     <div>
         <label for="newLastName">Last Name:</label>
@@ -115,7 +67,6 @@ else
         <label for="newGender">Gender:</label>
         <select id="newGender" name="newGender" required>
             <option value="">Select Gender</option>
-
             @foreach (Gender gender in Enum.GetValues(typeof(Gender)))
             {
                 <option value="@gender">@gender</option>
@@ -131,24 +82,22 @@ else
         <input type="text" id="newPhoneNumber">
     </div>
     <div>
-        <label for="newSpecialization">Specialization:</label>
-        <select id="newSpecialization" name="newSpecialization" required>
-            <option value="">Select Specialization</option>
-
-            @foreach (Specialization specialization in Enum.GetValues(typeof(Specialization)))
+        <label for="newDepartment">Department:</label>
+        <select id="newDepartment" name="newDepartment" required>
+            <option value="">Select Department</option>
+            @foreach (Department department in Model.Departments)
             {
-                <option value="@specialization">@specialization</option>
+                <option value="@department.Id">@department.Name</option>
             }
         </select>
     </div>
     <div>
-        <label for="Department">Department:</label>
-        <select id="newDepartment" name="newDepartment" required>
-            <option value="">Select Department</option>
-
-            @foreach (Department department in Enum.GetValues(typeof(Department)))
+        <label for="newSpecialization">Specialization:</label>
+        <select id="newSpecialization" name="newSpecialization" required>
+            <option value="">Select Specialization</option>
+            @foreach (Specialization specialization in Model.Specializations)
             {
-                <option value="@department">@department</option>
+                <option value="@specialization.Id">@specialization.Name</option>
             }
         </select>
     </div>
@@ -187,8 +136,8 @@ else
         document.getElementById('newGender').value = data.gender;
         document.getElementById('newEmail').value = data.email;
         document.getElementById('newPhoneNumber').value = data.phoneNumber;
-        document.getElementById('newSpecialization').value = data.specialization;
-        document.getElementById('newDepartment').value = data.department;
+        document.getElementById('newSpecialization').value = data.specializationId;
+        document.getElementById('newDepartment').value = data.departmentId;
         document.getElementById('updateForm').style.display = 'block';
     }
 
@@ -215,9 +164,10 @@ else
             gender: gender,
             email: email,
             phoneNumber: phoneNumber,
-            specialization: specialization,
-            department: department
+            departmentId: department,
+            specializationId: specialization
         };
+
         fetch(`/Doctor`, {
             method: 'PUT',
             headers: {
@@ -230,8 +180,6 @@ else
                     alert('Doctor updated successfully!');
                     hideUpdateForm();
                     window.location.reload();
-
-
                 } else {
                     alert('Failed to update doctor.');
                 }
@@ -264,16 +212,19 @@ else
         color: #333;
     }
 
-    form {
-        background-color: #fff;
-        padding: 20px;
-        border-radius: 5px;
-        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        margin-bottom: 20px;
+    .btn-modern {
+        padding: 10px 20px;
+        background-color: #28a745;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        font-size: 16px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
     }
 
-    form div {
-        margin-bottom: 15px;
+    .btn-modern:hover {
+        background-color: #218838;
     }
 
     label {
@@ -366,9 +317,9 @@ else
 
     .update-form {
         position: absolute;
-        top: 50%;
+        top: 40%;
         left: 50%;
-        transform: translate(-40%, -40%);
+        transform: translate(-40%, -50%);
         background-color: #fff;
         padding: 20px;
         border-radius: 10px;
@@ -410,3 +361,8 @@ else
         background-color: #4cae4c;
     }
 </style>
+
+@section Scripts {
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+}

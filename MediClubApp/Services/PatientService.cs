@@ -1,4 +1,3 @@
-
 using MediClubApp.Models;
 using MediClubApp.Repositories.Base;
 using MediClubApp.Services.Base;
@@ -22,26 +21,26 @@ public class PatientService : IPatientService
 
         await this._patientRepository.CreateAsync(newPatient: newPatient);
     }
-    public Task<IEnumerable<Patient>> GetAllPatientsAsync()
+    public async Task<IEnumerable<Patient>> GetAllPatientsAsync()
     {
-        return this._patientRepository.GetAllAsync();
+        return await this._patientRepository.GetAllAsync();
     }
-    public Task<Patient?> GetPatientAsync(int id)
+    public async Task<Patient?> GetPatientAsync(Guid id)
     {
-        return this._patientRepository.GetAsync(id: id);
+        return await this._patientRepository.GetAsync(id: id);
     }
-    public async Task UpdatePatientAsync(int id, Patient newPatient)
+    public async Task UpdatePatientAsync(Guid id, Patient newPatient)
     {
-        if (newPatient is null || this._patientRepository.GetAsync(id) is null)
+        if (newPatient is null || await this._patientRepository.GetAsync(id) is null)
         {
             throw new ArgumentNullException(nameof(newPatient));
         }
 
-        await this._patientRepository.UpdateAsync(id: id, newPatient:newPatient);
+        await this._patientRepository.UpdateAsync(id: id, newPatient: newPatient);
     }
-    public async Task DeletePatientByIdAsync(int id)
+    public async Task DeletePatientByIdAsync(Guid id)
     {
-        if (this._patientRepository.GetAsync(id) is null)
+        if (await this._patientRepository.GetAsync(id) is null)
         {
             throw new ArgumentNullException(nameof(Patient));
         }

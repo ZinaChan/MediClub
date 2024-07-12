@@ -1,0 +1,285 @@
+﻿@model IEnumerable<Department>;
+@{
+    ViewData["Title"] = "Department Page";
+}
+
+<h1> Departments List</h1>
+<hr />
+<a asp-route="CreateDepartmentPage"> <button class="btn-modern">Create new Department</button> </a>
+<br />
+<br />
+
+@if (!Model.Any())
+{
+    <div class="no-departments">
+        <img src="/images/sad-star.png" alt="No departments" class="sad-face" />
+        <p>No departments available at the moment.</p>
+    </div>
+}
+else
+{
+    <ol class="card-list">
+        @foreach (var department in Model)
+        {
+
+            <li class="department-item">
+                <a class="nav-link" asp-controller="Department" asp-action="DepartmentInfo"
+                    asp-route-departmentId="@department?.Id">
+
+                    <div class="department-details">
+                        <p><strong>Department Name:</strong> @(department?.Name ?? "UNKNOWN")</p>
+                    </div>
+                </a>
+                <br>
+                <div class="department-actions">
+                    <button class="update-btn btn-close-white" onclick="showUpdateForm('@department!.Id')">Update</button>
+                    <button class="delete-btn btn-danger" onclick="deleteDepartment('@department!.Id')">Delete</button>
+                </div>
+            </li>
+            <hr class="divider" />
+        }
+    </ol>
+}
+<div id="updateForm" class="update-form" style="display:none;">
+    <h3>Update Department</h3>
+    <input type="hidden" id="departmentId">
+    <div>
+        <label for="newName">Department Name:</label>
+        <input type="text" id="newName">
+    </div> 
+    <div class="department-actions">
+        <button onclick="updateDepartment()">Save</button>
+        <button onclick="hideUpdateForm()">Cancel</button>
+    </div>
+</div>
+
+<script>
+    function showUpdateForm(id) {
+        fetchDepartmentAndUpdateForm(id);
+    }
+
+    function fetchDepartmentAndUpdateForm(id) {
+        fetch(`/Department/Json/${id}`)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Failed to fetch department.');
+                }
+                return response.json();
+            })
+            .then(data => {
+                updateFormWithDepartmentData(data);
+            })
+            .catch(error => console.error('Error fetching department:', error));
+    }
+
+    function updateFormWithDepartmentData(data) {
+        document.getElementById('departmentId').value = data.id;
+        document.getElementById('newName').value = data.name;
+         document.getElementById('updateForm').style.display = 'block';
+    }
+
+    function hideUpdateForm() {
+        document.getElementById('updateForm').style.display = 'none';
+    }
+
+    function updateDepartment() {
+        const departmentId = document.getElementById('departmentId').value;
+        const name = document.getElementById('newName').value;
+
+        const updatedDepartment = {
+            id: departmentId,
+            name: name
+        };
+
+        fetch(`/Department`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(updatedDepartment)
+        })
+            .then(response => {
+                if (response.ok) {
+                    alert('Department updated successfully!');
+                    hideUpdateForm();
+                    window.location.reload();
+                } else {
+                    alert('Failed to update department.');
+                }
+            })
+            .catch(error => console.error('Error updating department:', error));
+    }
+    function deleteDepartment(id) {
+        if (confirm('Are you sure you want to delete this department?')) {
+            fetch(`/Department/${id}`, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+                .then(response => {
+                    if (response.ok) {
+                        alert('Department deleted successfully!');
+                        window.location.reload();
+                    } else {
+                        alert('Failed to delete department.');
+                    }
+                });
+        }
+    }
+</script>
+
+<style>
+    h1 {
+        color: #333;
+    }
+
+    .btn-modern {
+        padding: 10px 20px;
+        background-color: #28a745;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        font-size: 16px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+
+    .btn-modern:hover {
+        background-color: #218838;
+    }
+
+    label {
+        display: block;
+        margin-bottom: 5px;
+        font-weight: bold;
+    }
+
+    input[type="text"],
+    input[type="date"],
+    input[type="email"],
+    select,
+    textarea {
+        width: 100%;
+        padding: 8px;
+        box-sizing: border-box;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+    }
+
+    button {
+        background-color: #5cb85c;
+        color: white;
+        border: none;
+        padding: 10px 15px;
+        border-radius: 4px;
+        cursor: pointer;
+    }
+
+    button:hover {
+        background-color: #4cae4c;
+    }
+
+    .card-list {
+        list-style-type: none;
+        padding: 0;
+    }
+
+    .no-departments {
+        text-align: center;
+        margin-top: 20px;
+    }
+
+    .no-departments img.sad-face {
+        width: 100px;
+        height: 100px;
+    }
+
+    .no-departments p {
+        font-size: 18px;
+        color: #888;
+    }
+
+    .department-item {
+        background-color: #cfe2f3;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        margin-bottom: 20px;
+        padding: 20px;
+        transition: transform 0.3s ease-in-out;
+        position: relative;
+    }
+
+    .department-item:hover {
+        transform: translateY(-5px);
+    }
+
+    .department-details p {
+        margin: 0;
+        font-size: 16px;
+        line-height: 1.6;
+        font-weight: 550;
+        color: #333;
+    }
+
+    .department-details p strong {
+        font-weight: bold;
+        color: #666;
+    }
+
+    .department-actions {
+        flex-shrink: 0;
+    }
+
+    .department-item hr {
+        margin: 10px 0;
+        border: none;
+        border-top: 1px solid #e0e0e0;
+    }
+
+    .update-form {
+        position: absolute;
+        top: 40%;
+        left: 50%;
+        transform: translate(-40%, -50%);
+        background-color: #fff;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 0 20px rgba(0, 0, 0, 0.418);
+        display: none;
+        z-index: 1000;
+        width: 400px;
+    }
+
+    .update-form label {
+        display: block;
+        margin-bottom: 5px;
+        font-weight: bold;
+    }
+
+    .update-form input[type="text"],
+    .update-form input[type="date"],
+    .update-form input[type="email"],
+    .update-form select {
+        width: calc(100% - 22px);
+        padding: 8px;
+        box-sizing: border-box;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        margin-bottom: 10px;
+    }
+
+    .update-form button {
+        background-color: #5cb85c;
+        color: white;
+        border: none;
+        padding: 10px 15px;
+        border-radius: 4px;
+        cursor: pointer;
+        margin-right: 10px;
+    }
+
+    .update-form button:hover {
+        background-color: #4cae4c;
+    }
+</style>

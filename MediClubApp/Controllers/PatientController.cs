@@ -1,4 +1,5 @@
 using System.Text.Json;
+using FluentValidation;
 using MediClubApp.Models;
 using MediClubApp.Services.Base;
 using Microsoft.AspNetCore.Mvc;
@@ -9,87 +10,130 @@ namespace MediClubApp.Controllers;
 public class PatientController : Controller
 {
     private readonly IPatientService _patientService;
+    private readonly IValidator<Patient> _validator;
 
-    public PatientController(IPatientService patientService)
+    public PatientController(IValidator<Patient> validator, IPatientService patientService)
     {
+        this._validator = validator;
         this._patientService = patientService;
     }
 
     [HttpGet]
+    [Route("/[controller]")]
     public async Task<IActionResult> Index()
     {
         var patients = await this._patientService.GetAllPatientsAsync();
-        return View(patients);
+
+        return base.View(patients);
     }
 
-    [HttpGet("{patientId:int}")]
-    public async Task<IActionResult> PatientInfo(int patientId)
+    [HttpGet("Json")]
+    public async Task<IActionResult> GetAllPatientsJson()
     {
         try
         {
-            var doctor = await _patientService.GetPatientAsync(patientId);
-            return View(doctor);
+            var patients = await this._patientService.GetAllPatientsAsync();
+            foreach (var patient in patients)
+            {
+                patient.Appointments = null!;
+                patient.MedicalRecords = null!;
+            }
+            return base.Json(data: patients);
         }
         catch (System.Exception ex)
         {
-            return base.StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            return base.StatusCode(statusCode: StatusCodes.Status500InternalServerError, value: ex.Message);
         }
     }
 
-    [HttpGet("Json/{patientId:int}")]
-    public async Task<IActionResult> GetPatientJson(int patientId)
+    [HttpGet]
+    [Route("Json/{patientId:Guid}")]
+    public async Task<IActionResult> GetPatientJson(Guid patientId)
     {
         try
         {
-            var doctor = await _patientService.GetPatientAsync(patientId);
-            return Json(doctor);
+            var patient = await this._patientService.GetPatientAsync(id: patientId);
+            return base.Json(data: patient);
         }
         catch (System.Exception ex)
         {
-            return base.StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            return base.StatusCode(statusCode: StatusCodes.Status500InternalServerError, value: ex.Message);
         }
+    }
+
+    [HttpGet]
+    [Route("/[controller]/{patientId:Guid}")]
+    public async Task<IActionResult> PatientInfo(Guid patientId)
+    {
+        try
+        {
+            var doctor = await this._patientService.GetPatientAsync(id: patientId);
+            return base.View(doctor);
+        }
+        catch (System.Exception ex)
+        {
+            return base.StatusCode(statusCode: StatusCodes.Status500InternalServerError, value: ex.Message);
+        }
+    }
+
+    [HttpGet]
+    [Route("[action]", Name = "CreatePatientPage")]
+    public IActionResult Create()
+    {
+        return base.View();
     }
 
     [HttpPost]
-    public async Task<IActionResult> CreatePatient(Patient newPatient)
+    [Route("[action]", Name = "CreatePatientApi")]
+    public async Task<IActionResult> Create(Patient newPatient)
     {
         try
         {
-            await this._patientService.CreatePatientAsync(newPatient);
+            var validatorResult = this._validator.Validate(instance: newPatient);
+            if (!validatorResult.IsValid)
+            {
+                foreach (var error in validatorResult.Errors)
+                {
+                    base.ModelState.AddModelError(key: error.PropertyName, errorMessage: error.ErrorMessage);
+                }
+
+                return base.View(viewName: "Create");
+            }
+
+            await this._patientService.CreatePatientAsync(newPatient: newPatient);
             return base.RedirectToAction(actionName: "Index");
         }
         catch (System.Exception ex)
         {
-            return base.StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            return base.StatusCode(statusCode: StatusCodes.Status500InternalServerError, value: ex.Message);
         }
     }
 
     [HttpPut]
-    public IActionResult UpdateDoctor([FromBody] Patient patient)
+    public async Task<IActionResult> UpdateDoctor([FromBody] Patient patient)
     {
         try
         {
-            this._patientService.UpdatePatientAsync(patient.Id, patient);
+            await this._patientService.UpdatePatientAsync(id: patient.Id, newPatient: patient);
+            return base.Ok();
+        }
+        catch (System.Exception ex)
+        {
+            return base.StatusCode(statusCode: StatusCodes.Status500InternalServerError, value: ex.Message);
+        }
+    }
+
+    [HttpDelete("{patientId:Guid}")]
+    public async Task<IActionResult> DeleteDoctor(Guid patientId)
+    {
+        try
+        {
+            await this._patientService.DeletePatientByIdAsync(id: patientId);
             return Ok();
         }
         catch (System.Exception ex)
         {
-            return base.StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            return base.StatusCode(statusCode: StatusCodes.Status500InternalServerError, value: ex.Message);
         }
     }
-
-    [HttpDelete("{patientId:int}")]
-    public IActionResult DeleteDoctor(int patientId)
-    {
-        try
-        {
-            this._patientService.DeletePatientByIdAsync(patientId);
-            return Ok();
-        }
-        catch (System.Exception ex)
-        {
-            return base.StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
-        }
-    }
-
 }
