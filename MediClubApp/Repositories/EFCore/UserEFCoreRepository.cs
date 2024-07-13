@@ -17,46 +17,49 @@ public class UserEFCoreRepository : IUserRepository
     }
 
     public async Task<string> ChangeAvatar(Guid id, IFormFile avatarFile)
-{
-    var user = await this._clinicDbContext.Users.FindAsync(id);
-    if (user == null)
     {
-        throw new ArgumentException($"User with ID '{id}' not found.");
-    }
-
-    // Remove old avatar file if it exists
-    if (!string.IsNullOrEmpty(user.AvatarUrl))
-    {
-        var oldAvatarPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "Assets", "UsersImg", user.AvatarUrl);
-        if (File.Exists(oldAvatarPath))
+        var user = await _clinicDbContext.Users.FindAsync(id);
+        if (user == null)
         {
-            File.Delete(oldAvatarPath);
+            throw new ArgumentException($"User with ID '{id}' not found.");
         }
+
+        // Remove old avatar file if it exists
+        var wwwrootPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot");
+        var uploadsFolder = Path.Combine(wwwrootPath, "Assets", "UsersImg");
+
+        if (!string.IsNullOrEmpty(user.AvatarUrl))
+        {
+            var oldAvatarPath = Path.Combine(uploadsFolder, Path.GetFileName(user.AvatarUrl));
+            if (File.Exists(oldAvatarPath))
+            {
+                File.Delete(oldAvatarPath);
+            }
+        }
+
+        // Save new avatar file
+        var extension = Path.GetExtension(avatarFile.FileName);
+        var newFileName = $"{id}{extension}";
+
+        if (!Directory.Exists(uploadsFolder))
+        {
+            Directory.CreateDirectory(uploadsFolder);
+        }
+
+        var filePath = Path.Combine(uploadsFolder, newFileName);
+        using (var stream = new FileStream(filePath, FileMode.Create))
+        {
+            await avatarFile.CopyToAsync(stream);
+        }
+
+        // Update user's AvatarUrl in database
+        user.AvatarUrl = $"Assets/UsersImg/{newFileName}";
+        _clinicDbContext.Users.Update(user);
+        await _clinicDbContext.SaveChangesAsync();
+
+        return user.AvatarUrl;
     }
 
-    // Save new avatar file
-    var extension = Path.GetExtension(avatarFile.FileName);
-    var newFileName = $"{id}{extension}";
-    var uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "Assets", "UsersImg");
-
-    if (!Directory.Exists(uploadsFolder))
-    {
-        Directory.CreateDirectory(uploadsFolder);
-    }
-
-    var filePath = Path.Combine(uploadsFolder, newFileName);
-    using (var stream = new FileStream(filePath, FileMode.Create))
-    {
-        await avatarFile.CopyToAsync(stream);
-    }
-
-    // Update user's AvatarUrl in database
-    user.AvatarUrl = Path.Combine("Assets", "UsersImg", newFileName);
-    this._clinicDbContext.Users.Update(user);
-    await this._clinicDbContext.SaveChangesAsync();
-
-    return user.AvatarUrl;
-}
 
     public async Task CreateAsync(User newUser, IFormFile image)
     {

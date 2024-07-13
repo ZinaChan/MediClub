@@ -95,8 +95,8 @@ public class DoctorController : Controller
         }
     }
 
-    [Authorize(Roles = "Admin")]
     [HttpGet]
+    [Authorize(Roles = "Admin")]
     [Route("[action]", Name = "CreateDoctorPage")]
     public async Task<IActionResult> Create()
     {

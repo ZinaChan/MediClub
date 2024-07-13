@@ -81,8 +81,19 @@ public class IdentityController : Controller
             {
                 return base.Redirect(loginDto.ReturnUrl);
             }
+            if (base.User.IsInRole("Admin"))
+            {
+                return base.RedirectToAction(controllerName: "Dashboard", actionName: "Index");
 
-            return base.RedirectToAction(controllerName: "Patient", actionName: "Index");
+            }
+            else if (base.User.IsInRole("Doctor"))
+            {
+                return base.RedirectToAction(controllerName: "Patient", actionName: "Index");
+
+            }
+            return base.RedirectToAction(controllerName: "Doctor", actionName: "Index");
+
+
         }
         catch (System.Exception ex)
         {
@@ -143,8 +154,8 @@ public class IdentityController : Controller
         return base.RedirectToRoute("LoginView");
     }
 
-    [Authorize]
     [HttpGet]
+    [Authorize]
     [Route("[action]", Name = "LogOut")]
     public async Task<IActionResult> Logout(string? ReturnUrl)
     {
@@ -156,8 +167,8 @@ public class IdentityController : Controller
         });
     }
 
-    [Authorize]
     [HttpGet]
+    [Authorize]
     [Route("[action]", Name = "UserInfo")]
     public async Task<IActionResult> UserInfo()
     {

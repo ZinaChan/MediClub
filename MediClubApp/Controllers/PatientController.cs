@@ -121,7 +121,7 @@ public class PatientController : Controller
 
     [Authorize(Roles = "Admin")]
     [HttpPut]
-    public async Task<IActionResult> UpdateDoctor([FromBody] Patient patient)
+    public async Task<IActionResult> UpdatePatient([FromBody] Patient patient)
     {
         try
         {
@@ -136,7 +136,7 @@ public class PatientController : Controller
 
     [Authorize(Roles = "Admin")]
     [HttpDelete("{patientId:Guid}")]
-    public async Task<IActionResult> DeleteDoctor(Guid patientId)
+    public async Task<IActionResult> DeletePatient(Guid patientId)
     {
         try
         {

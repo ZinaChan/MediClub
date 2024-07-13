@@ -30,6 +30,7 @@ public class UserController : Controller
         return base.View(users);
     }
 
+        [Authorize(Roles = "Admin")]
     [HttpGet("Json")]
     public async Task<IActionResult> GetAllUsersJson()
     {
@@ -43,7 +44,7 @@ public class UserController : Controller
             return base.StatusCode(statusCode: StatusCodes.Status500InternalServerError, value: ex.Message);
         }
     }
-
+    
     [HttpGet]
     [Route("Json/{userId:Guid}")]
     public async Task<IActionResult> GetUserJson(Guid userId)
@@ -78,57 +79,9 @@ public class UserController : Controller
             return base.StatusCode(statusCode: StatusCodes.Status500InternalServerError, value: ex.Message);
         }
     }
-
-    [HttpGet]
-    [Route("[action]", Name = "CreateUserPage")]
-    public IActionResult Create()
-    {
-        return base.View();
-    }
-
-    [HttpPost]
-    [Route("[action]", Name = "CreateUserEndpoint")]
-    public async Task<IActionResult> Registration([FromForm] User user, IFormFile image)
-    {
-        try
-        {
-            var users = new User
-            {
-                FirstName = user.FirstName,
-                LastName = user.LastName,
-                Email = user.Email,
-                Password = user.Password,
-                Gender = user.Gender,
-                DateOfBirth = user.DateOfBirth,
-                PhoneNumber = user.PhoneNumber,
-                Address = user.Address,
-            };
-
-            var validationResult = this._validator.Validate(user);
-            if (!validationResult.IsValid)
-            {
-                foreach (var error in validationResult.Errors)
-                {
-                    base.ModelState.AddModelError(key: error.PropertyName, errorMessage: error.ErrorMessage);
-                }
-                return View();
-            }
-
-            await this._userService.CreateUserAsync(newUser: user, image: image);
-        }
-        catch (Exception ex)
-        {
-            TempData["error"] = ex.Message;
-            return base.RedirectToRoute("RegistrationView");
-        }
-
-        return base.RedirectToRoute("LoginView");
-    }
-
-
-
+  
     [HttpPut]
-    public async Task<IActionResult> UpdateDoctor([FromBody] User user)
+    public async Task<IActionResult> UpdateUser([FromBody] User user)
     {
         try
         {
@@ -140,9 +93,9 @@ public class UserController : Controller
             return base.StatusCode(statusCode: StatusCodes.Status500InternalServerError, value: ex.Message);
         }
     }
-
+     [Authorize(Roles = "Admin")]
     [HttpDelete("{userId:Guid}")]
-    public async Task<IActionResult> DeleteDoctor(Guid userId)
+    public async Task<IActionResult> DeleteUser(Guid userId)
     {
         try
         {

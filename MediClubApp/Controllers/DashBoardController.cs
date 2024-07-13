@@ -6,16 +6,16 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace MediClubApp.Controllers;
 
-[Authorize]
+[Authorize(Roles = "Admin")]
 [Route("Admin/[controller]")]
 public class DashBoardController : Controller
 {
-    private readonly IUserService _userService; 
-    private readonly IDoctorService _doctorService; 
-    private readonly IPatientService _patientService; 
+    private readonly IUserService _userService;
+    private readonly IDoctorService _doctorService;
+    private readonly IPatientService _patientService;
     private readonly IDepartmentService _departmentService;
-    private readonly ISpecializationService _specializationService; 
-    private readonly IRoomService _roomService; 
+    private readonly ISpecializationService _specializationService;
+    private readonly IRoomService _roomService;
 
     public DashBoardController(IUserService userService, IDoctorService doctorService, IPatientService patientService, IDepartmentService departmentService, ISpecializationService specializationService, IRoomService roomService)
     {
@@ -32,11 +32,11 @@ public class DashBoardController : Controller
     {
         var viewModel = new DashboardViewModel
         {
-            TotalUsers = (await this._userService.GetAllUsersAsync()).Count(),  
-            TotalDoctors = (await this._doctorService.GetAllDoctorsAsync()).Count(),  
-            TotalPatients = (await this._patientService.GetAllPatientsAsync()).Count(),  
-            TotalDepartments = (await this._departmentService.GetAllDepartmentsAsync()).Count(),  
-            TotalSpecializations = (await this._specializationService.GetAllSpecializationsAsync()).Count(),  
+            TotalUsers = (await this._userService.GetAllUsersAsync()).Count(),
+            TotalDoctors = (await this._doctorService.GetAllDoctorsAsync()).Count(),
+            TotalPatients = (await this._patientService.GetAllPatientsAsync()).Count(),
+            TotalDepartments = (await this._departmentService.GetAllDepartmentsAsync()).Count(),
+            TotalSpecializations = (await this._specializationService.GetAllSpecializationsAsync()).Count(),
             TotalRooms = (await this._roomService.GetAllRoomsAsync()).Count()
         };
         return View(viewModel);
