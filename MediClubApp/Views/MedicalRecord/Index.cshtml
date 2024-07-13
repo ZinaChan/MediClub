@@ -3,116 +3,25 @@
     Layout = "~/Views/Shared/_LayoutAuth.cshtml";
     ViewData["Title"] = "MedicalRecord Page";
     var IsAdmin = base.User.IsInRole("Admin");
+    var IsPatient = base.User.IsInRole("Patient");
+
 }
 
-<style>
-    .medicalRecord-item {
-        border-radius: 10px;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        margin-bottom: 20px;
-        padding: 20px;
-        transition: transform 0.3s ease-in-out;
-        position: relative;
-    }
 
-    .medicalRecord-item {
-        background-color: #cfe2f3;
-    }
 
-    .medicalRecord-item.past {
-        background-color: #f8d7da;
-    }
-
-    .medicalRecord-item.today {
-        background-color: #fff3cd;
-    }
-
-    .medicalRecord-item.future {
-        background-color: #d4edda;
-    }
-
-    .medicalRecord-item:hover {
-        transform: translateY(-5px);
-    }
-
-    .medicalRecord-details p {
-        margin: 0;
-        font-size: 16px;
-        line-height: 1.6;
-        font-weight: 550;
-        color: #333;
-    }
-
-    .medicalRecord-details p strong {
-        font-weight: bold;
-        color: #666;
-    }
-
-    .medicalRecord-actions {
-        flex-shrink: 0;
-    }
-
-    .medicalRecord-item hr {
-        margin: 10px 0;
-        border: none;
-        border-top: 1px solid #e0e0e0;
-    }
-
-    .update-form {
-        position: absolute;
-        top: 40%;
-        left: 50%;
-        transform: translate(-40%, -50%);
-        background-color: #fff;
-        padding: 20px;
-        border-radius: 10px;
-        box-shadow: 0 0 20px rgba(0, 0, 0, 0.418);
-        display: none;
-        z-index: 1000;
-        width: 400px;
-    }
-
-    .update-form label {
-        display: block;
-        margin-bottom: 5px;
-        font-weight: bold;
-    }
-
-    .update-form input[type="text"],
-    .update-form input[type="date"],
-    .update-form input[type="email"],
-    .update-form select {
-        width: calc(100% - 22px);
-        padding: 8px;
-        box-sizing: border-box;
-        border: 1px solid #ccc;
-        border-radius: 4px;
-        margin-bottom: 10px;
-    }
-
-    .update-form button {
-        background-color: #5cb85c;
-        color: white;
-        border: none;
-        padding: 10px 15px;
-        border-radius: 4px;
-        cursor: pointer;
-        margin-right: 10px;
-    }
-
-    .update-form button:hover {
-        background-color: #4cae4c;
-    }
-</style>
-
+<h1>Medical Records Calendar</h1>
+<div id="calendar"></div>
+<br>
+<br>
+<br>
+<hr />
 <h1>Medical Records List</h1>
 <hr />
-
 <div class="col mb-3">
-    @if (IsAdmin)
+    @if (IsPatient)
     {
         <div class="row-cols-auto mb-3">
-            <a asp-route="CreateMedicalRecordPage" class="btn-modern">Create new Medical Record</a>
+            <a asp-route="CreateMedicalRecordPage" class="btn btn-success">Create new Medical Record</a>
         </div>
     }
 </div>
@@ -173,8 +82,9 @@ else
                 @if (IsAdmin)
                 {
                     <div class="medicalRecord-actions">
-                        <button class="update-btn btn-close-white" onclick="showUpdateForm('@medicalRecord!.Id')">Update</button>
-                        <button class="delete-btn btn-danger" onclick="deleteMedicalRecord('@medicalRecord!.Id')">Delete</button>
+                        <button class="update-btn btn btn-dark" onclick="showUpdateForm('@medicalRecord!.Id')">Update</button>
+                        <button class="delete-btn btn btn-danger"
+                            onclick="deleteMedicalRecord('@medicalRecord!.Id')">Delete</button>
                     </div>
                 }
             </li>
@@ -346,3 +256,143 @@ else
         }
     }
 </script>
+
+
+
+@section Scripts {
+    <link href="https://cdn.jsdelivr.net/npm/fullcalendar@5.7.2/main.min.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/moment@2.29.1/moment.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.7.2/main.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.7.2/daygrid/main.min.js"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var calendarEl = document.getElementById('calendar');
+
+            var events = [
+        @foreach (var medicalRecord in Model.MedicalRecords)
+        {
+            var recordDate = medicalRecord.Date.Date.ToString("yyyy-MM-dd");
+            <text>{
+                        title: '@(medicalRecord?.Patient.FirstName ?? "UNKNOWN") @(medicalRecord?.Patient.LastName ?? "UNKNOWN")',
+                        start: '@recordDate',
+                        url: '@Url.Action("MedicalRecordInfo", "MedicalRecord", new { medicalRecordId = medicalRecord.Id })'
+                                },</text>
+        }
+                ];
+
+            var calendar = new FullCalendar.Calendar(calendarEl, {
+                initialView: 'dayGridMonth',
+                events: events,
+                eventClick: function (info) {
+                    if (info.event.url) {
+                        window.location.href = info.event.url;
+                    }
+                }
+            });
+
+            calendar.render();
+        });
+    </script>
+
+}
+
+<style>
+    .medicalRecord-item {
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        margin-bottom: 20px;
+        padding: 20px;
+        transition: transform 0.3s ease-in-out;
+        position: relative;
+    }
+
+    .medicalRecord-item {
+        background-color: #cfe2f3;
+    }
+
+    .medicalRecord-item.past {
+        background-color: #f8d7da;
+    }
+
+    .medicalRecord-item.today {
+        background-color: #fff3cd;
+    }
+
+    .medicalRecord-item.future {
+        background-color: #d4edda;
+    }
+
+    .medicalRecord-item:hover {
+        transform: translateY(-5px);
+    }
+
+    .medicalRecord-details p {
+        margin: 0;
+        font-size: 16px;
+        line-height: 1.6;
+        font-weight: 550;
+        color: #333;
+    }
+
+    .medicalRecord-details p strong {
+        font-weight: bold;
+        color: #666;
+    }
+
+    .medicalRecord-actions {
+        flex-shrink: 0;
+    }
+
+    .medicalRecord-item hr {
+        margin: 10px 0;
+        border: none;
+        border-top: 1px solid #e0e0e0;
+    }
+
+    .update-form {
+        position: absolute;
+        top: 40%;
+        left: 50%;
+        transform: translate(-40%, -50%);
+        background-color: #fff;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 0 20px rgba(0, 0, 0, 0.418);
+        display: none;
+        z-index: 1000;
+        width: 400px;
+    }
+
+    .update-form label {
+        display: block;
+        margin-bottom: 5px;
+        font-weight: bold;
+    }
+
+    .update-form input[type="text"],
+    .update-form input[type="date"],
+    .update-form input[type="email"],
+    .update-form select {
+        width: calc(100% - 22px);
+        padding: 8px;
+        box-sizing: border-box;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        margin-bottom: 10px;
+    }
+
+    .update-form button {
+        background-color: #5cb85c;
+        color: white;
+        border: none;
+        padding: 10px 15px;
+        border-radius: 4px;
+        cursor: pointer;
+        margin-right: 10px;
+    }
+
+    .update-form button:hover {
+        background-color: #4cae4c;
+    }
+</style>
