@@ -27,17 +27,50 @@ public class AppointmentController : Controller
     }
 
     [HttpGet]
-    [Route("/[controller]")]
-    public async Task<IActionResult> Index()
+    [Route("/[controller]/{id:Guid?}", Name = "AppointmentIndex")]
+    public async Task<IActionResult> Index(Guid? id = null)
     {
-        var model = new AppointmentViewModel
+        var model = new AppointmentViewModel();
+        if (User.IsInRole("Admin"))
         {
-            Appointments = await this._appointmentService.GetAllAppointmentsAsync(),
-            Doctors = await this._doctorService.GetAllDoctorsAsync(),
-            Patients = await this._patientService.GetAllPatientsAsync(),
-            Rooms = await this._roomService.GetAllRoomsAsync()
-        };
-        return base.View(model);
+            model = new AppointmentViewModel
+            {
+                Patients = await _patientService.GetAllPatientsAsync(),
+                Doctors = await _doctorService.GetAllDoctorsAsync(),
+                Appointments = await _appointmentService.GetAllAppointmentsAsync(),
+                Rooms = await this._roomService.GetAllRoomsAsync()
+            };
+        }
+        else if (User.IsInRole("Doctor"))
+        {
+            if (id.Value != null)
+            {
+                model = new AppointmentViewModel
+                {
+                    Appointments = await _appointmentService.GetAppointmentsForDoctorAsync(doctorId: id.Value)
+                };
+            }
+            else
+            {
+                return RedirectToAction("Error", "Home");
+            }
+        }
+        else if (User.IsInRole("Patient"))
+        {
+            if (id.Value != null)
+            {
+                model = new AppointmentViewModel
+                {
+                    Appointments = await _appointmentService.GetAppointmentsForPatientAsync(patientId: id.Value)
+                };
+            }
+            else
+            {
+                return RedirectToAction("Error", "Home");
+            }
+        }
+
+        return View(model);
     }
 
     [HttpGet]
@@ -77,7 +110,7 @@ public class AppointmentController : Controller
     }
 
     [HttpGet]
-    [Route("/[controller]/{appointmentId:Guid}")]
+    [Route("/[controller]/[action]/{appointmentId:Guid}")]
     public async Task<IActionResult> AppointmentInfo(Guid appointmentId)
     {
         try
@@ -99,8 +132,8 @@ public class AppointmentController : Controller
         }
     }
 
-    [Authorize(Roles = "Admin")]
     [HttpGet]
+    [Authorize(Policy = "MediClubPolicyWorkRoles")]
     [Route("[action]", Name = "CreateAppointmentPage")]
     public async Task<IActionResult> Create()
     {

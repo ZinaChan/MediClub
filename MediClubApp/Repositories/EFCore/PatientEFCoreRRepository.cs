@@ -67,4 +67,12 @@ public class PatientEFCoreRRepository : IPatientRepository
         this._clinicDbContext.Update(oldPatient);
         await this._clinicDbContext.SaveChangesAsync();
     }
+
+    public async Task<IEnumerable<Patient>> GetPatientsByDoctorAsync(Guid doctorId){
+         var patients = await _clinicDbContext.Patients
+                .Where(p => p.Appointments.Any(a => a.DoctorId == doctorId))
+                .ToListAsync();
+
+            return patients;
+    }
 }

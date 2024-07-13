@@ -1,11 +1,10 @@
 ﻿@{
-    var IsAuthenticated = base.User.Identity?.IsAuthenticated ?? false;
-    var IsAdmin = base.User.IsInRole("Admin");
-    var IsDoctor = base.User.IsInRole("Doctor");
-
-    var firstnameCookie = base.User.Claims.FirstOrDefault(claim => claim.Type == ClaimTypes.Name);
+    var IsAuthenticated = User.Identity?.IsAuthenticated ?? false;
+    var IsAdmin = User.IsInRole("Admin");
+    var IsDoctor = User.IsInRole("Doctor");
+    var Id = User.FindFirstValue("Id");
+    var firstnameCookie = User.Claims.FirstOrDefault(claim => claim.Type == ClaimTypes.Name);
 }
-
 @if (IsAuthenticated)
 {
     <!DOCTYPE html>
@@ -52,8 +51,7 @@
                                                 <label for="searchInput" style="margin: 13px">Users</label>
                                                 <hr class="dropdown-divider">
                                             </li>
-                                            <li><a class="dropdown-item" asp-controller="User" asp-action="Index">User</a>
-                                            </li>
+                                            <li><a class="dropdown-item" asp-controller="User" asp-action="Index">User</a></li>
                                             <li><a class="dropdown-item" asp-controller="Doctor" asp-action="Index">Doctor</a>
                                             </li>
                                             <li><a class="dropdown-item" asp-controller="Patient" asp-action="Index">Patient</a>
@@ -64,29 +62,26 @@
                                                 <hr class="dropdown-divider">
                                             </li>
                                             <li><a class="dropdown-item" asp-controller="Department"
-                                                    asp-action="Index">Department</a> </li>
-                                            <li><a class="dropdown-item" asp-controller="Specialization" asp-action="Index">
-                                                    Specialization</a> </li>
-                                            <li><a class="dropdown-item" asp-controller="Room" asp-action="Index">Room</a>
-                                            </li>
+                                                    asp-action="Index">Department</a></li>
+                                            <li><a class="dropdown-item" asp-controller="Specialization"
+                                                    asp-action="Index">Specialization</a></li>
+                                            <li><a class="dropdown-item" asp-controller="Room" asp-action="Index">Room</a></li>
                                             <li>
                                                 <hr class="dropdown-divider">
                                                 <label for="searchInput" style="margin: 13px">Record</label>
                                                 <hr class="dropdown-divider">
                                             </li>
-                                            <li><a class="dropdown-item" asp-controller="MedicalRecord"
-                                                    asp-action="Index">MedicalRecord</a> </li>
-                                            <li><a class="dropdown-item" asp-controller="Appointment" asp-action="Index">
-                                                    Appointment</a> </li>
+                                            <li><a class="dropdown-item" asp-route="MRIndex">MedicalRecord</a></li>
+                                            <li><a class="dropdown-item" asp-route="AppointmentIndex">Appointment</a></li>
                                         </ul>
                                     </li>
                                     <li class="nav-item dropdown">
                                         <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
                                             aria-expanded="false">
-                                            Welcome, @firstnameCookie.Value
+                                            Welcome, @firstnameCookie?.Value
                                         </a>
                                         <ul class="dropdown-menu">
-                                            <li><a class="dropdown-item" asp-route="UserInfo">Account</a> </li>
+                                            <li><a class="dropdown-item" asp-route="UserInfo">Account</a></li>
                                             <li>
                                                 <hr class="dropdown-divider">
                                             </li>
@@ -112,22 +107,29 @@
 
                             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                                 <ul class="navbar-nav">
-                                    <li class="nav-item active">
-                                        <a class="nav-link" asp-controller="Home" asp-action="Index">Home</a>
-                                    </li>
                                     <li class="nav-item">
                                         <a class="nav-link" asp-controller="Patient" asp-action="Index">Patients</a>
                                     </li>
                                     <li class="nav-item">
                                         <a class="nav-link" asp-controller="Department" asp-action="Index">Department</a>
                                     </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" asp-controller="Specialization"
+                                            asp-action="Index">Specialization</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" asp-route="MRIndex" asp-route-id="@Id">Medical Records</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" asp-route="AppointmentIndex" asp-route-id="@Id">Appointments</a>
+                                    </li>
                                     <li class="nav-item dropdown">
                                         <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
                                             aria-expanded="false">
-                                            Welcome, @firstnameCookie.Value
+                                            Welcome, @firstnameCookie?.Value
                                         </a>
                                         <ul class="dropdown-menu">
-                                            <li><a class="dropdown-item" asp-route="UserInfo">Account</a> </li>
+                                            <li><a class="dropdown-item" asp-route="UserInfo">Account</a></li>
                                             <li>
                                                 <hr class="dropdown-divider">
                                             </li>
@@ -153,22 +155,22 @@
 
                             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                                 <ul class="navbar-nav">
-                                    <li class="nav-item active">
-                                        <a class="nav-link" asp-controller="Home" asp-action="Index">Home</a>
-                                    </li>
                                     <li class="nav-item">
                                         <a class="nav-link" asp-controller="Doctor" asp-action="Index">Doctor</a>
                                     </li>
                                     <li class="nav-item">
-                                        <a class="nav-link" asp-controller="Department" asp-action="Index">Department</a>
+                                        <a class="nav-link" asp-route="MRIndex" asp-route-id="@Id">Medical Records</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link"  asp-route="AppointmentIndex" asp-route-id="@Id">Appointments</a>
                                     </li>
                                     <li class="nav-item dropdown">
                                         <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
                                             aria-expanded="false">
-                                            Welcome, @firstnameCookie.Value
+                                            Welcome, @firstnameCookie?.Value
                                         </a>
                                         <ul class="dropdown-menu">
-                                            <li><a class="dropdown-item" asp-route="UserInfo">Account</a> </li>
+                                            <li><a class="dropdown-item" asp-route="UserInfo">Account</a></li>
                                             <li>
                                                 <hr class="dropdown-divider">
                                             </li>
@@ -249,7 +251,6 @@
     </footer>
 
     </html>
-
 }
 
 <style>

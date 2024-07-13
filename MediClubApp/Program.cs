@@ -57,6 +57,16 @@ builder.Services.AddAuthorization(options =>
         policyBuilder.RequireRole("Admin", "Doctor","Patient");
         policyBuilder.RequireAuthenticatedUser();
     });
+     options.AddPolicy("MediClubPolicyUserRoles", policyBuilder =>
+    {
+        policyBuilder.RequireRole("Admin","Patient");
+        policyBuilder.RequireAuthenticatedUser();
+    });
+     options.AddPolicy("MediClubPolicyWorkRoles", policyBuilder =>
+    {
+        policyBuilder.RequireRole("Admin", "Doctor");
+        policyBuilder.RequireAuthenticatedUser();
+    });
 });
 
 var app = builder.Build();

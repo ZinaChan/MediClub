@@ -31,7 +31,7 @@
     </div>
     <div>
         <label asp-for="MedicalRecord.Date">Date:</label>
-        <input asp-for="MedicalRecord.Date" type="date" />
+        <input asp-for="MedicalRecord.Date" type="date" min="@DateTime.Today.ToString("yyyy-MM-dd")" required>
         <span class="text-danger" asp-validation-for="MedicalRecord.Date"></span>
     </div>
     <div>
@@ -97,7 +97,7 @@
     }
 </style>
 
-@* @section Scripts {
+@section Scripts {
 <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
 <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
-} *@
+}

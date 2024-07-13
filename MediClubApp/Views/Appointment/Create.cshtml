@@ -43,12 +43,13 @@
     </div>
     <div>
         <label asp-for="Appointment.Date">Date:</label>
-        <input asp-for="Appointment.Date" type="date" />
+        <input asp-for="Appointment.Date" type="date"  max ="@DateTime.Today.ToString("yyyy-MM-dd")" required>
+
         <span class="text-danger" asp-validation-for="Appointment.Date"></span>
     </div>
     <div>
         <label asp-for="Appointment.Time">Time:</label>
-        <input asp-for="Appointment.Time" type="datetime" />
+        <input asp-for="Appointment.Time" type="datetime" min="09:00" max="11:00" />
         <span class="text-danger" asp-validation-for="Appointment.Time"></span>
     </div>
     <div>
@@ -109,7 +110,7 @@
     }
 </style>
 
-@* @section Scripts {
+@section Scripts {
 <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
 <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
-} *@
+}

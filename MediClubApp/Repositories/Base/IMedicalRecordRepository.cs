@@ -12,4 +12,8 @@ public interface IMedicalRecordRepository :  ICreateAsync<MedicalRecord>, IGetAs
     Task CreateAsync(MedicalRecord newMedicalRecord);
     Task UpdateAsync(Guid id, MedicalRecord newMedicalRecord);
     Task DeleteByIdAsync(Guid id);
+
+     Task<IEnumerable<MedicalRecord>> GetMedicalRecordsForPatientAsync(Guid patientId);
+
+     Task<IEnumerable<MedicalRecord>> GetMedicalRecordsForDoctorAsync(Guid doctorId);
 }

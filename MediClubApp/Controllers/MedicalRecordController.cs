@@ -25,16 +25,50 @@ public class MedicalRecordController : Controller
     }
 
     [HttpGet]
-    [Route("/[controller]")]
-    public async Task<IActionResult> Index()
+    [Route("/[controller]/{id:Guid?}", Name ="MRIndex")]
+    public async Task<IActionResult> Index(Guid? id = null)
     {
-        var model = new MedicalRecordViewModel
+        var model = new MedicalRecordViewModel();
+        if (User.IsInRole("Admin"))
         {
-            Patients = await this._patientService.GetAllPatientsAsync(),
-            Doctors = await this._doctorService.GetAllDoctorsAsync(),
-            MedicalRecords = await this._medicalRecordService.GetAllMedicalRecordsAsync()
-        };
-        return base.View(model);
+            model = new MedicalRecordViewModel
+            {
+                Patients = await _patientService.GetAllPatientsAsync(),
+                Doctors = await _doctorService.GetAllDoctorsAsync(),
+                MedicalRecords = await _medicalRecordService.GetAllMedicalRecordsAsync()
+            };
+        }
+        else if (User.IsInRole("Doctor"))
+        {
+            if (id != null)
+            {
+                model = new MedicalRecordViewModel
+                {
+                    MedicalRecords = await _medicalRecordService.GetMedicalRecordsForDoctorAsync(doctorId: id.Value),
+                };
+            }
+            else
+            {
+                return RedirectToAction("Error", "Home");
+            }
+        }
+        else if (User.IsInRole("Patient"))
+        {
+            if (id != null)
+            {
+                model = new MedicalRecordViewModel
+                {
+                    MedicalRecords = await _medicalRecordService.GetMedicalRecordsForPatientAsync(patientId: id.Value)
+
+                };
+            }
+            else
+            {
+                return RedirectToAction("Error", "Home");
+            }
+        }
+
+        return View(model);
     }
 
     [HttpGet]
@@ -73,7 +107,7 @@ public class MedicalRecordController : Controller
     }
 
     [HttpGet]
-    [Route("/[controller]/{medicalRecordId:Guid}")]
+    [Route("/[controller]/[action]/{medicalRecordId:Guid}")]
     public async Task<IActionResult> MedicalRecordInfo(Guid medicalRecordId)
     {
         try
@@ -113,7 +147,7 @@ public class MedicalRecordController : Controller
         return base.View(model: model);
     }
 
-    [Authorize(Roles = "Admin")]
+    [Authorize(Policy = "MediClubPolicyUserRoles")] 
     [HttpPost(Name = "CreateMedicalRecordApi")]
     public async Task<IActionResult> Create(MedicalRecordViewModel model)
     {

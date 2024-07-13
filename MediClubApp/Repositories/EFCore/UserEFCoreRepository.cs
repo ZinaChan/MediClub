@@ -125,7 +125,7 @@ public class UserEFCoreRepository : IUserRepository
         oldUser.PhoneNumber = newUser.PhoneNumber ?? oldUser.PhoneNumber;
         oldUser.Gender = newUser.Gender ?? oldUser.Gender;
 
-        if (oldUser.Role != newUser.Role)
+        if (oldUser.Role != newUser.Role &&  newUser.Role != null)
         {
             switch (newUser.Role)
             {

@@ -117,27 +117,22 @@
         <div class="row">
             <div class="col-md-6">
                 <div class="form_container contact-form">
-                    <form action="">
+                    <form action="" id="contactForm">
                         <div class="form-row">
                             <div class="col-lg-6">
                                 <div>
-                                    <input type="text" placeholder="Your Name" />
-                                </div>
-                            </div>
-                            <div class="col-lg-6">
-                                <div>
-                                    <input type="text" placeholder="Phone Number" />
+                                    <input type="text" placeholder="Your Name" id="name" />
                                 </div>
                             </div>
                         </div>
                         <div>
-                            <input type="email" placeholder="Email" />
+                            <input type="email" placeholder="Email" id="email" />
                         </div>
                         <div>
-                            <input type="text" class="message-box" placeholder="Message" />
+                            <input type="text" class="message-box" placeholder="Message" id="message" />
                         </div>
                         <div class="btn_box">
-                            <button>
+                            <button id="sendButton">
                                 SEND
                             </button>
                         </div>
@@ -154,6 +149,7 @@
         </div>
     </div>
 </section>
+
 
 
 
@@ -178,4 +174,54 @@
     <link href="css/font-awesome.min.css" rel="stylesheet" />
     <link href="css/style.css" rel="stylesheet" />
     <link href="css/responsive.css" rel="stylesheet" />
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script type="text/javascript">
+
+         document.addEventListener('DOMContentLoaded', function () {
+            var contactForm = document.getElementById('contactForm');
+
+            contactForm.addEventListener('submit', function (event) {
+                event.preventDefault(); 
+
+                var name = document.getElementById('name').value;
+                var email = document.getElementById('email').value; 
+                var message = document.getElementById('message').value;
+
+                 if (!name || !email || !message) {
+                    alert('Please fill in all required fields.');
+                    return;
+                }
+
+                 var formData = new FormData();
+                formData.append('name', name);
+                formData.append('email', email); 
+                formData.append('message', message); 
+
+                fetch('/Home/ContactForm', {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(function (response) {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(function (data) {
+                    if (data.success) {
+                        alert('Message sent successfully!');
+                        contactForm.reset();  
+                    } else {
+                        alert('Error: ' + data.message);
+                    }
+                })
+                .catch(function (error) {
+                    alert('Error sending message.');
+                    console.error('Error:', error);
+                });
+            });
+        });
+
+    </script>
 }

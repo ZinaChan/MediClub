@@ -48,5 +48,15 @@ public class MedicalRecordService : IMedicalRecordService
 
         await _medicalRecordRepository.DeleteByIdAsync(id: id);
     }
+
+    public async Task<IEnumerable<MedicalRecord>> GetMedicalRecordsForPatientAsync(Guid patientId)
+    {
+       return await _medicalRecordRepository.GetMedicalRecordsForPatientAsync(patientId: patientId);
+    }
+
+    public async Task<IEnumerable<MedicalRecord>> GetMedicalRecordsForDoctorAsync(Guid doctorId)
+    {
+       return await _medicalRecordRepository.GetMedicalRecordsForDoctorAsync(doctorId: doctorId);
+    }
 }
 

@@ -21,7 +21,7 @@ public class UserController : Controller
         this._userService = userService;
     }
 
-    [HttpGet]
+    [Authorize(Roles = "Admin")]
     [Route("/[controller]")]
     public async Task<IActionResult> Index()
     {
@@ -30,7 +30,7 @@ public class UserController : Controller
         return base.View(users);
     }
 
-        [Authorize(Roles = "Admin")]
+    [Authorize(Roles = "Admin")]
     [HttpGet("Json")]
     public async Task<IActionResult> GetAllUsersJson()
     {
@@ -44,8 +44,7 @@ public class UserController : Controller
             return base.StatusCode(statusCode: StatusCodes.Status500InternalServerError, value: ex.Message);
         }
     }
-    
-    [HttpGet]
+
     [Route("Json/{userId:Guid}")]
     public async Task<IActionResult> GetUserJson(Guid userId)
     {
@@ -60,7 +59,7 @@ public class UserController : Controller
         }
     }
 
-    [HttpGet]
+    [Authorize(Roles = "Admin")]
     [Route("/[controller]/{userId:Guid}")]
     public async Task<IActionResult> UserInfo(Guid userId)
     {
@@ -79,7 +78,7 @@ public class UserController : Controller
             return base.StatusCode(statusCode: StatusCodes.Status500InternalServerError, value: ex.Message);
         }
     }
-  
+
     [HttpPut]
     public async Task<IActionResult> UpdateUser([FromBody] User user)
     {
@@ -93,7 +92,8 @@ public class UserController : Controller
             return base.StatusCode(statusCode: StatusCodes.Status500InternalServerError, value: ex.Message);
         }
     }
-     [Authorize(Roles = "Admin")]
+
+    [Authorize(Roles = "Admin")]
     [HttpDelete("{userId:Guid}")]
     public async Task<IActionResult> DeleteUser(Guid userId)
     {

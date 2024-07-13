@@ -8,4 +8,7 @@ public interface IMedicalRecordService
     Task CreateMedicalRecordAsync(MedicalRecord newMedicalRecord);
     Task UpdateMedicalRecordAsync(Guid id, MedicalRecord newMedicalRecord);
     Task DeleteMedicalRecordByIdAsync(Guid id);
+
+    Task<IEnumerable<MedicalRecord>> GetMedicalRecordsForPatientAsync(Guid patientId);
+     Task<IEnumerable<MedicalRecord>> GetMedicalRecordsForDoctorAsync(Guid doctorId);
 }

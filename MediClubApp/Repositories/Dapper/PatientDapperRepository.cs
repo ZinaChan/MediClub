@@ -63,4 +63,8 @@ public class PatientDapperRepository : IPatientRepository
             param: new { Id = id });
     }
 
+    public Task<IEnumerable<Patient>> GetPatientsByDoctorAsync(Guid doctorId)
+    {
+        throw new NotImplementedException();
+    }
 }

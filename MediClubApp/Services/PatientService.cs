@@ -48,4 +48,8 @@ public class PatientService : IPatientService
         await this._patientRepository.DeleteByIdAsync(id: id);
     }
 
+    public async Task<IEnumerable<Patient>> GetPatientsByDoctorAsync(Guid doctorId)
+    { 
+       return await this._patientRepository.GetPatientsByDoctorAsync(doctorId: doctorId);
+    }
 }

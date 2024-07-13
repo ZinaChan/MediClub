@@ -46,6 +46,27 @@ public class MedicalRecordEFCoreRepository : IMedicalRecordRepository
         return this._clinicDbContext.MedicalRecords.FirstOrDefaultAsync(d => d.Id == id);
     }
 
+    public async Task<IEnumerable<MedicalRecord>> GetMedicalRecordsForDoctorAsync(Guid doctorId)
+    {
+        var medicalRecord = await _clinicDbContext.MedicalRecords
+                            .Include(mr => mr.Doctor)
+                            .Include(mr => mr.Patient)
+                            .Where(a => a.DoctorId == doctorId)
+                            .ToListAsync();
+        return medicalRecord;
+    }
+
+    public async Task<IEnumerable<MedicalRecord>> GetMedicalRecordsForPatientAsync(Guid patientId)
+    {
+        var medicalRecord = await _clinicDbContext.MedicalRecords
+                            .Include(mr => mr.Doctor)
+                            .Include(mr => mr.Patient)
+                            .Where(a => a.PatientId == patientId)
+                           .ToListAsync();
+
+        return medicalRecord;
+    }
+
     public async Task UpdateAsync(Guid id, MedicalRecord newMedicalRecord)
     {
         var oldMedicalRecord = await this._clinicDbContext.MedicalRecords.FirstOrDefaultAsync(d => d.Id == id);
@@ -57,7 +78,7 @@ public class MedicalRecordEFCoreRepository : IMedicalRecordRepository
         oldMedicalRecord.Doctor = await this._clinicDbContext.Doctors.FirstOrDefaultAsync(p => p.Id == newMedicalRecord.DoctorId) ?? new Doctor();
         oldMedicalRecord.Date = newMedicalRecord.Date;
         oldMedicalRecord.Diagnosis = newMedicalRecord.Diagnosis ?? oldMedicalRecord.Diagnosis;
-        oldMedicalRecord.Treatment = newMedicalRecord.Treatment ?? oldMedicalRecord.Treatment; 
+        oldMedicalRecord.Treatment = newMedicalRecord.Treatment ?? oldMedicalRecord.Treatment;
 
         this._clinicDbContext.Update(oldMedicalRecord);
         await this._clinicDbContext.SaveChangesAsync();

@@ -2,14 +2,19 @@
 @{
     Layout = "~/Views/Shared/_LayoutAuth.cshtml";
     ViewData["Title"] = "Appointment Page";
+    var IsAdmin = base.User.IsInRole("Admin");
+
 }
 
 <h1>Appointments List</h1>
 <hr />
 <div class="col mb-3">
-    <div class="row-cols-auto mb-3">
-        <a asp-route="CreateAppointmentPage" class="btn-modern">Create new Appointment</a>
-    </div>
+    @if (IsAdmin)
+    {
+        <div class="row-cols-auto mb-3">
+            <a asp-route="CreateAppointmentPage" class="btn-modern">Create new Appointment</a>
+        </div>
+    }
 </div>
 <div class="row-cols-auto">
     <div class="input-group">
@@ -48,75 +53,78 @@ else
                     </div>
                 </a>
                 <br>
-                <div class="appointment-actions">
-                    <button class="update-btn btn-close-white" onclick="showUpdateForm('@appointment!.Id')">Update</button>
-                    <button class="delete-btn btn-danger" onclick="deleteAppointment('@appointment!.Id')">Delete</button>
-                </div>
+                @if (IsAdmin)
+                {
+                    <div class="appointment-actions">
+                        <button class="update-btn btn-close-white" onclick="showUpdateForm('@appointment!.Id')">Update</button>
+                        <button class="delete-btn btn-danger" onclick="deleteAppointment('@appointment!.Id')">Delete</button>
+                    </div>
+                }
             </li>
         }
     </ol>
 }
-
-<div id="updateForm" class="update-form" style="display:none;">
-    <div class="card">
-        <h3 class="card-header">Update Appointment</h3>
-        <input type="hidden" id="appointmentId">
-        <div class="card-body">
-            <div class="mb-3">
-                <label for="newDoctor">Doctor:</label>
-                <select id="newDoctor" name="newDoctor" required>
-                    <option value="">Select Doctor</option>
-                    @foreach (Doctor doctor in Model.Doctors)
-                    {
-                        <option value="@doctor.Id">@doctor.FirstName @doctor.LastName</option>
-                    }
-                </select>
-            </div>
-            <div class="mb-3">
-                <label for="newPatient">Patient:</label>
-                <select id="newPatient" name="newPatient" required>
-                    <option value="">Select Patient</option>
-                    @foreach (Patient patient in Model.Patients)
-                    {
-                        <option value="@patient.Id">@patient.FirstName @patient.LastName</option>
-                    }
-                </select>
-            </div>
-            <div class="mb-3">
-                <label for="newRoom">Room:</label>
-                <select id="newRoom" name="newRoom" required>
-                    <option value="">Select Room</option>
-                    @foreach (Room room in Model.Rooms)
-                    {
-                        <option value="@room.Id">@room.RoomNumber</option>
-                    }
-                </select>
-            </div>
-            <div class="mb-3">
-                <label for="newDate">Date:</label>
-                <input type="date" id="newDate">
-            </div>
-            <div class="mb-3">
-                <label for="newTime">Time:</label>
-                <input type="time" id="newTime">
-            </div>
-            <div class="mb-3">
-                <label for="newReason">Reason:</label>
-                <input type="text" id="newReason">
-            </div>
-            <br>
-            <div class="mb-3">
-                <button onclick="updateAppointment()">Save</button>
-                <button onclick="hideUpdateForm()">Cancel</button>
+@if (IsAdmin)
+{
+    <div id="updateForm" class="update-form" style="display:none;">
+        <div class="card">
+            <h3 class="card-header">Update Appointment</h3>
+            <input type="hidden" id="appointmentId">
+            <div class="card-body">
+                <div class="mb-3">
+                    <label for="newDoctor">Doctor:</label>
+                    <select id="newDoctor" name="newDoctor" required>
+                        <option value="">Select Doctor</option>
+                        @foreach (Doctor doctor in Model.Doctors)
+                        {
+                            <option value="@doctor.Id">@doctor.FirstName @doctor.LastName</option>
+                        }
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label for="newPatient">Patient:</label>
+                    <select id="newPatient" name="newPatient" required>
+                        <option value="">Select Patient</option>
+                        @foreach (Patient patient in Model.Patients)
+                        {
+                            <option value="@patient.Id">@patient.FirstName @patient.LastName</option>
+                        }
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label for="newRoom">Room:</label>
+                    <select id="newRoom" name="newRoom" required>
+                        <option value="">Select Room</option>
+                        @foreach (Room room in Model.Rooms)
+                        {
+                            <option value="@room.Id">@room.RoomNumber</option>
+                        }
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label for="newDate">Date:</label>
+                    <input type="date" id="newDate" max="@DateTime.Today.ToString("yyyy-MM-dd")">
+                </div>
+                <div class="mb-3">
+                    <label for="newTime">Time:</label>
+                    <input type="time" min="09:00" max="11:00" id="newTime">
+                </div>
+                <div class="mb-3">
+                    <label for="newReason">Reason:</label>
+                    <input type="text" id="newReason">
+                </div>
+                <br>
+                <div class="mb-3">
+                    <button onclick="updateAppointment()">Save</button>
+                    <button onclick="hideUpdateForm()">Cancel</button>
+                </div>
             </div>
         </div>
     </div>
+}
 
-    @section Scripts {
-        <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
-        <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
-    }
 
+@section Scripts {
     <script>
         function showUpdateForm(id) {
             fetchAppointmentAndUpdateForm(id);
@@ -207,187 +215,195 @@ else
                     });
             }
         }
-
-        function searchAppointment() {
-            appointmentItems.forEach(item => {
-                const patientName = item.querySelector('.appointment-details p:first-child').textContent.trim().toLowerCase();
-                const doctorName = item.querySelector('.appointment-details p:nth-child(2)').textContent.trim().toLowerCase();
-                const roomNumber = item.querySelector('.appointment-details p:nth-child(3)').textContent.trim().toLowerCase();
-                const reason = item.querySelector('.appointment-details p:nth-child(6)').textContent.trim().toLowerCase();
-
-                const matchesSearch = patientName.includes(searchString) ||
-                    doctorName.includes(searchString) ||
-                    roomNumber.includes(searchString) ||
-                    reason.includes(searchString);
-
-                if (matchesSearch) {
-                    item.style.display = '';
-                } else {
-                    item.style.display = 'none';
-                }
-            });
-        }
-
-        function handleKeyPress(event) {
-            if (event.key === 'Enter') {
-                searchAppointment();
-            }
-        }
     </script>
+    <script>
+    function searchAppointment() {
+        const appointments = document.querySelectorAll('.appointment-item');
 
-    <style>
-        h1 {
-            color: #333;
-        }
+        const searchString = document.getElementById('searchString').value.trim().toLowerCase();
 
-        .btn-modern {
-            padding: 10px 20px;
-            background-color: #28a745;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            font-size: 16px;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-        }
+        appointments.forEach(item => {
+            const patientName = item.querySelector('.appointment-details p:first-child').textContent.trim().toLowerCase();
+            const doctorName = item.querySelector('.appointment-details p:nth-child(2)').textContent.trim().toLowerCase();
+            const roomNumber = item.querySelector('.appointment-details p:nth-child(3)').textContent.trim().toLowerCase();
+            const reason = item.querySelector('.appointment-details p:nth-child(6)').textContent.trim().toLowerCase();
 
-        .btn-modern:hover {
-            background-color: #218838;
-        }
+            const matchesSearch = patientName.includes(searchString) ||
+                doctorName.includes(searchString) ||
+                roomNumber.includes(searchString) ||
+                reason.includes(searchString);
 
-        label {
-            display: block;
-            margin-bottom: 5px;
-            font-weight: bold;
-        }
+            if (matchesSearch) {
+                item.style.display = '';
+            } else {
+                item.style.display = 'none';
+            }
+        });
+    }
 
-        input[type="text"],
-        input[type="date"],
-        input[type="time"],
-        input[type="datetime-local"],
-        select,
-        textarea {
-            width: 100%;
-            padding: 8px;
-            box-sizing: border-box;
-            border: 1px solid #ccc;
-            border-radius: 4px;
+    function handleKeyPress(event) {
+        if (event.key === 'Enter') {
+            searchAppointment();
         }
+    }
+</script>
 
-        button {
-            background-color: #5cb85c;
-            color: white;
-            border: none;
-            padding: 10px 15px;
-            border-radius: 4px;
-            cursor: pointer;
-        }
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+}
+<style>
+    h1 {
+        color: #333;
+    }
 
-        button:hover {
-            background-color: #4cae4c;
-        }
+    .btn-modern {
+        padding: 10px 20px;
+        background-color: #28a745;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        font-size: 16px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
 
-        .card-list {
-            list-style-type: none;
-            padding: 0;
-        }
+    .btn-modern:hover {
+        background-color: #218838;
+    }
 
-        .no-appointments {
-            text-align: center;
-            margin-top: 20px;
-        }
+    label {
+        display: block;
+        margin-bottom: 5px;
+        font-weight: bold;
+    }
 
-        .no-appointments img.sad-face {
-            width: 100px;
-            height: 100px;
-        }
+    input[type="text"],
+    input[type="date"],
+    input[type="time"],
+    input[type="datetime-local"],
+    select,
+    textarea {
+        width: 100%;
+        padding: 8px;
+        box-sizing: border-box;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+    }
 
-        .no-appointments p {
-            font-size: 18px;
-            color: #888;
-        }
+    button {
+        background-color: #5cb85c;
+        color: white;
+        border: none;
+        padding: 10px 15px;
+        border-radius: 4px;
+        cursor: pointer;
+    }
 
-        .appointment-item {
-            background-color: #cfe2f3;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            margin-bottom: 20px;
-            padding: 20px;
-            transition: transform 0.3s ease-in-out;
-            position: relative;
-        }
+    button:hover {
+        background-color: #4cae4c;
+    }
 
-        .appointment-item:hover {
-            transform: translateY(-5px);
-        }
+    .card-list {
+        list-style-type: none;
+        padding: 0;
+    }
 
-        .appointment-details p {
-            margin: 0;
-            font-size: 16px;
-            line-height: 1.6;
-            font-weight: 550;
-            color: #333;
-        }
+    .no-appointments {
+        text-align: center;
+        margin-top: 20px;
+    }
 
-        .appointment-details p strong {
-            font-weight: bold;
-            color: #666;
-        }
+    .no-appointments img.sad-face {
+        width: 100px;
+        height: 100px;
+    }
 
-        .appointment-actions {
-            flex-shrink: 0;
-        }
+    .no-appointments p {
+        font-size: 18px;
+        color: #888;
+    }
 
-        .appointment-item hr {
-            margin: 10px 0;
-            border: none;
-            border-top: 1px solid #e0e0e0;
-        }
+    .appointment-item {
+        background-color: #cfe2f3;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        margin-bottom: 20px;
+        padding: 20px;
+        transition: transform 0.3s ease-in-out;
+        position: relative;
+    }
 
-        .update-form {
-            position: absolute;
-            top: 40%;
-            left: 50%;
-            transform: translate(-40%, -50%);
-            background-color: #fff;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 0 20px rgba(0, 0, 0, 0.418);
-            display: none;
-            z-index: 1000;
-            width: 400px;
-        }
+    .appointment-item:hover {
+        transform: translateY(-5px);
+    }
 
-        .update-form label {
-            display: block;
-            margin-bottom: 5px;
-            font-weight: bold;
-        }
+    .appointment-details p {
+        margin: 0;
+        font-size: 16px;
+        line-height: 1.6;
+        font-weight: 550;
+        color: #333;
+    }
 
-        .update-form input[type="text"],
-        .update-form input[type="date"],
-        .update-form input[type="time"],
-        .update-form input[type="datetime-local"],
-        .update-form select {
-            width: calc(100% - 22px);
-            padding: 8px;
-            box-sizing: border-box;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            margin-bottom: 10px;
-        }
+    .appointment-details p strong {
+        font-weight: bold;
+        color: #666;
+    }
 
-        .update-form button {
-            background-color: #5cb85c;
-            color: white;
-            border: none;
-            padding: 10px 15px;
-            border-radius: 4px;
-            cursor: pointer;
-            margin-right: 10px;
-        }
+    .appointment-actions {
+        flex-shrink: 0;
+    }
 
-        .update-form button:hover {
-            background-color: #4cae4c;
-        }
-    </style>
+    .appointment-item hr {
+        margin: 10px 0;
+        border: none;
+        border-top: 1px solid #e0e0e0;
+    }
+
+    .update-form {
+        position: absolute;
+        top: 40%;
+        left: 50%;
+        transform: translate(-40%, -50%);
+        background-color: #fff;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 0 20px rgba(0, 0, 0, 0.418);
+        display: none;
+        z-index: 1000;
+        width: 400px;
+    }
+
+    .update-form label {
+        display: block;
+        margin-bottom: 5px;
+        font-weight: bold;
+    }
+
+    .update-form input[type="text"],
+    .update-form input[type="date"],
+    .update-form input[type="time"],
+    .update-form input[type="datetime-local"],
+    .update-form select {
+        width: calc(100% - 22px);
+        padding: 8px;
+        box-sizing: border-box;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        margin-bottom: 10px;
+    }
+
+    .update-form button {
+        background-color: #5cb85c;
+        color: white;
+        border: none;
+        padding: 10px 15px;
+        border-radius: 4px;
+        cursor: pointer;
+        margin-right: 10px;
+    }
+
+    .update-form button:hover {
+        background-color: #4cae4c;
+    }
+</style>

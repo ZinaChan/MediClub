@@ -59,4 +59,10 @@ public class DoctorService : IDoctorService
 
        return await _doctorRepository.GetDoctorsBySpecializationAsync(specializationId: specializationId);
     }
+
+    public async Task<IEnumerable<Doctor>> GetDoctorsByPatientAsync(Guid patientId)
+    {
+       return await this._doctorRepository.GetDoctorsByPatientAsync(patientId: patientId);
+    }
+ 
 }

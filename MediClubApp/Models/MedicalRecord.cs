@@ -17,6 +17,7 @@ public class MedicalRecord
 
     [ForeignKey("DoctorId")]
     public Doctor Doctor { get; set; }
+    
     public DateTime Date { get; set; }
     public string Diagnosis { get; set; }
     public string Treatment { get; set; }

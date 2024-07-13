@@ -5,7 +5,7 @@ using MediClubApp.Repositories.Base.CRUD;
 
 namespace MediClubApp.Repositories.Base;
 
-public interface IDoctorRepository :  ICreateAsync<Doctor>, IGetAsync<Doctor>, IGetAllAsync<Doctor>, IUpdateAsync<Doctor>, IDeleteAsync<Doctor>
+public interface IDoctorRepository : ICreateAsync<Doctor>, IGetAsync<Doctor>, IGetAllAsync<Doctor>, IUpdateAsync<Doctor>, IDeleteAsync<Doctor>
 {
     Task<Doctor?> GetAsync(Guid id);
     Task<IEnumerable<Doctor>> GetAllAsync();
@@ -14,4 +14,6 @@ public interface IDoctorRepository :  ICreateAsync<Doctor>, IGetAsync<Doctor>, I
     Task DeleteByIdAsync(Guid id);
     Task<List<Doctor>> GetDoctorsByDepartmentAsync(Guid departmentId);
     Task<List<Doctor>> GetDoctorsBySpecializationAsync(Guid specializationId);
-} 
+    Task<IEnumerable<Doctor>> GetDoctorsByPatientAsync(Guid patientId);
+
+}

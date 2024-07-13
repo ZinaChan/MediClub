@@ -12,4 +12,6 @@ public interface IDoctorService
     Task<List<Doctor>> GetDoctorsByDepartmentAsync(Guid departmentId);
 
     Task<List<Doctor>> GetDoctorsBySpecializationAsync(Guid specializationId);
+
+    Task<IEnumerable<Doctor>> GetDoctorsByPatientAsync(Guid patientId);
 }

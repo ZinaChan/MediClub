@@ -13,7 +13,9 @@ public class MedicalRecordValidator : AbstractValidator<MedicalRecord>
             .NotEmpty().WithMessage("Doctor is required.");
 
         RuleFor(medicalRecord => medicalRecord.Date)
-            .NotEmpty().WithMessage("Date is required.");
+            .NotEmpty().WithMessage("Date is required.")
+            .Must(date => date.Date >= DateTime.Today)
+        .WithMessage("Date must be today or in the future.");
 
         RuleFor(medicalRecord => medicalRecord.Diagnosis)
             .NotEmpty().WithMessage("Diagnosis is required.");

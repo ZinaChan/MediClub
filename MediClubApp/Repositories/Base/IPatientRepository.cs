@@ -12,4 +12,5 @@ public interface IPatientRepository : ICreateAsync<Patient>, IGetAsync<Patient>,
     Task CreateAsync(Patient newPatient);
     Task UpdateAsync(Guid id, Patient newPatient);
     Task DeleteByIdAsync(Guid id);
+    Task<IEnumerable<Patient>> GetPatientsByDoctorAsync(Guid doctorId);
 }

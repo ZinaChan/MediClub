@@ -77,21 +77,7 @@ public class IdentityController : Controller
             var claimsPrincipal = new ClaimsPrincipal(claimsIdentity);
             await base.HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, claimsPrincipal);
 
-            if (!string.IsNullOrWhiteSpace(loginDto.ReturnUrl))
-            {
-                return base.Redirect(loginDto.ReturnUrl);
-            }
-            if (base.User.IsInRole("Admin"))
-            {
-                return base.RedirectToAction(controllerName: "Dashboard", actionName: "Index");
-
-            }
-            else if (base.User.IsInRole("Doctor"))
-            {
-                return base.RedirectToAction(controllerName: "Patient", actionName: "Index");
-
-            }
-            return base.RedirectToAction(controllerName: "Doctor", actionName: "Index");
+            return base.RedirectToAction(controllerName: "Home", actionName: "Index");
 
 
         }

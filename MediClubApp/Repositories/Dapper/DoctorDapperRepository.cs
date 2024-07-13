@@ -72,4 +72,9 @@ public class DoctorDapperRepository : IDoctorRepository
     {
         throw new NotImplementedException();
     }
+
+    public Task<IEnumerable<Doctor>> GetDoctorsByPatientAsync(Guid patientId)
+    {
+        throw new NotImplementedException();
+    }
 }

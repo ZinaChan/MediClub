@@ -1,6 +1,7 @@
 ﻿@{
     var IsAuthenticated = base.User.Identity?.IsAuthenticated ?? false;
     var IsAdmin = base.User.IsInRole("Admin");
+    var IsDoctor = base.User.IsInRole("Doctor");
 
     var firstnameCookie = base.User.Claims.FirstOrDefault(claim => claim.Type == ClaimTypes.Name);
 }
@@ -49,10 +50,24 @@
                                 <li class="nav-item">
                                     <a class="nav-link" href="#contact">Contact Us</a>
                                 </li>
-                                
-                                <li class="nav-item">
-                                    <a class="nav-link" asp-route="Services"> Services</a>
-                                </li>
+                                @if (IsAdmin)
+                                {
+                                    <li class="nav-item">
+                                        <a class="nav-link" asp-route="Services"> Services</a>
+                                    </li>
+                                }
+                                else if (IsDoctor)
+                                {
+                                    <li class="nav-item">
+                                        <a class="nav-link" asp-controller="Patient" asp-action="Index"> Services</a>
+                                    </li>
+                                }
+                                else
+                                {
+                                    <li class="nav-item">
+                                        <a class="nav-link" asp-controller="Doctor" asp-action="Index"> Services</a>
+                                    </li>
+                                } 
                                 <li class="nav-item dropdown">
                                     <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
                                         aria-expanded="false">
@@ -161,7 +176,7 @@
                 </section>
             </div>
         </header>
-    } 
+    }
     <div class="container">
         <main role="main" class="pb-3">
             @RenderBody()

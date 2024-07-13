@@ -2,6 +2,7 @@
 @{
     Layout = "~/Views/Shared/_LayoutAuth.cshtml";
     ViewData["Title"] = "Patient Page";
+    var IsAdmin = base.User.IsInRole("Admin");
 }
 
 @functions {
@@ -62,10 +63,13 @@ else
                                     <p class="card-text"><strong>Email:</strong> @(patient?.Email ?? "UNKNOWN")</p>
                                     <div class="d-flex justify-content-between">
                                         <div>
-                                        <a class="btn btn-primary" asp-controller="Patient" asp-action="PatientInfo"
-                                            asp-route-patientId="@patient?.Id">View</a>
-                                            <button class="btn btn-danger"
-                                                onclick="deletePatient('@patient?.Id')">Delete</button>
+                                            <a class="btn btn-primary" asp-controller="Patient" asp-action="PatientInfo"
+                                                asp-route-patientId="@patient?.Id">View</a>
+                                            @if (IsAdmin)
+                                            {
+                                                <button class="btn btn-danger"
+                                                    onclick="deletePatient('@patient?.Id')">Delete</button>
+                                            }
                                         </div>
                                     </div>
                                 </div>
@@ -73,7 +77,7 @@ else
                         </div>
                     </div>
                 </div>
-            }
+            } 
         </div>
     </div>
 }
@@ -95,33 +99,34 @@ else
         });
     }
 
-    // Handle Enter key press in the search input
     document.getElementById('searchString').addEventListener('keydown', function (event) {
         if (event.key === 'Enter') {
             searchPatients();
         }
     });
-
-    function deletePatient(id) {
-        if (confirm('Are you sure you want to delete this patient?')) {
-            fetch(`/Patient/${id}`, {
-                method: 'DELETE',
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-            })
-                .then(response => {
-                    if (response.ok) {
-                        alert('Patient deleted successfully!');
-                        window.location.reload();
-                    } else {
-                        alert('Failed to delete patient.');
+</script>
+ 
+    <script>
+        function deletePatient(id) {
+            if (confirm('Are you sure you want to delete this patient?')) {
+                fetch(`/Patient/${id}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'Content-Type': 'application/json'
                     }
                 })
-                .catch(error => console.error('Error deleting patient:', error));
+                    .then(response => {
+                        if (response.ok) {
+                            alert('Patient deleted successfully!');
+                            window.location.reload();
+                        } else {
+                            alert('Failed to delete patient.');
+                        }
+                    })
+                    .catch(error => console.error('Error deleting patient:', error));
+            }
         }
-    }
-</script>
+    </script> 
 
 @section Scripts {
     <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>

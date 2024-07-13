@@ -39,7 +39,31 @@ public class AppointmentEFCoreRepository : IAppointmentRepository
                         .Include(a => a.Patient)
                         .Include(a => a.Room)
                         .ToListAsync();
-        return appointment; 
+        return appointment;
+    }
+
+    public async Task<IEnumerable<Appointment>> GetAppointmentsForDoctorAsync(Guid doctorId)
+    {
+        var appointments = await _clinicDbContext.Appointments
+                            .Include(a => a.Doctor)
+                            .Include(a => a.Patient)
+                            .Include(a => a.Room)
+                            .Where(a => a.DoctorId == doctorId)
+                            .ToListAsync();
+
+        return appointments;
+    }
+
+    public async Task<IEnumerable<Appointment>> GetAppointmentsForPatientAsync(Guid patientId)
+    {
+        var appointments = await _clinicDbContext.Appointments
+                            .Include(a => a.Doctor)
+                            .Include(a => a.Patient)
+                            .Include(a => a.Room)
+                            .Where(a => a.PatientId == patientId)
+                            .ToListAsync();
+
+        return appointments;
     }
 
     public Task<Appointment?> GetAsync(Guid id)
@@ -56,9 +80,9 @@ public class AppointmentEFCoreRepository : IAppointmentRepository
         oldAppointment.Patient = await this._clinicDbContext.Patients.FirstOrDefaultAsync(s => s.Id == newAppointment.PatientId) ?? new Patient();
         oldAppointment.DoctorId = newAppointment.DoctorId;
         oldAppointment.Doctor = await this._clinicDbContext.Doctors.FirstOrDefaultAsync(s => s.Id == newAppointment.DoctorId) ?? new Doctor();
-        oldAppointment.RoomId = newAppointment.RoomId; 
+        oldAppointment.RoomId = newAppointment.RoomId;
         oldAppointment.Room = await this._clinicDbContext.Rooms.FirstOrDefaultAsync(s => s.Id == newAppointment.RoomId) ?? new Room();
-        oldAppointment.Reason = newAppointment.Reason ?? oldAppointment.Reason; 
+        oldAppointment.Reason = newAppointment.Reason ?? oldAppointment.Reason;
 
         if (newAppointment.Date != default(DateTime))
         {
@@ -72,4 +96,4 @@ public class AppointmentEFCoreRepository : IAppointmentRepository
         this._clinicDbContext.Update(oldAppointment);
         await this._clinicDbContext.SaveChangesAsync();
     }
-} 
+}

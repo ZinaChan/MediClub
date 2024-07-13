@@ -48,5 +48,16 @@ public class AppointmentService : IAppointmentService
 
         await _appointmentRepository.DeleteByIdAsync(id: id);
     }
+
+    public async Task<IEnumerable<Appointment>> GetAppointmentsForDoctorAsync(Guid doctorId)
+    {
+        return await _appointmentRepository.GetAppointmentsForDoctorAsync(doctorId: doctorId);
+
+    }
+
+    public async Task<IEnumerable<Appointment>> GetAppointmentsForPatientAsync(Guid patientId)
+    {
+        return await _appointmentRepository.GetAppointmentsForPatientAsync(patientId: patientId);
+    }
 }
 
