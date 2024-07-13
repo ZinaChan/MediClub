@@ -4,17 +4,28 @@
     ViewData["Title"] = "MedicalRecord Page";
 }
 
-<h1> MedicalRecords List</h1>
+<h1>Medical Records List</h1>
 <hr />
-<a asp-route="CreateMedicalRecordPage"> <button class="btn-modern">Create new MedicalRecord</button> </a>
+<div class="col mb-3">
+    <div class="row-cols-auto mb-3">
+        <a asp-route="CreateMedicalRecordPage" class="btn-modern">Create new Medical Record</a>
+    </div>
+</div>
+<div class="row-cols-auto">
+    <div class="input-group">
+        <input type="text" class="form-control" placeholder="Search by name" id="searchString"
+            onkeypress="handleKeyPress(event)">
+        <button type="button" class="btn btn-outline-primary" onclick="searchMedicalRecord()">Search</button>
+    </div>
+</div>
 <br />
 <br />
 
 @if (!Model.MedicalRecords.Any())
 {
     <div class="no-medicalRecords">
-        <img src="/images/sad-star.png" alt="No medicalRecords" class="sad-face" />
-        <p>No medicalRecords available at the moment.</p>
+        <img src="/images/sad-star.png" alt="No medical records" class="sad-face" />
+        <p>No medical records available at the moment.</p>
     </div>
 }
 else
@@ -25,14 +36,12 @@ else
             <li class="medicalRecord-item">
                 <a class="nav-link" asp-controller="MedicalRecord" asp-action="MedicalRecordInfo"
                     asp-route-medicalRecordId="@medicalRecord?.Id">
-
                     <div class="medicalRecord-details">
                         <p><strong>Patient:</strong> @(medicalRecord?.Patient.FirstName ?? "UNKNOWN")
                             @(medicalRecord?.Patient.LastName ?? "UNKNOWN")</p>
                         <p><strong>Doctor:</strong> @(medicalRecord?.Doctor.FirstName ?? "UNKNOWN")
-                            @(medicalRecord?.Doctor.LastName
-                                ?? "UNKNOWN")</p>
-                        <p><strong>Date :</strong> @medicalRecord?.Date </p>
+                            @(medicalRecord?.Doctor.LastName ?? "UNKNOWN")</p>
+                        <p><strong>Date :</strong> @medicalRecord?.Date.ToString("dd.MM.yyyy")</p>
                         <p><strong>Diagnosis:</strong> @(medicalRecord?.Diagnosis ?? "UNKNOWN")</p>
                         <p><strong>Treatment:</strong> @(medicalRecord?.Treatment ?? "UNKNOWN")</p>
                     </div>
@@ -43,141 +52,172 @@ else
                     <button class="delete-btn btn-danger" onclick="deleteMedicalRecord('@medicalRecord!.Id')">Delete</button>
                 </div>
             </li>
-            <hr class="divider" />
         }
     </ol>
 }
 
 <div id="updateForm" class="update-form" style="display:none;">
-    <h3>Update Medical record</h3>
-    <input type="hidden" id="medicalRecordId">
-    <div>
-        <label for="newDoctor">Doctor:</label>
-        <select id="newDoctor" name="newDoctor" required>
-            <option value="">Select Doctor</option>
-            @foreach (Doctor doctor in Model.Doctors)
-            {
-                <option value="@doctor.Id">@doctor.FirstName @doctor.LastName</option>
-            }
-        </select>
-    </div>
-    <div>
-        <label for="newPatient">Patient:</label>
-        <select id="newPatient" name="newPatient" required>
-            <option value="">Select Patient</option>
-            @foreach (Patient patient in Model.Patients)
-            {
-                <option value="@patient.Id">@patient.FirstName @patient.LastName</option>
-            }
-        </select>
-    </div>
-    <div>
-        <label for="newDate">Date:</label>
-        <input type="date" id="newDate">
-    </div>
-    <div>
-        <label for="newDiagnosis">Diagnosis:</label>
-        <input type="text" id="newDiagnosis">
-    </div>
-    <div>
-        <label for="newTreatment">Treatment:</label>
-        <input type="text" id="newTreatment">
-    </div>
-    <br>
-    <div class="medicalRecord-actions">
-        <button onclick="updateMedicalRecord()">Save</button>
-        <button onclick="hideUpdateForm()">Cancel</button>
+    <div class="card">
+        <h3 class="card-header">Update Medical Record</h3>
+        <input type="hidden" id="medicalRecordId">
+        <div class="card-body">
+            <div class="mb-3">
+                <label for="newDoctor">Doctor:</label>
+                <select id="newDoctor" name="newDoctor" required>
+                    <option value="">Select Doctor</option>
+                    @foreach (Doctor doctor in Model.Doctors)
+                    {
+                        <option value="@doctor.Id">@doctor.FirstName @doctor.LastName</option>
+                    }
+                </select>
+            </div>
+            <div class="mb-3">
+                <label for="newPatient">Patient:</label>
+                <select id="newPatient" name="newPatient" required>
+                    <option value="">Select Patient</option>
+                    @foreach (Patient patient in Model.Patients)
+                    {
+                        <option value="@patient.Id">@patient.FirstName @patient.LastName</option>
+                    }
+                </select>
+            </div>
+            <div class="mb-3">
+                <label for="newDate">Date:</label>
+                <input type="date" id="newDate">
+            </div>
+            <div class="mb-3">
+                <label for="newDiagnosis">Diagnosis:</label>
+                <input type="text" id="newDiagnosis">
+            </div>
+            <div class="mb-3">
+                <label for="newTreatment">Treatment:</label>
+                <input type="text" id="newTreatment">
+            </div>
+            <br>
+            <div class="mb-3">
+                <button onclick="updateMedicalRecord()">Save</button>
+                <button onclick="hideUpdateForm()">Cancel</button>
+            </div>
+        </div>
     </div>
 </div>
 
-<script>
-    function showUpdateForm(id) {
-        fetchMedicalRecordsAndUpdateForm(id);
-    }
 
-    function fetchMedicalRecordsAndUpdateForm(id) {
-        fetch(`/MedicalRecord/Json/${id}`)
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Failed to fetch medical record.');
-                }
-                return response.json();
-            })
-            .then(data => {
-                updateFormWithMedicalRecordData(data);
-            })
-            .catch(error => console.error('Error fetching medical record:', error));
-    }
+@section Scripts {
+    <script>
+        function showUpdateForm(id) {
+            fetchMedicalRecordsAndUpdateForm(id);
+        }
 
-    function updateFormWithMedicalRecordData(data) {
-        document.getElementById('medicalRecordId').value = data.id;
-        document.getElementById('newPatient').value = data.patientId;
-        document.getElementById('newDoctor').value = data.doctorId;
-        document.getElementById('newDate').value = data.date.split('T')[0];
-        document.getElementById('newDiagnosis').value = data.diagnosis;
-        document.getElementById('newTreatment').value = data.treatment;
-        document.getElementById('updateForm').style.display = 'block';
-    }
+        function fetchMedicalRecordsAndUpdateForm(id) {
+            fetch(`/MedicalRecord/Json/${id}`)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Failed to fetch medical record.');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    updateFormWithMedicalRecordData(data);
+                })
+                .catch(error => console.error('Error fetching medical record:', error));
+        }
 
-    function hideUpdateForm() {
-        document.getElementById('updateForm').style.display = 'none';
-    }
+        function updateFormWithMedicalRecordData(data) {
+            document.getElementById('medicalRecordId').value = data.id;
+            document.getElementById('newPatient').value = data.patientId;
+            document.getElementById('newDoctor').value = data.doctorId;
+            document.getElementById('newDate').value = data.date.split('T')[0];
+            document.getElementById('newDiagnosis').value = data.diagnosis;
+            document.getElementById('newTreatment').value = data.treatment;
+            document.getElementById('updateForm').style.display = 'block';
+        }
 
-    function updateMedicalRecord() {
-        const medicalRecordId = document.getElementById('medicalRecordId').value;
-        const patient = document.getElementById('newPatient').value;
-        const doctor = document.getElementById('newDoctor').value;
-        const date = document.getElementById('newDate').value;
-        const diagnosis = document.getElementById('newDiagnosis').value;
-        const treatment = document.getElementById('newTreatment').value;
+        function hideUpdateForm() {
+            document.getElementById('updateForm').style.display = 'none';
+        }
 
-        const updatedMedicalRecord = {
-            id: medicalRecordId,
-            patientId: patient,
-            doctorId: doctor,
-            date: date,
-            diagnosis: diagnosis,
-            treatment: treatment
-        };
+        function updateMedicalRecord() {
+            const medicalRecordId = document.getElementById('medicalRecordId').value;
+            const patient = document.getElementById('newPatient').value;
+            const doctor = document.getElementById('newDoctor').value;
+            const date = document.getElementById('newDate').value;
+            const diagnosis = document.getElementById('newDiagnosis').value;
+            const treatment = document.getElementById('newTreatment').value;
 
-        fetch(`/MedicalRecord`, {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(updatedMedicalRecord)
-        })
-            .then(response => {
-                if (response.ok) {
-                    alert('Medical record updated successfully!');
-                    hideUpdateForm();
-                    window.location.reload();
-                } else {
-                    alert('Failed to update medical record.');
-                }
-            })
-            .catch(error => console.error('Error updating medical record:', error));
-    }
+            const updatedMedicalRecord = {
+                id: medicalRecordId,
+                patientId: patient,
+                doctorId: doctor,
+                date: date,
+                diagnosis: diagnosis,
+                treatment: treatment
+            };
 
-    function deleteMedicalRecord(id) {
-        if (confirm('Are you sure you want to delete this medical record?')) {
-            fetch(`/MedicalRecord/${id}`, {
-                method: 'DELETE',
+            fetch(`/MedicalRecord`, {
+                method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json'
-                }
+                },
+                body: JSON.stringify(updatedMedicalRecord)
             })
                 .then(response => {
                     if (response.ok) {
-                        alert('Medical record deleted successfully!');
+                        alert('Medical record updated successfully!');
+                        hideUpdateForm();
                         window.location.reload();
                     } else {
-                        alert('Failed to delete medical record.');
+                        alert('Failed to update medical record.');
                     }
-                });
+                })
+                .catch(error => console.error('Error updating medical record:', error));
         }
-    }
-</script>
+
+        function deleteMedicalRecord(id) {
+            if (confirm('Are you sure you want to delete this medical record?')) {
+                fetch(`/MedicalRecord/${id}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                })
+                    .then(response => {
+                        if (response.ok) {
+                            alert('Medical record deleted successfully!');
+                            window.location.reload();
+                        } else {
+                            alert('Failed to delete medical record.');
+                        }
+                    });
+            }
+        }
+
+        function searchMedicalRecord() {
+            const searchString = document.getElementById('searchString').value.trim().toLowerCase();
+            const medicalRecordItems = document.querySelectorAll('.medicalRecord-item');
+
+            medicalRecordItems.forEach(item => {
+                const patientName = item.querySelector('.medicalRecord-details p:first-child').textContent.trim().toLowerCase();
+                const doctorName = item.querySelector('.medicalRecord-details p:nth-child(2)').textContent.trim().toLowerCase();
+
+                const matchesSearch = patientName.includes(searchString) ||
+                    doctorName.includes(searchString)
+
+                if (matchesSearch) {
+                    item.style.display = '';
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+        }
+
+        function handleKeyPress(event) {
+            if (event.key === 'Enter') {
+                searchMedicalRecord();
+            }
+        }
+    </script>
+}
 
 <style>
     h1 {

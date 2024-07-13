@@ -35,7 +35,7 @@ public class UserController : Controller
     {
         try
         {
-            var users = await this._userService.GetAllUsersAsync(); 
+            var users = await this._userService.GetAllUsersAsync();
             return base.Json(data: users);
         }
         catch (System.Exception ex)
@@ -66,6 +66,11 @@ public class UserController : Controller
         try
         {
             var doctor = await this._userService.GetUserAsync(id: userId);
+            if (doctor == null)
+            {
+                return NotFound();
+            }
+
             return base.View(doctor);
         }
         catch (System.Exception ex)
@@ -73,7 +78,7 @@ public class UserController : Controller
             return base.StatusCode(statusCode: StatusCodes.Status500InternalServerError, value: ex.Message);
         }
     }
- 
+
     [HttpGet]
     [Route("[action]", Name = "CreateUserPage")]
     public IActionResult Create()
@@ -81,7 +86,46 @@ public class UserController : Controller
         return base.View();
     }
 
-    
+    [HttpPost]
+    [Route("[action]", Name = "CreateUserEndpoint")]
+    public async Task<IActionResult> Registration([FromForm] User user, IFormFile image)
+    {
+        try
+        {
+            var users = new User
+            {
+                FirstName = user.FirstName,
+                LastName = user.LastName,
+                Email = user.Email,
+                Password = user.Password,
+                Gender = user.Gender,
+                DateOfBirth = user.DateOfBirth,
+                PhoneNumber = user.PhoneNumber,
+                Address = user.Address,
+            };
+
+            var validationResult = this._validator.Validate(user);
+            if (!validationResult.IsValid)
+            {
+                foreach (var error in validationResult.Errors)
+                {
+                    base.ModelState.AddModelError(key: error.PropertyName, errorMessage: error.ErrorMessage);
+                }
+                return View();
+            }
+
+            await this._userService.CreateUserAsync(newUser: user, image: image);
+        }
+        catch (Exception ex)
+        {
+            TempData["error"] = ex.Message;
+            return base.RedirectToRoute("RegistrationView");
+        }
+
+        return base.RedirectToRoute("LoginView");
+    }
+
+
 
     [HttpPut]
     public async Task<IActionResult> UpdateDoctor([FromBody] User user)
@@ -110,4 +154,24 @@ public class UserController : Controller
             return base.StatusCode(statusCode: StatusCodes.Status500InternalServerError, value: ex.Message);
         }
     }
+
+    [HttpPost]
+    public async Task<IActionResult> ChangeAvatar(Guid id, IFormFile avatarFile)
+    {
+        try
+        {
+            if (avatarFile == null || avatarFile.Length == 0)
+            {
+                return BadRequest("No file uploaded or file is empty.");
+            }
+
+            var avatarUrl = await this._userService.ChangeAvatar(id: id, formFile: avatarFile);
+            return Json(new { avatarUrl });
+        }
+        catch (System.Exception ex)
+        {
+            return base.StatusCode(statusCode: StatusCodes.Status500InternalServerError, value: ex.Message);
+        }
+    }
+
 }

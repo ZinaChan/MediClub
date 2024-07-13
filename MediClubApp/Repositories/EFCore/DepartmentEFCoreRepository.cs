@@ -51,7 +51,7 @@ public class DepartmentEFCoreRepository : IDepartmentRepository
         var oldDepartment = await this._clinicDbContext.Departments.FirstOrDefaultAsync(d => d.Id == id);
         if (oldDepartment is null) return;
 
-        oldDepartment.Name = newDepartment.Name;
+        oldDepartment.Name = newDepartment.Name ?? oldDepartment.Name; 
 
         this._clinicDbContext.Update(oldDepartment);
         await this._clinicDbContext.SaveChangesAsync();

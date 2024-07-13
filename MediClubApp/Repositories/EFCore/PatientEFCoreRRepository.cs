@@ -52,13 +52,17 @@ public class PatientEFCoreRRepository : IPatientRepository
 
         if (oldPatient is null) return;
 
-        oldPatient.FirstName = newPatient.FirstName;
-        oldPatient.LastName = newPatient.LastName;
-        oldPatient.DateOfBirth = newPatient.DateOfBirth;
-        oldPatient.Gender = newPatient.Gender;
-        oldPatient.Email = newPatient.Email;
-        oldPatient.PhoneNumber = newPatient.PhoneNumber;
-        oldPatient.Address = newPatient.Address;
+        oldPatient.FirstName = newPatient.FirstName ?? oldPatient.FirstName;
+        oldPatient.Gender = newPatient.Gender ?? oldPatient.Gender;
+        oldPatient.Email = newPatient.Email ?? oldPatient.Email;
+        oldPatient.PhoneNumber = newPatient.PhoneNumber ?? oldPatient.PhoneNumber;
+        oldPatient.Address = newPatient.Address ?? oldPatient.Address;
+        oldPatient.LastName = newPatient.LastName ?? oldPatient.LastName;
+
+        if (newPatient.DateOfBirth != default(DateTime))
+        {
+            oldPatient.DateOfBirth = oldPatient.DateOfBirth;
+        }
 
         this._clinicDbContext.Update(oldPatient);
         await this._clinicDbContext.SaveChangesAsync();

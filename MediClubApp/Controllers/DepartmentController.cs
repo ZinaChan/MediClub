@@ -1,5 +1,6 @@
 using FluentValidation;
 using MediClubApp.Models;
+using MediClubApp.Repositories.Base;
 using MediClubApp.Services.Base;
 using MediClubApp.ViewModels;
 using Microsoft.AspNetCore.Authorization;
@@ -13,10 +14,12 @@ public class DepartmentController : Controller
 {
     private readonly IValidator<Department> _validator;
     private readonly IDepartmentService _departmentService;
-    public DepartmentController(IValidator<Department> validator, IDepartmentService departmentService)
+    private readonly IDoctorService _doctorService;
+    public DepartmentController(IValidator<Department> validator, IDepartmentService departmentService, IDoctorRepository doctorRepository, IDoctorService doctorService)
     {
         this._validator = validator;
         this._departmentService = departmentService;
+        this._doctorService = doctorService;
     }
 
     [HttpGet]
@@ -70,6 +73,11 @@ public class DepartmentController : Controller
         try
         {
             var department = await this._departmentService.GetDepartmentAsync(id: departmentId);
+            if (department == null)
+            {
+                return NotFound();
+            }
+            department!.Doctors = await this._doctorService.GetDoctorsByDepartmentAsync(departmentId: departmentId);
             return base.View(model: department);
         }
         catch (System.Exception ex)

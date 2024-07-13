@@ -83,6 +83,10 @@ public class AppointmentController : Controller
         try
         {
             var appointment = await this._appointmentService.GetAppointmentAsync(id: appointmentId);
+            if (appointment == null)
+            {
+                return NotFound();
+            }
             appointment!.Doctor = await this._doctorService.GetDoctorAsync(id: appointment.DoctorId) ?? new Doctor();
             appointment!.Patient = await this._patientService.GetPatientAsync(id: appointment.PatientId) ?? new Patient();
             appointment!.Room = await this._roomService.GetRoomAsync(id: appointment.RoomId) ?? new Room();

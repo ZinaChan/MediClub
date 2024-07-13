@@ -1,78 +1,133 @@
-﻿@model IEnumerable<User>;
+﻿@model IEnumerable<User>
 @{
     Layout = "~/Views/Shared/_LayoutAuth.cshtml";
     ViewData["Title"] = "User Page";
 }
 
-<h1> Users List</h1>
+@functions {
+    public string GetDefaultAvatarUrl(string gender)
+    {
+        if (gender == nameof(Gender.Male))
+        {
+            return "images/anonymous-man.png";
+        }
+        else if (gender == nameof(Gender.Female))
+        {
+            return "images/anonymous-woman.png";
+        }
+        else
+        {
+            return "images/anonymous.png";
+        }
+    }
+}
+
+<h1>Users List</h1>
 <hr />
-<a asp-route="CreateUserPage"> <button class="btn-modern">Create new User</button> </a>
-<br />
-<br />
+
+<div class="col mb-3">
+    @* <div class="row-cols-4 mb-1">
+    <a asp-action="Create" class="btn btn-success">Create new User</a>
+    </div> *@
+    <div class="row-col-auto">
+        <div class="input-group">
+            <input type="text" class="form-control" placeholder="Search by name or email" id="searchString"
+                onkeypress="handleKeyPress(event)">
+            <button type="button" class="btn btn-outline-primary" onclick="searchUsers()">Search</button>
+        </div>
+    </div>
+</div>
 
 @if (!Model.Any())
 {
-    <div class="no-users">
-        <img src="/images/sad-star.png" alt="No users" class="sad-face" />
+    <div class="text-center">
+        <img src="/images/sad-star.png" alt="No users" class="img-fluid" style="max-width: 150px;" />
         <p>No users available at the moment.</p>
     </div>
 }
 else
 {
-    <ol class="card-list">
-        @foreach (var user in Model)
-        {
-
-            <li class="user-item">
-                <a class="nav-link" asp-controller="User" asp-action="UserInfo" asp-route-userId="@user?.Id">
-                    <div class="user-details">
-                        <p><strong>AvatarUrl:</strong> @(user?.AvatarUrl ?? "UNKNOWN")</p>
-                        <p><strong>FirstName:</strong> @(user?.FirstName ?? "UNKNOWN")</p>
-                        <p><strong>LastName:</strong> @(user?.LastName ?? "UNKNOWN")</p>
-                        <p><strong>Email:</strong> @user?.Email </p>
+    <div class="container">
+        <div class="row row-cols-1 row-cols-md-2 g-4" id="userList">
+            @foreach (var user in Model)
+            {
+                <div class="col user-card">
+                    <div class="card mb-3">
+                        <div class="row g-0">
+                            <div class="col-md-4">
+                                <img src="/@(user.AvatarUrl ?? GetDefaultAvatarUrl(user.Gender))"
+                                    class="img-fluid rounded-start" alt="User Avatar">
+                            </div>
+                            <div class="col-md-8">
+                                <div class="card-body">
+                                    <h5 class="card-title">@user.FirstName @user.LastName</h5>
+                                    <p class="card-text"><strong>Role:</strong> @user.Role</p>
+                                    <div class="d-flex justify-content-between">
+                                        <a class="btn btn-primary" asp-controller="User" asp-action="UserInfo"
+                                            asp-route-userId="@user.Id">View</a>
+                                        <div>
+                                            <button class="btn btn-warning me-2"
+                                                onclick="showUpdateForm('@user.Id')">Update</button>
+                                            <button class="btn btn-danger" onclick="deleteUser('@user.Id')">Delete</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                </a>
-                <br>
-                <div class="user-actions">
-                    <button class="update-btn btn-close-white" onclick="showUpdateForm('@user!.Id')">Update</button>
-                    <button class="delete-btn btn-danger" onclick="deleteUser('@user!.Id')">Delete</button>
                 </div>
-            </li>
-            <hr class="divider" />
-        }
-    </ol>
+            }
+        </div>
+    </div>
 }
 
 <div id="updateForm" class="update-form" style="display:none;">
-    <h3>Update User</h3>
-    <input type="hidden" id="userId">
-    <div>
-        <label for="newLogin">Login:</label>
-        <input type="text" id="newLogin">
-    </div>
-    <div>
-        <label for="newPassword">Password:</label>
-        <input type="text" id="newPassword">
-    </div>
-    <div>
-        <label for="newEmail">Email:</label>
-        <input type="email" id="newEmail">
-    </div>
-    <div>
-        <label for="newUsername">Username:</label>
-        <input type="text" id="newUsername">
-    </div>
-    <div>
-        <label for="newAvatarUrl">AvatarUrl:</label>
-        <input type="text" id="newAvatarUrl">
-    </div>
-    <br />
-    <div class="user-actions">
-        <button onclick="updateUser()">Save</button>
-        <button onclick="hideUpdateForm()">Cancel</button>
+    <div class="card">
+        <h3 class="card-header">Update User</h3>
+        <input type="hidden" id="userId">
+        <div class="card-body">
+            <div class="mb-3">
+                <label for="newFirstName" class="form-label">First Name:</label>
+                <input type="text" id="newFirstName" class="form-control">
+            </div>
+
+            <div class="mb-3">
+                <label for="newLastName" class="form-label">Last Name:</label>
+                <input type="text" id="newLastName" class="form-control">
+            </div>
+
+            <div class="mb-3">
+                <label for="newUserRole">Role:</label>
+                <select id="newUserRole" class="form-select" aria-label="Select Role">
+                    @foreach (UserRole role in Enum.GetValues(typeof(UserRole)))
+                    {
+                        <option value="@role">@role</option>
+                    }
+                </select>
+            </div>
+
+            <div class="mb-3">
+                <label for="newGender">Gender:</label>
+                <select id="newGender" class="form-select" aria-label="Select Gender">
+                    @foreach (Gender gender in Enum.GetValues(typeof(Gender)))
+                    {
+                        <option value="@gender">@gender</option>
+                    }
+                </select>
+            </div>
+
+            <div class="mb-3">
+                <label for="newPhoneNumber" class="form-label">Phone Number:</label>
+                <input type="text" id="newPhoneNumber" class="form-control">
+            </div>
+
+            <div class="mb-3">
+                <button type="button" class="btn btn-success" onclick="updateUser()">Save</button>
+                <button type="button" class="btn btn-secondary" onclick="hideUpdateForm()">Cancel</button>
+            </div>
+        </div>
     </div>
 </div>
-
 
 <script>
     function showUpdateForm(id) {
@@ -91,16 +146,15 @@ else
                 updateFormWithUserData(data);
             })
             .catch(error => console.error('Error fetching user:', error));
-
     }
 
     function updateFormWithUserData(data) {
         document.getElementById('userId').value = data.id;
-        document.getElementById('newLogin').value = data.firstName;
-        document.getElementById('newPassword').value = data.lastName;
-        document.getElementById('newEmail').value = data.email;
-        document.getElementById('newUsername').value = data.phoneNumber;
-        document.getElementById('newAvatarUrl').value = data.address;
+        document.getElementById('newFirstName').value = data.firstName;
+        document.getElementById('newLastName').value = data.lastName;
+        document.getElementById('newPhoneNumber').value = data.phoneNumber;
+        document.getElementById('newGender').value = data.gender;
+        document.getElementById('newUserRole').value = data.role;
         document.getElementById('updateForm').style.display = 'block';
     }
 
@@ -110,19 +164,19 @@ else
 
     function updateUser() {
         const userId = document.getElementById('userId').value;
-        const login = document.getElementById('newLogin').value;
-        const password = document.getElementById('newPassword').value;
-        const email = document.getElementById('newEmail').value;
-        const username = document.getElementById('newUsername').value;
-        const avatarUrl = document.getElementById('newAvatarUrl').value;
+        const firstName = document.getElementById('newFirstName').value;
+        const lastName = document.getElementById('newLastName').value;
+        const phoneNumber = document.getElementById('newPhoneNumber').value;
+        const gender = document.getElementById('newGender').value;
+        const role = document.getElementById('newUserRole').value;
 
         const updatedUser = {
             id: userId,
-            login: login,
-            password: password,
-            email: email,
-            username: username,
-            avatarUrl: avatarUrl
+            firstName: firstName,
+            lastName: lastName,
+            phoneNumber: phoneNumber,
+            gender: gender,
+            role: role
         };
 
         fetch(`/User`, {
@@ -137,7 +191,6 @@ else
                     alert('User updated successfully!');
                     hideUpdateForm();
                     window.location.reload();
-
                 } else {
                     alert('Failed to update user.');
                 }
@@ -163,116 +216,33 @@ else
                 });
         }
     }
+
+    function searchUsers() {
+        const searchString = document.getElementById('searchString').value.trim().toLowerCase();
+        const userCards = document.querySelectorAll('.user-card');
+
+        userCards.forEach(card => {
+            const userName = card.querySelector('.card-title').textContent.trim().toLowerCase();
+            const userEmail = card.querySelector('.card-text').textContent.trim().toLowerCase();
+
+            if (userName.includes(searchString) || userEmail.includes(searchString)) {
+                card.style.display = '';
+            } else {
+                card.style.display = 'none';
+            }
+        });
+    }
+
+    function handleKeyPress(event) {
+        if (event.keyCode === 13) {
+            // Enter press
+            searchUsers();
+        }
+    }
+
 </script>
 
 <style>
-    h1 {
-        color: #333;
-    }
-
-    .btn-modern {
-        padding: 10px 20px;
-        background-color: #28a745;
-        color: white;
-        border: none;
-        border-radius: 4px;
-        font-size: 16px;
-        cursor: pointer;
-        transition: background-color 0.3s ease;
-    }
-
-    .btn-modern:hover {
-        background-color: #218838;
-    }
-
-    label {
-        display: block;
-        margin-bottom: 5px;
-        font-weight: bold;
-    }
-
-    input[type="text"],
-    input[type="date"],
-    input[type="email"],
-    select,
-    textarea {
-        width: 100%;
-        padding: 8px;
-        box-sizing: border-box;
-        border: 1px solid #ccc;
-        border-radius: 4px;
-    }
-
-    button {
-        background-color: #5cb85c;
-        color: white;
-        border: none;
-        padding: 10px 15px;
-        border-radius: 4px;
-        cursor: pointer;
-    }
-
-    button:hover {
-        background-color: #4cae4c;
-    }
-
-    .card-list {
-        list-style-type: none;
-        padding: 0;
-    }
-
-    .no-users {
-        text-align: center;
-        margin-top: 20px;
-    }
-
-    .no-users img.sad-face {
-        width: 100px;
-        height: 100px;
-    }
-
-    .no-users p {
-        font-size: 18px;
-        color: #888;
-    }
-
-    .user-item {
-        background-color: #cfe2f3;
-        border-radius: 10px;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        margin-bottom: 20px;
-        padding: 20px;
-        transition: transform 0.3s ease-in-out;
-        position: relative;
-    }
-
-    .user-item:hover {
-        transform: translateY(-5px);
-    }
-
-    .user-details p {
-        margin: 0;
-        font-size: 16px;
-        line-height: 1.6;
-        font-weight: 550;
-        color: #333;
-    }
-
-    .user-details p strong {
-        font-weight: bold;
-        color: #666;
-    }
-
-    .user-actions {
-        flex-shrink: 0;
-    }
-
-    .user-item hr {
-        margin: 10px 0;
-        border: none;
-        border-top: 1px solid #e0e0e0;
-    }
-
     .update-form {
         position: absolute;
         top: 40%;
@@ -285,38 +255,6 @@ else
         display: none;
         z-index: 1000;
         width: 400px;
-    }
-
-    .update-form label {
-        display: block;
-        margin-bottom: 5px;
-        font-weight: bold;
-    }
-
-    .update-form input[type="text"],
-    .update-form input[type="date"],
-    .update-form input[type="email"],
-    .update-form select {
-        width: calc(100% - 22px);
-        padding: 8px;
-        box-sizing: border-box;
-        border: 1px solid #ccc;
-        border-radius: 4px;
-        margin-bottom: 10px;
-    }
-
-    .update-form button {
-        background-color: #5cb85c;
-        color: white;
-        border: none;
-        padding: 10px 15px;
-        border-radius: 4px;
-        cursor: pointer;
-        margin-right: 10px;
-    }
-
-    .update-form button:hover {
-        background-color: #4cae4c;
     }
 </style>
 

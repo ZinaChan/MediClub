@@ -8,4 +8,8 @@ public interface IDoctorService
     Task CreateDoctorAsync(Doctor newDoctor);
     Task UpdateDoctorAsync(Guid id, Doctor newDoctor);
     Task DeleteDoctorByIdAsync(Guid id);
+
+    Task<List<Doctor>> GetDoctorsByDepartmentAsync(Guid departmentId);
+
+    Task<List<Doctor>> GetDoctorsBySpecializationAsync(Guid specializationId);
 }

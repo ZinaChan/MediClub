@@ -6,9 +6,20 @@
 
 <h1> Rooms List</h1>
 <hr />
-<a asp-route="CreateRoomPage"> <button class="btn-modern">Create new Room</button> </a>
-<br />
-<br />
+
+<div class="col mb-3">
+    <div class="row-cols-auto mb-3">
+        <a asp-route="CreateRoomPage" class="btn-modern">Create new Room</a>
+    </div>
+    <div class="row-cols-auto">
+        <div class="input-group">
+            <input type="text" class="form-control" placeholder="Search by name" id="searchString"
+                onkeypress="handleKeyPress(event)">
+            <button type="button" class="btn btn-outline-primary" onclick="searchRoom()">Search</button>
+        </div>
+    </div>
+</div>
+
 
 @if (!Model.Rooms.Any())
 {
@@ -36,31 +47,31 @@ else
                     <button class="delete-btn btn-danger" onclick="deleteRoom('@room!.Id')">Delete</button>
                 </div>
             </li>
-            <hr class="divider" />
         }
     </ol>
 }
 
 <div id="updateForm" class="update-form" style="display:none;">
-    <h3>Update Room</h3>
-    <input type="hidden" id="roomId">
-    <div>
-        <label for="newRoomNumber">Room Number:</label>
-        <input type="text" id="newRoomNumber">
-    </div>
-    <div>
-        <label for="newDepartment">Department:</label>
-        <select id="newDepartment" name="newDepartment" required>
-            <option value="">Select Department</option>
-            @foreach (Department department in Model.Departments)
-            {
-                <option value="@department.Id">@department.Name</option>
-            }
-        </select>
-    </div>
-    <div class="room-actions">
-        <button onclick="updateRoom()">Save</button>
-        <button onclick="hideUpdateForm()">Cancel</button>
+    <div class="card">
+        <h3 class="card-header">Update Room</h3>
+        <input type="hidden" id="roomId">
+        <div class="card-body">
+            <div class="mb-3"> <label for="newRoomNumber">Room Number:</label>
+                <input type="text" id="newRoomNumber">
+            </div>
+            <div class="mb-3"> <label for="newDepartment">Department:</label>
+                <select id="newDepartment" name="newDepartment" required>
+                    <option value="">Select Department</option>
+                    @foreach (Department department in Model.Departments)
+                    {
+                        <option value="@department.Id">@department.Name</option>
+                    }
+                </select>
+            </div>
+            <div class="mb-3"> <button onclick="updateRoom()">Save</button>
+                <button onclick="hideUpdateForm()">Cancel</button>
+            </div>
+        </div>
     </div>
 </div>
 
@@ -140,6 +151,28 @@ else
                         alert('Failed to delete room.');
                     }
                 });
+        }
+    }
+
+    function searchDepartment() {
+        const searchString = document.getElementById('searchString').value.trim().toLowerCase();
+        const roomItems = document.querySelectorAll('.room-item');
+
+        roomItems.forEach(item => {
+            const roomNum = item.querySelector('.room-details p:first-child').textContent.trim().toLowerCase();
+            const roomDep = item.querySelector('.room-details p:last-child').textContent.trim().toLowerCase();
+
+            if (roomNum.includes(searchString) || roomDep.includes(searchString)) {
+                item.style.display = '';
+            } else {
+                item.style.display = 'none';
+            }
+        });
+    }
+
+    function handleKeyPress(event) {
+        if (event.key === 'Enter') {
+            searchDepartment();
         }
     }
 </script>

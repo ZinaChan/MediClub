@@ -1,12 +1,23 @@
-﻿@model SpecializationViewModel;
+﻿@model SpecializationViewModel
 @{
     Layout = "~/Views/Shared/_LayoutAuth.cshtml";
     ViewData["Title"] = "Specialization Page";
 }
 
-<h1> Specializations List</h1>
+<h1>Specializations List</h1>
 <hr />
-<a asp-route="CreateSpecializationPage"> <button class="btn-modern">Create new Specialization</button> </a>
+<div class="col mb-3">
+    <div class="row-cols-auto mb-3">
+        <a asp-route="CreateSpecializationPage" class="btn-modern">Create new Specialization</a>
+    </div>
+</div>
+<div class="row-cols-auto">
+    <div class="input-group">
+        <input type="text" class="form-control" placeholder="Search by name" id="searchString"
+            onkeypress="handleKeyPress(event)">
+        <button type="button" class="btn btn-outline-primary" onclick="searchSpecialization()">Search</button>
+    </div>
+</div>
 <br />
 <br />
 
@@ -24,43 +35,46 @@ else
         {
             <li class="specialization-item">
                 <a class="nav-link" asp-controller="Specialization" asp-action="SpecializationInfo"
-                    asp-route-specializationId="@specialization?.Id">
+                    asp-route-specializationId="@specialization.Id">
 
                     <div class="specialization-details">
-                        <p><strong>Specialization Name:</strong> @(specialization?.Name ?? "UNKNOWN")</p>
-                        <p><strong>Department Name:</strong> @(specialization?.Department.Name ?? "UNKNOWN")</p>
+                        <p><strong>Specialization Name:</strong> @(specialization.Name ?? "UNKNOWN")</p>
+                        <p><strong>Department Name:</strong> @(specialization.Department?.Name ?? "UNKNOWN")</p>
                     </div>
                 </a>
-                <br>
+                <br />
                 <div class="specialization-actions">
-                    <button class="update-btn btn-close-white" onclick="showUpdateForm('@specialization!.Id')">Update</button>
-                    <button class="delete-btn btn-danger" onclick="deleteSpecialization('@specialization!.Id')">Delete</button>
+                    <button class="update-btn btn-close-white" onclick="showUpdateForm('@specialization.Id')">Update</button>
+                    <button class="delete-btn btn-danger" onclick="deleteSpecialization('@specialization.Id')">Delete</button>
                 </div>
             </li>
-            <hr class="divider" />
         }
     </ol>
 }
+
 <div id="updateForm" class="update-form" style="display:none;">
-    <h3>Update Specialization</h3>
-    <input type="hidden" id="specializationId">
-    <div>
-        <label for="newName">Specialization Name:</label>
-        <input type="text" id="newName">
-    </div>
-    <div>
-        <label for="newDepartment">Department:</label>
-        <select id="newDepartment" name="newDepartment" required>
-            <option value="">Select Department</option>
-            @foreach (Department department in Model.Departments)
-            {
-                <option value="@department.Id">@department.Name</option>
-            }
-        </select>
-    </div>
-    <div class="specialization-actions">
-        <button onclick="updateSpecialization()">Save</button>
-        <button onclick="hideUpdateForm()">Cancel</button>
+    <div class="card">
+        <h3 class="card-header">Update Specialization</h3>
+        <input type="hidden" id="specializationId">
+        <div class="card-body">
+            <div class="mb-3"> <label for="newName">Specialization Name:</label>
+                <input type="text" id="newName">
+            </div>
+            <div class="mb-3">
+                <label for="newDepartment">Department:</label>
+                <select id="newDepartment" name="newDepartment" required>
+                    <option value="">Select Department</option>
+                    @foreach (var department in Model.Departments)
+                    {
+                        <option value="@department.Id">@department.Name</option>
+                    }
+                </select>
+            </div>
+            <div class="mb-3">
+                <button onclick="updateSpecialization()">Save</button>
+                <button onclick="hideUpdateForm()">Cancel</button>
+            </div>
+        </div>
     </div>
 </div>
 
@@ -140,6 +154,28 @@ else
                         alert('Failed to delete specialization.');
                     }
                 });
+        }
+    }
+
+    function searchSpecialization() {
+        const searchString = document.getElementById('searchString').value.trim().toLowerCase();
+        const specializationItems = document.querySelectorAll('.specialization-item');
+
+        specializationItems.forEach(item => {
+            const specializationName = item.querySelector('.specialization-details p:first-child').textContent.trim().toLowerCase();
+            const specializationDep = item.querySelector('.specialization-details p:last-child').textContent.trim().toLowerCase();
+
+            if (specializationName.includes(searchString) || specializationDep.includes(searchString)) {
+                item.style.display = '';
+            } else {
+                item.style.display = 'none';
+            }
+        });
+    }
+
+    function handleKeyPress(event) {
+        if (event.key === 'Enter') {
+            searchSpecialization();
         }
     }
 </script>

@@ -62,4 +62,14 @@ public class DoctorDapperRepository : IDoctorRepository
             sql: "DELETE FROM Doctors WHERE Id = @Id",
             param: new { Id = id });
     }
+
+    public Task<List<Doctor>> GetDoctorsByDepartmentAsync(Guid departmentId)
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task<List<Doctor>> GetDoctorsBySpecializationAsync(Guid specializationId)
+    {
+        throw new NotImplementedException();
+    }
 }

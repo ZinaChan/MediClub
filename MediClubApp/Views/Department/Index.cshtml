@@ -4,22 +4,20 @@
     ViewData["Title"] = "Department Page";
 }
 
-<h1> Departments List</h1>
+<h1>Departments List</h1>
 <hr />
-<div class="column justify-content-center">
-    <div class="row-12 row-md-8">
-        <div class="input-group mb-3">
-            <input type="text" id="searchInput" class="form-control" placeholder="Search The smth..." autocomplete="off"
-                autofocus="autofocus" required>
-            <button id="searchButton" class="btn btn-primary">
-                <span id="searchText">Search</span>
-            </button>
+<div class="col mb-3">
+    <div class="row-cols-auto mb-3">
+        <a asp-route="CreateDepartmentPage" class="btn-modern">Create new Department</a>
+    </div>
+    <div class="row-cols-auto">
+        <div class="input-group">
+            <input type="text" class="form-control" placeholder="Search by name" id="searchString"
+                onkeypress="handleKeyPress(event)">
+            <button type="button" class="btn btn-outline-primary" onclick="searchDepartment()">Search</button>
         </div>
     </div>
 </div>
-<a asp-route="CreateDepartmentPage"> <button class="btn-modern">Create new Department</button> </a>
-<br />
-<br />
 
 @if (!Model.Any())
 {
@@ -33,7 +31,6 @@ else
     <ol class="card-list">
         @foreach (var department in Model)
         {
-
             <li class="department-item">
                 <a class="nav-link" asp-controller="Department" asp-action="DepartmentInfo"
                     asp-route-departmentId="@department?.Id">
@@ -51,47 +48,25 @@ else
         }
     </ol>
 }
+
 <div id="updateForm" class="update-form" style="display:none;">
-    <h3>Update Department</h3>
-    <input type="hidden" id="departmentId">
-    <div>
-        <label for="newName">Department Name:</label>
-        <input type="text" id="newName">
-    </div>
-    <div class="department-actions">
-        <button onclick="updateDepartment()">Save</button>
-        <button onclick="hideUpdateForm()">Cancel</button>
+    <div class="card">
+        <h3 class="card-header">Update Department</h3>
+        <input type="hidden" id="departmentId">
+        <div class="card-body">
+            <div class="mb-3">
+                <label for="newName">Department Name:</label>
+                <input type="text" id="newName">
+            </div>
+            <div class="mb-3">
+                <button onclick="updateDepartment()">Save</button>
+                <button onclick="hideUpdateForm()">Cancel</button>
+            </div>
+        </div>
     </div>
 </div>
 
 <script>
-
-    document.getElementById('searchButton').addEventListener('click', function () {
-        filterDepartments();
-    }); 
-
-    document.getElementById('searchInput').addEventListener('keyup', function (event) {
-        if (event.key === 'Enter') {
-            filterDepartments();
-        }
-    });
-    document.getElementById('searchInput').addEventListener('change', function (event) {
-            filterDepartments();
-    });
-
-    function filterDepartments() {
-        var input = document.getElementById('searchInput').value.toLowerCase();
-        var items = document.querySelectorAll('.department-item');
-
-        items.forEach(function (item) {
-            var departmentName = item.querySelector('.department-details p').textContent.split(':')[1]?.trim().toLowerCase() || '';
-            if (departmentName.includes(input)) {
-                item.style.display = '';
-            } else {
-                item.style.display = 'none';
-            }
-        });
-    }
     function showUpdateForm(id) {
         fetchDepartmentAndUpdateForm(id);
     }
@@ -147,6 +122,7 @@ else
             })
             .catch(error => console.error('Error updating department:', error));
     }
+
     function deleteDepartment(id) {
         if (confirm('Are you sure you want to delete this department?')) {
             fetch(`/Department/${id}`, {
@@ -165,7 +141,34 @@ else
                 });
         }
     }
+
+    function searchDepartment() {
+        const searchString = document.getElementById('searchString').value.trim().toLowerCase();
+        const departmentItems = document.querySelectorAll('.department-item');
+
+        departmentItems.forEach(item => {
+            const departmentName = item.querySelector('.department-details p').textContent.trim().toLowerCase();
+
+            if (departmentName.includes(searchString)) {
+                item.style.display = '';
+            } else {
+                item.style.display = 'none';
+            }
+        });
+    }
+
+    function handleKeyPress(event) {
+        if (event.key === 'Enter') {
+            searchDepartment();
+        }
+    }
 </script>
+
+@section Scripts {
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+}
+
 
 <style>
     h1 {

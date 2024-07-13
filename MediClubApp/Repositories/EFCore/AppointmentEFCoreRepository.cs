@@ -58,9 +58,16 @@ public class AppointmentEFCoreRepository : IAppointmentRepository
         oldAppointment.Doctor = await this._clinicDbContext.Doctors.FirstOrDefaultAsync(s => s.Id == newAppointment.DoctorId) ?? new Doctor();
         oldAppointment.RoomId = newAppointment.RoomId; 
         oldAppointment.Room = await this._clinicDbContext.Rooms.FirstOrDefaultAsync(s => s.Id == newAppointment.RoomId) ?? new Room();
-        oldAppointment.Date = newAppointment.Date;
-        oldAppointment.Time = newAppointment.Time;
-        oldAppointment.Reason = newAppointment.Reason;
+        oldAppointment.Reason = newAppointment.Reason ?? oldAppointment.Reason; 
+
+        if (newAppointment.Date != default(DateTime))
+        {
+            oldAppointment.Date = newAppointment.Date;
+        }
+        if (newAppointment.Time != default(TimeSpan))
+        {
+            oldAppointment.Time = newAppointment.Time;
+        }
 
         this._clinicDbContext.Update(oldAppointment);
         await this._clinicDbContext.SaveChangesAsync();

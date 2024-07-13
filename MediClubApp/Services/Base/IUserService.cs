@@ -9,5 +9,6 @@ public interface IUserService
     Task CreateUserAsync(User newUser, IFormFile image);
     Task UpdateUserAsync(Guid id, User newUser);
     Task DeleteUserByIdAsync(Guid id);
+    Task<string> ChangeAvatar(Guid id, IFormFile formFile);
 }
 

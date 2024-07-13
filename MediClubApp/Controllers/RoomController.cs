@@ -75,6 +75,12 @@ public class RoomController : Controller
         try
         {
             var room = await this._roomService.GetRoomAsync(id: roomId);
+
+            if (room == null)
+            {
+                return NotFound();
+            }
+
             room!.Department = await this._departmenttService.GetDepartmentAsync(id: room.DepartmentId) ?? new Department();
 
             return base.View(model: room);

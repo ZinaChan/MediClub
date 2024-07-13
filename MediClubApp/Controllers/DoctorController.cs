@@ -30,9 +30,10 @@ public class DoctorController : Controller
     {
         var model = new DoctorViewModel
         {
-            Departments = await this._departmentService.GetAllDepartmentsAsync(),
-            Specializations = await this._specializationService.GetAllSpecializationsAsync(),
-            Doctors = await this._doctorService.GetAllDoctorsAsync()
+            Departments = await this._departmentService.GetAllDepartmentsAsync() ?? new List<Department>(),
+            Specializations = await this._specializationService.GetAllSpecializationsAsync() ?? new List<Specialization>(),
+            Doctors = await this._doctorService.GetAllDoctorsAsync() ?? new List<Doctor>(),
+            Doctor = new Doctor()
         };
         return base.View(model);
     }
@@ -79,6 +80,10 @@ public class DoctorController : Controller
         try
         {
             var doctor = await this._doctorService.GetDoctorAsync(id: doctorId);
+            if (doctor == null)
+            {
+                return NotFound();
+            }
             doctor!.Department = await this._departmentService.GetDepartmentAsync(id: doctor.DepartmentId) ?? new Department();
             doctor!.Specialization = await this._specializationService.GetSpecializationAsync(id: doctor.SpecializationId) ?? new Specialization();
 

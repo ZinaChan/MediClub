@@ -38,12 +38,22 @@ public class DoctorEFCoreRepository : IDoctorRepository
                         .Include(d => d.Department)
                         .Include(d => d.Specialization)
                         .ToListAsync();
-        return doctors;    
+        return doctors;
     }
 
-    public Task<Doctor?> GetAsync(Guid id)
+    public async Task<Doctor?> GetAsync(Guid id)
     {
-        return this._clinicDbContext.Doctors.FirstOrDefaultAsync(d => d.Id == id);
+        return await this._clinicDbContext.Doctors.FirstOrDefaultAsync(d => d.Id == id);
+    }
+
+    public async Task<List<Doctor>> GetDoctorsByDepartmentAsync(Guid departmentId)
+    {
+        return await this._clinicDbContext.Doctors.Where(d => d.DepartmentId == departmentId).ToListAsync();
+    }
+
+    public async Task<List<Doctor>> GetDoctorsBySpecializationAsync(Guid specializationId)
+    {
+        return await this._clinicDbContext.Doctors.Where(d => d.SpecializationId == specializationId).ToListAsync();
     }
 
     public async Task UpdateAsync(Guid id, Doctor newDoctor)
@@ -51,12 +61,7 @@ public class DoctorEFCoreRepository : IDoctorRepository
         var oldDoctor = await this._clinicDbContext.Doctors.FirstOrDefaultAsync(d => d.Id == id);
         if (oldDoctor is null) return;
 
-        oldDoctor.FirstName = newDoctor.FirstName;
-        oldDoctor.LastName = newDoctor.LastName;
-        oldDoctor.DateOfBirth = newDoctor.DateOfBirth;
-        oldDoctor.Gender = newDoctor.Gender;
-        oldDoctor.Email = newDoctor.Email;
-        oldDoctor.PhoneNumber = newDoctor.PhoneNumber;
+
         oldDoctor.DepartmentId = newDoctor.DepartmentId;
         oldDoctor.Department = await this._clinicDbContext.Departments.FirstOrDefaultAsync(d => d.Id == newDoctor.DepartmentId) ?? new Department();
         oldDoctor.SpecializationId = newDoctor.SpecializationId;

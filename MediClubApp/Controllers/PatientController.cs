@@ -22,10 +22,10 @@ public class PatientController : Controller
     }
 
     [HttpGet]
-    [Route("/[controller]", Name = "Services")]
+    [Route("/[controller]")]
     public async Task<IActionResult> Index()
     {
-        var patients = await this._patientService.GetAllPatientsAsync();
+        var patients = await this._patientService.GetAllPatientsAsync() ?? new List<Patient>();
 
         return base.View(patients);
     }
@@ -71,6 +71,10 @@ public class PatientController : Controller
         try
         {
             var doctor = await this._patientService.GetPatientAsync(id: patientId);
+            if (doctor == null)
+            {
+                return NotFound();
+            }
             return base.View(doctor);
         }
         catch (System.Exception ex)

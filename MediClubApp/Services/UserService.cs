@@ -52,5 +52,15 @@ public class UserService : IUserService
 
         await _userRepository.DeleteByIdAsync(id: id);
     }
+
+    public async Task<string> ChangeAvatar(Guid id, IFormFile formFile)
+    {
+        if (await this._userRepository.GetAsync(id) is null)
+        {
+            throw new ArgumentNullException(nameof(User));
+        }
+
+        return await _userRepository.ChangeAvatar(id: id, formFile: formFile);
+    }
 }
 

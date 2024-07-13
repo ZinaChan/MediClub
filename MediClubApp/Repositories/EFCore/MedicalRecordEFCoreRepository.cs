@@ -56,8 +56,8 @@ public class MedicalRecordEFCoreRepository : IMedicalRecordRepository
         oldMedicalRecord.DoctorId = newMedicalRecord.DoctorId;
         oldMedicalRecord.Doctor = await this._clinicDbContext.Doctors.FirstOrDefaultAsync(p => p.Id == newMedicalRecord.DoctorId) ?? new Doctor();
         oldMedicalRecord.Date = newMedicalRecord.Date;
-        oldMedicalRecord.Diagnosis = newMedicalRecord.Diagnosis;
-        oldMedicalRecord.Treatment = newMedicalRecord.Treatment;
+        oldMedicalRecord.Diagnosis = newMedicalRecord.Diagnosis ?? oldMedicalRecord.Diagnosis;
+        oldMedicalRecord.Treatment = newMedicalRecord.Treatment ?? oldMedicalRecord.Treatment; 
 
         this._clinicDbContext.Update(oldMedicalRecord);
         await this._clinicDbContext.SaveChangesAsync();

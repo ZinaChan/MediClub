@@ -14,12 +14,14 @@ public class SpecializationController : Controller
     private readonly IValidator<Specialization> _validator;
     private readonly ISpecializationService _specializationService;
     private readonly IDepartmentService _departmenttService;
+    private readonly IDoctorService _doctorService;
 
-    public SpecializationController(IValidator<Specialization> validator, ISpecializationService specializationService, IDepartmentService departmenttService)
+    public SpecializationController(IValidator<Specialization> validator, ISpecializationService specializationService, IDepartmentService departmenttService, IDoctorService doctorService)
     {
         this._validator = validator;
         this._specializationService = specializationService;
         this._departmenttService = departmenttService;
+        this._doctorService = doctorService;
     }
 
     [HttpGet]
@@ -75,7 +77,13 @@ public class SpecializationController : Controller
         try
         {
             var specialization = await this._specializationService.GetSpecializationAsync(id: specializationId);
+            if (specialization == null)
+            {
+                return NotFound(); 
+            }
+
             specialization!.Department = await this._departmenttService.GetDepartmentAsync(id: specialization.DepartmentId) ?? new Department();
+            specialization.Doctors = await this._doctorService.GetDoctorsBySpecializationAsync(specializationId: specialization.Id);
 
             return base.View(model: specialization);
         }

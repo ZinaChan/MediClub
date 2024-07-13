@@ -1,75 +1,60 @@
 ﻿@model Patient;
 @{
+    Layout = "~/Views/Shared/_LayoutAuth.cshtml";
     ViewData["Title"] = "Patient Info Page";
+    var url = "/" + Model.AvatarUrl;
+}
+@functions
+{
+    public string GetDefaultAvatarUrl(string gender)
+    {
+        if (gender == nameof(Gender.Male))
+        {
+            return "images/anonymous-man.png";
+        }
+        else if (gender == nameof(Gender.Female))
+        {
+            return "images/anonymous-woman.png";
+        }
+        else
+        {
+            return "images/anonymous.png";
+        }
+    }
 }
 
-
-<div class="infoContainer">
-    @if (@Model.Gender == nameof(Gender.Male))
-    {
-        <img src="/images/anonymous-man.png" alt="User Logo" class="logo">
-    }
-    else if (@Model.Gender == nameof(Gender.Female))
-    {
-        <img src="/images/anonymous-woman.png" alt="User Logo" class="logo">
-    }
-    else
-    {
-        <img src="/images/anonymous.png" alt="User Logo" class="logo">
-    }
-    <div class="profile-details">
-        <h2 class="accent-color">@Model.FirstName @Model.LastName</h2>
-        <p>Date of Birth: @Model.DateOfBirth.ToString("dd.MM.yyyy")</p>
-        <p>Gender: @Model.Gender</p>
-        <p>Email: @Model.Email</p>
-        <p>Phone Number: @Model.PhoneNumber</p>
-        <p>Address: @Model.Address</p>
-        @* <p>MedicalHistory: @Model.MedicalHistory</p> *@
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-md-4">
+            <img src="/@(Model.AvatarUrl ?? GetDefaultAvatarUrl(Model.Gender))" class="img-fluid rounded-circle"
+                alt="Patient Avatar">
+        </div>
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title mb-3">@Model.FirstName @Model.LastName</h5>
+                    <p class="card-text"> <strong>Gender:</strong> @Model.Gender </p>
+                    <p class="card-text"> <strong>Date of Birth:</strong> @Model.DateOfBirth.ToString("dd.MM.yyyy") </p>
+                    <p class="card-text"> <strong>Phone Number:</strong> @Model.PhoneNumber </p>
+                    <p class="card-text"> <strong>Address:</strong> @Model.Address </p>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
-
-<style>
-    .infoContainer {
-        width: 80%;
-        margin: auto;
-        background-color: #fff;
-        padding: 25px;
-        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        border-radius: 10px;
-        margin-top: 50px;
-        display: flex;
-    }
-
-    .logo {
-        width: 200px;
-        height: 200px;
-        border-radius: 50%;
-        object-fit: cover;
-        margin-right: 20px;
-    }
-
-    .profile-details {
-        margin-left: 30px;
-        flex-grow: 1;
-        padding-right: 20px;
-    }
-
-    .profile-details h2 {
-        margin-top: 0;
-        color: #343a40;
-    }
-
-    .profile-details p {
-        margin: 5px 0;
-        color: #6c757d;
-    }
-
-    .accent-color {
-        color: #88ff00;
-    }
-</style>
 
 @section Scripts {
     <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
     <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
 }
+
+<style>
+    .card-title {
+        margin-bottom: 0.5rem;
+        color: #343a40;
+    }
+
+    .card-text {
+        color: #6c757d;
+    }
+</style>

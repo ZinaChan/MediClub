@@ -4,39 +4,60 @@
     ViewData["Title"] = "Room Info Page";
 }
 
-
-<div class="infoContainer">
+<div class="info-container">
     <div class="room-details">
-        <p>Room Number: @Model.RoomNumber</p>
-        <p>Department: @Model.Department.Name</p>
+        <h2>Room Details</h2>
+         <div class="detail-item">
+            <span class="detail-label">Room Number:</span>
+            <span class="detail-value">@Model.RoomNumber</span>
+        </div>
+        <div class="detail-item">
+            <span class="detail-label">Department:</span>
+            <span class="detail-value">@Model.Department.Name</span>
+        </div>
     </div>
 </div>
 
 <style>
-    .infoContainer {
+    .info-container {
         width: 80%;
         margin: auto;
-        background-color: #fff;
+        background-color: #f8f9fa;
         padding: 20px;
-        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        border: 1px solid #dee2e6;
         border-radius: 10px;
         margin-top: 50px;
-        display: flex;
     }
 
     .room-details {
-        flex-grow: 1;
-        padding-right: 20px;
+        padding: 20px;
+        background-color: #fff;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     }
 
     .room-details h2 {
-        margin-top: 0;
         color: #343a40;
+        font-size: 24px;
+        margin-top: 0;
+        margin-bottom: 10px;
+        border-bottom: 1px solid #dee2e6;
+        padding-bottom: 10px;
     }
 
-    .room-details p {
-        margin: 5px 0;
+    .detail-item {
+        margin-bottom: 15px;
+    }
+
+    .detail-label {
+        font-weight: bold;
         color: #6c757d;
+        display: inline-block;
+        width: 120px;
+    }
+
+    .detail-value {
+        color: #495057;
     }
 </style>
 

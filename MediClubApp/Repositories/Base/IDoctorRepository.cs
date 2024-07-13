@@ -12,4 +12,6 @@ public interface IDoctorRepository :  ICreateAsync<Doctor>, IGetAsync<Doctor>, I
     Task CreateAsync(Doctor newDoctor);
     Task UpdateAsync(Guid id, Doctor newDoctor);
     Task DeleteByIdAsync(Guid id);
+    Task<List<Doctor>> GetDoctorsByDepartmentAsync(Guid departmentId);
+    Task<List<Doctor>> GetDoctorsBySpecializationAsync(Guid specializationId);
 } 

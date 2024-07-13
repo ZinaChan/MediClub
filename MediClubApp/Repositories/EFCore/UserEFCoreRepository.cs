@@ -16,6 +16,48 @@ public class UserEFCoreRepository : IUserRepository
         this._clinicDbContext = dbContext;
     }
 
+    public async Task<string> ChangeAvatar(Guid id, IFormFile avatarFile)
+{
+    var user = await this._clinicDbContext.Users.FindAsync(id);
+    if (user == null)
+    {
+        throw new ArgumentException($"User with ID '{id}' not found.");
+    }
+
+    // Remove old avatar file if it exists
+    if (!string.IsNullOrEmpty(user.AvatarUrl))
+    {
+        var oldAvatarPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "Assets", "UsersImg", user.AvatarUrl);
+        if (File.Exists(oldAvatarPath))
+        {
+            File.Delete(oldAvatarPath);
+        }
+    }
+
+    // Save new avatar file
+    var extension = Path.GetExtension(avatarFile.FileName);
+    var newFileName = $"{id}{extension}";
+    var uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "Assets", "UsersImg");
+
+    if (!Directory.Exists(uploadsFolder))
+    {
+        Directory.CreateDirectory(uploadsFolder);
+    }
+
+    var filePath = Path.Combine(uploadsFolder, newFileName);
+    using (var stream = new FileStream(filePath, FileMode.Create))
+    {
+        await avatarFile.CopyToAsync(stream);
+    }
+
+    // Update user's AvatarUrl in database
+    user.AvatarUrl = Path.Combine("Assets", "UsersImg", newFileName);
+    this._clinicDbContext.Users.Update(user);
+    await this._clinicDbContext.SaveChangesAsync();
+
+    return user.AvatarUrl;
+}
+
     public async Task CreateAsync(User newUser, IFormFile image)
     {
         newUser.Id = Guid.NewGuid();
@@ -71,19 +113,88 @@ public class UserEFCoreRepository : IUserRepository
     public async Task UpdateAsync(Guid id, User newUser)
     {
         var oldUser = await this._clinicDbContext.Users.FirstOrDefaultAsync(d => d.Id == id);
-        if (oldUser is null) return;
+        if (oldUser == null)
+            return;
 
-        oldUser.Password = newUser.Password;
-        oldUser.Email = newUser.Email;
-        oldUser.FirstName = newUser.FirstName;
-        oldUser.LastName = newUser.LastName;
-        oldUser.Address = newUser.Address;
-        oldUser.DateOfBirth = newUser.DateOfBirth;
-        oldUser.Gender = newUser.Gender;
-        oldUser.PhoneNumber = newUser.PhoneNumber;
-        oldUser.AvatarUrl = newUser.AvatarUrl;
+        oldUser.FirstName = newUser.FirstName ?? oldUser.FirstName;
+        oldUser.LastName = newUser.LastName ?? oldUser.LastName;
+        oldUser.Address = newUser.Address ?? oldUser.Address;
+        oldUser.PhoneNumber = newUser.PhoneNumber ?? oldUser.PhoneNumber;
+        oldUser.Gender = newUser.Gender ?? oldUser.Gender;
 
-        this._clinicDbContext.Update(oldUser);
+        if (oldUser.Role != newUser.Role)
+        {
+            switch (newUser.Role)
+            {
+                case "Patient":
+                    var newPatient = new Patient
+                    {
+                        Id = oldUser.Id,
+                        AvatarUrl = oldUser.AvatarUrl,
+                        FirstName = oldUser.FirstName,
+                        LastName = oldUser.LastName,
+                        Address = oldUser.Address,
+                        PhoneNumber = oldUser.PhoneNumber,
+                        Gender = oldUser.Gender,
+                        DateOfBirth = oldUser.DateOfBirth,
+                        Email = oldUser.Email,
+                        Password = oldUser.Password,
+                        Role = nameof(UserRole.Patient)
+                    };
+
+                    this._clinicDbContext.Users.Remove(oldUser);
+                    this._clinicDbContext.Patients.Add(newPatient);
+                    break;
+
+                case "Doctor":
+                    var newDoctor = new Doctor
+                    {
+                        Id = oldUser.Id,
+                        AvatarUrl = oldUser.AvatarUrl,
+                        FirstName = oldUser.FirstName,
+                        LastName = oldUser.LastName,
+                        Address = oldUser.Address,
+                        PhoneNumber = oldUser.PhoneNumber,
+                        Gender = oldUser.Gender,
+                        DateOfBirth = oldUser.DateOfBirth,
+                        Email = oldUser.Email,
+                        Password = oldUser.Password,
+                        Department = this._clinicDbContext.Departments.First(),
+                        DepartmentId = this._clinicDbContext.Departments.First().Id,
+                        Specialization = this._clinicDbContext.Specializations.First(),
+                        SpecializationId = this._clinicDbContext.Specializations.First().Id,
+                        Role = nameof(UserRole.Doctor)
+                    };
+
+                    this._clinicDbContext.Users.Remove(oldUser);
+                    this._clinicDbContext.Doctors.Add(newDoctor);
+                    break;
+                default:
+
+                    if (oldUser.Role == nameof(UserRole.Patient))
+                    {
+                        var patientToDelete = await this._clinicDbContext.Patients.FirstOrDefaultAsync(p => p.Id == oldUser.Id);
+                        if (patientToDelete != null)
+                            this._clinicDbContext.Patients.Remove(patientToDelete);
+                    }
+                    else if (oldUser.Role == nameof(UserRole.Doctor))
+                    {
+                        var doctorToDelete = await this._clinicDbContext.Doctors.FirstOrDefaultAsync(d => d.Id == oldUser.Id);
+                        if (doctorToDelete != null)
+                            this._clinicDbContext.Doctors.Remove(doctorToDelete);
+                    }
+                    oldUser.Role = nameof(UserRole.Admin);
+                    this._clinicDbContext.Update(oldUser);
+                    break;
+            }
+        }
+        else
+        {
+            oldUser.Role = newUser.Role ?? oldUser.Role;
+            oldUser.DateOfBirth = newUser.DateOfBirth != default ? newUser.DateOfBirth : oldUser.DateOfBirth;
+            this._clinicDbContext.Update(oldUser);
+        }
+
         await this._clinicDbContext.SaveChangesAsync();
     }
 }

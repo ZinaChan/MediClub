@@ -13,4 +13,6 @@ public interface IUserRepository :  IGetAsync<User>, IGetAllAsync<User>, IUpdate
     Task CreateAsync(User newUser, IFormFile image);
     Task UpdateAsync(Guid id, User newUser);
     Task DeleteByIdAsync(Guid id);
+
+    Task<string> ChangeAvatar(Guid id, IFormFile formFile);
 }

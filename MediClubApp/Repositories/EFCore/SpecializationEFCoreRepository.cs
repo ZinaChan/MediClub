@@ -49,7 +49,7 @@ public class SpecializationEFCoreRepository : ISpecializationRepository
         var oldSpecialization = await this._clinicDbContext.Specializations.FirstOrDefaultAsync(d => d.Id == id);
         if (oldSpecialization is null) return;
 
-        oldSpecialization.Name = newSpecialization.Name;
+        oldSpecialization.Name = newSpecialization.Name ?? oldSpecialization.Name;
         oldSpecialization.DepartmentId = newSpecialization.DepartmentId;
         oldSpecialization.Department = await this._clinicDbContext.Departments.FirstOrDefaultAsync(p => p.Id == oldSpecialization.DepartmentId) ?? new Department();
 

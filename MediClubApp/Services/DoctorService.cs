@@ -48,4 +48,15 @@ public class DoctorService : IDoctorService
 
         await _doctorRepository.DeleteByIdAsync(id: id);
     }
+
+    public async Task<List<Doctor>> GetDoctorsByDepartmentAsync(Guid departmentId)
+    {
+       return await _doctorRepository.GetDoctorsByDepartmentAsync(departmentId: departmentId);
+    }
+
+    public async Task<List<Doctor>> GetDoctorsBySpecializationAsync(Guid specializationId)
+    {
+
+       return await _doctorRepository.GetDoctorsBySpecializationAsync(specializationId: specializationId);
+    }
 }

@@ -79,6 +79,10 @@ public class MedicalRecordController : Controller
         try
         {
             var medicalRecord = await this._medicalRecordService.GetMedicalRecordAsync(id: medicalRecordId);
+            if (medicalRecord == null)
+            {
+                return NotFound();
+            }
             medicalRecord!.Doctor = await this._doctorService.GetDoctorAsync(id: medicalRecord.DoctorId) ?? new Doctor();
             medicalRecord!.Patient = await this._patientService.GetPatientAsync(id: medicalRecord.PatientId) ?? new Patient();
 
