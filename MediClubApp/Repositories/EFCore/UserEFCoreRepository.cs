@@ -65,14 +65,17 @@ public class UserEFCoreRepository : IUserRepository
     {
         newUser.Id = Guid.NewGuid();
         newUser.Role = newUser.Role == default ? UserRole.Patient.ToString() : newUser.Role;
-        var extension = new FileInfo(image.FileName).Extension[1..];
-        newUser.AvatarUrl = $"Assets/UsersImg/{newUser.Id}.{extension}";
+        if(image != null)
+        {
+            newUser.AvatarUrl = $"Assets/UsersImg/{newUser.Id}.{Path.GetExtension(image.FileName)}";
+        }
+        
 
         var res = await this._clinicDbContext.Users.AddAsync(entity: newUser);
         await this._clinicDbContext.SaveChangesAsync();
 
 
-        if (this.GetAsync(newUser.Email) is not null)
+        if (this.GetAsync(newUser.Email) is not null && image != null)
         {
             var wwwrootPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot");
             var uploadsFolder = Path.Combine(wwwrootPath, "Assets", "UsersImg");
@@ -81,7 +84,7 @@ public class UserEFCoreRepository : IUserRepository
             {
                 Directory.CreateDirectory(uploadsFolder);
             }
-            var filePath = Path.Combine(uploadsFolder, $"{newUser.Id}.{extension}");
+            var filePath = Path.Combine(uploadsFolder, $"{newUser.Id}.{Path.GetExtension(image.FileName)}");
 
             using var newFileStream = System.IO.File.Create(filePath);
             await image.CopyToAsync(newFileStream);

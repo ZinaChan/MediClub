@@ -30,7 +30,8 @@ public class UserValidator : AbstractValidator<User>
 
         RuleFor(user => user.PhoneNumber)
             .NotEmpty().WithMessage("Phone Number is required.")
-            .Matches(new Regex(@"(?:(?:\+?1\s*(?:[.-]\s*)?)?(?:(\s*([2-9]1[02-9]|[2-9][02-8]1|[2-9][02-8][02-9]‌​)\s*)|([2-9]1[02-9]|[2-9][02-8]1|[2-9][02-8][02-9]))\s*(?:[.-]\s*)?)([2-9]1[02-9]‌​|[2-9][02-9]1|[2-9][02-9]{2})\s*(?:[.-]\s*)?([0-9]{4})\s*(?:\s*(?:#|x\.?|ext\.?|extension)\s*(\d+)\s*)?$")).WithMessage("Invalid Phone Number format.");
+            .MinimumLength(8).WithMessage("Phone number must be at least8 characters.")
+            .Matches(new Regex(@"^[0-9-+\s]+$")).WithMessage("Invalid Phone Number format.");
 
         RuleFor(patient => patient.Address)
             .NotEmpty().WithMessage("Address is required.");

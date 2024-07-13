@@ -69,7 +69,6 @@ public class IdentityController : Controller
                 new Claim(ClaimTypes.Email, foundUser.Email),
                 new Claim(ClaimTypes.Name, foundUser.FirstName),
                 new Claim(ClaimTypes.Surname, foundUser.LastName),
-                new Claim("Image", foundUser.AvatarUrl!),
                 new Claim(ClaimTypes.Role, foundUser.Role)
             };
 

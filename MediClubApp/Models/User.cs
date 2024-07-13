@@ -10,7 +10,7 @@ public class User
     [Key]
     public Guid Id { get; set; }
     public string? AvatarUrl { set; get; }
-
+    
     public string Email { set; get; }
     [MinLength(8)]
     [MaxLength(20)]

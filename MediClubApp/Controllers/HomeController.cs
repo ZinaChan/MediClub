@@ -49,7 +49,7 @@ public class HomeController : Controller
         private async Task SendEmailAsync(ContactFormModel model)
         {
            var smtpServer = _configuration["EmailSettings:SmtpServer"];
-            var smtpPort = int.Parse(_configuration["EmailSettings:SmtpPort"]);
+            var smtpPort = int.Parse(_configuration["EmailSettings:SmtpPort"]!);
             var smtpUsername = _configuration["EmailSettings:SmtpUser"];
             var smtpPassword = _configuration["EmailSettings:SmtpPass"];
 
