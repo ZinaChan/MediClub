@@ -1,3 +1,4 @@
+using System.Security.Claims;
 using FluentValidation;
 using MediClubApp.Models;
 using MediClubApp.Services.Base;
@@ -27,47 +28,23 @@ public class AppointmentController : Controller
     }
 
     [HttpGet]
-    [Route("/[controller]/{id:Guid?}", Name = "AppointmentIndex")]
-    public async Task<IActionResult> Index(Guid? id = null)
+    [Route("/[controller]", Name = "AppointmentIndex")]
+    public async Task<IActionResult> Index()
     {
-        var model = new AppointmentViewModel();
-        if (User.IsInRole("Admin"))
+        var model = new AppointmentViewModel
         {
-            model = new AppointmentViewModel
-            {
-                Patients = await _patientService.GetAllPatientsAsync(),
-                Doctors = await _doctorService.GetAllDoctorsAsync(),
-                Appointments = await _appointmentService.GetAllAppointmentsAsync(),
-                Rooms = await this._roomService.GetAllRoomsAsync()
-            };
-        }
-        else if (User.IsInRole("Doctor"))
+            Patients = await _patientService.GetAllPatientsAsync(),
+            Doctors = await _doctorService.GetAllDoctorsAsync(),
+            Appointments = await _appointmentService.GetAllAppointmentsAsync(),
+            Rooms = await this._roomService.GetAllRoomsAsync()
+        };
+        if (User.IsInRole("Doctor"))
         {
-            if (id.Value != null)
-            {
-                model = new AppointmentViewModel
-                {
-                    Appointments = await _appointmentService.GetAppointmentsForDoctorAsync(doctorId: id.Value)
-                };
-            }
-            else
-            {
-                return RedirectToAction("Error", "Home");
-            }
+            model.Appointments = await _appointmentService.GetAppointmentsForDoctorAsync(new Guid(User.FindFirstValue("Id")!));
         }
         else if (User.IsInRole("Patient"))
         {
-            if (id.Value != null)
-            {
-                model = new AppointmentViewModel
-                {
-                    Appointments = await _appointmentService.GetAppointmentsForPatientAsync(patientId: id.Value)
-                };
-            }
-            else
-            {
-                return RedirectToAction("Error", "Home");
-            }
+            model.Appointments = await _appointmentService.GetAppointmentsForPatientAsync(new Guid(User.FindFirstValue("Id")!));
         }
 
         return View(model);
@@ -133,13 +110,14 @@ public class AppointmentController : Controller
     }
 
     [HttpGet]
-    [Authorize(Policy = "MediClubPolicyWorkRoles")]
+    [Authorize(Policy = "MediClubPolicyUserRoles")]
     [Route("[action]", Name = "CreateAppointmentPage")]
     public async Task<IActionResult> Create()
     {
         var patients = await this._patientService.GetAllPatientsAsync();
         var doctors = await this._doctorService.GetAllDoctorsAsync();
         var rooms = await this._roomService.GetAllRoomsAsync();
+        var Id = new Guid(User.FindFirstValue("Id")!);
 
         var model = new AppointmentViewModel
         {
@@ -148,11 +126,21 @@ public class AppointmentController : Controller
             Rooms = rooms,
             Appointment = new Appointment()
         };
+        if (User.IsInRole("Doctor"))
+        {
+            var doctor = await _doctorService.GetDoctorAsync(Id);
+            model.Doctors = new List<Doctor> { doctor! };
+        }
+        else if (User.IsInRole("Patient"))
+        {
+            var patient = await _patientService.GetPatientAsync(Id);
+            model.Patients = new List<Patient> { patient! };
+        }
 
         return base.View(model);
     }
 
-    [Authorize(Roles = "Admin")]
+    [Authorize(Policy = "MediClubPolicyUserRoles")]
     [HttpPost(Name = "CreateAppointmentApi")]
     public async Task<IActionResult> Create(AppointmentViewModel model)
     {
@@ -180,8 +168,24 @@ public class AppointmentController : Controller
 
                 return base.View(viewName: "Create", model: model);
             }
+
+            var overlappingAppointment = await _appointmentService.CheckOverlappingAppointmentAsync(model.Appointment);
+            if (overlappingAppointment != null)
+            {
+                ModelState.AddModelError("", "There is already an appointment scheduled at that time for the selected doctor or room.");
+                var patients = await _patientService.GetAllPatientsAsync();
+                var doctors = await _doctorService.GetAllDoctorsAsync();
+                var rooms = await _roomService.GetAllRoomsAsync();
+
+                model.Doctors = doctors;
+                model.Patients = patients;
+                model.Rooms = rooms;
+
+                return View(viewName: "Create", model: model);
+            }
+
             await this._appointmentService.CreateAppointmentAsync(newAppointment: model.Appointment);
-            return base.RedirectToAction(actionName: "Index");
+            return base.RedirectToAction(actionName: "Index", routeValues: new Guid(User.FindFirstValue("Id")!));
         }
         catch (System.Exception ex)
         {
@@ -189,8 +193,8 @@ public class AppointmentController : Controller
         }
     }
 
-    [Authorize(Roles = "Admin")]
     [HttpPut]
+    [Authorize(Policy = "MediClubPolicyUserRoles")]
     public async Task<IActionResult> UpdateAppointment([FromBody] Appointment appointment)
     {
         try

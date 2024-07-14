@@ -6,7 +6,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace MediClubApp.Models;
 
 public class Appointment
-{ 
+{
     [Key]
     public Guid Id { get; set; }
     public Guid PatientId { get; set; }
@@ -14,7 +14,7 @@ public class Appointment
     [ForeignKey("PatientId")]
     public Patient Patient { get; set; }
     public Guid DoctorId { get; set; }
-    
+
     [ForeignKey("DoctorId")]
     public Doctor Doctor { get; set; }
 

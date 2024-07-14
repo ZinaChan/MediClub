@@ -12,8 +12,7 @@ public interface IAppointmentRepository : ICreateAsync<Appointment>, IGetAsync<A
     Task CreateAsync(Appointment newAppointment);
     Task UpdateAsync(Guid id, Appointment newAppointment);
     Task DeleteByIdAsync(Guid id);
-
     Task<IEnumerable<Appointment>> GetAppointmentsForPatientAsync(Guid patientId);
-
     Task<IEnumerable<Appointment>> GetAppointmentsForDoctorAsync(Guid doctorId);
+    Task<Appointment> GetOverlappingAppointmentAsync(Guid doctorId, Guid roomId, DateTime date, TimeSpan time);
 }

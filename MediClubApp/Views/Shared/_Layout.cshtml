@@ -2,7 +2,6 @@
     var IsAuthenticated = base.User.Identity?.IsAuthenticated ?? false;
     var IsAdmin = base.User.IsInRole("Admin");
     var IsDoctor = base.User.IsInRole("Doctor");
-
     var firstnameCookie = base.User.Claims.FirstOrDefault(claim => claim.Type == ClaimTypes.Name);
 }
 

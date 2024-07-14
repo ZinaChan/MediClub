@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace MediClubApp.Controllers;
 
 
-[Authorize]
+[Authorize(Roles = "Admin")]
 [Route("[controller]")]
 public class UserController : Controller
 {
@@ -59,8 +59,7 @@ public class UserController : Controller
         }
     }
 
-    [Authorize(Roles = "Admin")]
-    [Route("/[controller]/{userId:Guid}")]
+     [Route("/[controller]/{userId:Guid}")]
     public async Task<IActionResult> UserInfo(Guid userId)
     {
         try
@@ -93,8 +92,7 @@ public class UserController : Controller
         }
     }
 
-    [Authorize(Roles = "Admin")]
-    [HttpDelete("{userId:Guid}")]
+     [HttpDelete("{userId:Guid}")]
     public async Task<IActionResult> DeleteUser(Guid userId)
     {
         try

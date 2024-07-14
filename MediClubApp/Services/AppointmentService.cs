@@ -59,5 +59,12 @@ public class AppointmentService : IAppointmentService
     {
         return await _appointmentRepository.GetAppointmentsForPatientAsync(patientId: patientId);
     }
+
+    public async Task<Appointment> CheckOverlappingAppointmentAsync(Appointment newAppointment)
+    {
+        var overlappingAppointment = await _appointmentRepository.GetOverlappingAppointmentAsync(newAppointment.DoctorId, newAppointment.RoomId, newAppointment.Date, newAppointment.Time);
+        return overlappingAppointment;
+    }
+
 }
 

@@ -6,12 +6,13 @@
 }
 
 <div class="container">
+    <a href="/" class="mt-5 p-lg-5 back-link"><i class="fas fa-arrow-left"></i></a>
     <div class="wrapper">
         <div class="title"><span>Registration Form</span></div>
 
 
-        <form asp-route="RegistrationEndpoint" method="post" enctype="multipart/form-data"> 
-             <div class="mb-4">
+        <form asp-route="RegistrationEndpoint" method="post" enctype="multipart/form-data">
+            <div class="mb-4">
                 <i class="fas fa-image"></i>
                 <label id="file-name"> Photo</label>
                 <input name="file-name" type="file">
@@ -83,6 +84,19 @@
     body {
         background: #1abc9c;
         overflow: hidden;
+    }
+
+    .back-link {
+        position: absolute;
+        top: 20px;
+        left: 20px;
+        color: #16a085;
+        text-decoration: none;
+        font-size: 35px;
+    }
+
+    .back-link:hover {
+        text-decoration: underline;
     }
 
     ::selection {

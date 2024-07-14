@@ -96,4 +96,9 @@ public class AppointmentEFCoreRepository : IAppointmentRepository
         this._clinicDbContext.Update(oldAppointment);
         await this._clinicDbContext.SaveChangesAsync();
     }
+
+    public async Task<Appointment> GetOverlappingAppointmentAsync(Guid doctorId, Guid roomId, DateTime date, TimeSpan time)
+    {
+        return await _clinicDbContext.Appointments.FirstOrDefaultAsync(a => a.Date == date && a.Time == time && (a.DoctorId == doctorId  || a.RoomId == roomId ));
+    }
 }

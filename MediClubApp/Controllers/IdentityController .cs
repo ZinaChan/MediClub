@@ -184,4 +184,23 @@ public class IdentityController : Controller
             return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
         }
     }
+
+    [HttpPost]
+    public async Task<IActionResult> ChangeAvatar(Guid id, IFormFile avatarFile)
+    {
+        try
+        {
+            if (avatarFile == null || avatarFile.Length == 0)
+            {
+                return BadRequest("No file uploaded or file is empty.");
+            }
+
+            var avatarUrl = await this._userService.ChangeAvatar(id: id, formFile: avatarFile);
+            return Json(new { avatarUrl });
+        }
+        catch (System.Exception ex)
+        {
+            return base.StatusCode(statusCode: StatusCodes.Status500InternalServerError, value: ex.Message);
+        }
+    }
 }

@@ -50,12 +50,12 @@ else
         <div class="row row-cols-1 row-cols-md-2 g-4" id="patientList">
             @foreach (var patient in Model)
             {
-                <div class="col patient-card">
-                    <div class="card mb-3">
-                        <div class="row g-0">
+                <div class="col patient-card"> 
+                    <div class="card mb-3 w-100 h-100">
+                        <div class="row g-0 h-100">
                             <div class="col-md-4">
                                 <img src="/@(patient.AvatarUrl ?? GetDefaultAvatarUrl(patient?.Gender))"
-                                    class="img-fluid rounded-start" alt="Patient Avatar">
+                                    class="img-fluid rounded-start w-100 h-100 object-fit-cover" alt="Patient Avatar">
                             </div>
                             <div class="col-md-8">
                                 <div class="card-body">

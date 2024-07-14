@@ -8,7 +8,7 @@
     <div>
         <label asp-for="MedicalRecord.DoctorId">Doctor:</label>
         <select asp-for="MedicalRecord.DoctorId">
-            <option value="">Select Doctor</option>
+            @if(Model.Doctors.Count() != 1 ){<option value="">Select Doctor</option>}
 
             @foreach (Doctor doctor in Model.Doctors)
             {
@@ -20,7 +20,7 @@
     <div>
         <label asp-for="MedicalRecord.PatientId">Patient:</label>
         <select asp-for="MedicalRecord.PatientId">
-            <option value="">Select Patient</option>
+            @if(Model.Patients.Count() != 1 ){<option value="">Select Patient</option>}
 
             @foreach (Patient patient in Model.Patients)
             {
@@ -29,9 +29,10 @@
         </select>
         <span class="text-danger" asp-validation-for="MedicalRecord.PatientId"></span>
     </div>
-    <div>
+   <div>
         <label asp-for="MedicalRecord.Date">Date:</label>
-        <input asp-for="MedicalRecord.Date" type="date" min="@DateTime.Today.ToString("yyyy-MM-dd")" required>
+        <input asp-for="MedicalRecord.Date" type="date" value="@DateTime.Today.ToString("yyyy-MM-dd")"
+            max="@DateTime.Today.ToString("yyyy-MM-dd")" required>
         <span class="text-danger" asp-validation-for="MedicalRecord.Date"></span>
     </div>
     <div>

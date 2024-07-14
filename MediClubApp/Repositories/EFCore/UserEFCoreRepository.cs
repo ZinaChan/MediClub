@@ -24,8 +24,7 @@ public class UserEFCoreRepository : IUserRepository
             throw new ArgumentException($"User with ID '{id}' not found.");
         }
 
-        // Remove old avatar file if it exists
-        var wwwrootPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot");
+         var wwwrootPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot");
         var uploadsFolder = Path.Combine(wwwrootPath, "Assets", "UsersImg");
 
         if (!string.IsNullOrEmpty(user.AvatarUrl))
@@ -37,8 +36,7 @@ public class UserEFCoreRepository : IUserRepository
             }
         }
 
-        // Save new avatar file
-        var extension = Path.GetExtension(avatarFile.FileName);
+         var extension = Path.GetExtension(avatarFile.FileName);
         var newFileName = $"{id}{extension}";
 
         if (!Directory.Exists(uploadsFolder))
@@ -52,8 +50,7 @@ public class UserEFCoreRepository : IUserRepository
             await avatarFile.CopyToAsync(stream);
         }
 
-        // Update user's AvatarUrl in database
-        user.AvatarUrl = $"Assets/UsersImg/{newFileName}";
+         user.AvatarUrl = $"Assets/UsersImg/{newFileName}";
         _clinicDbContext.Users.Update(user);
         await _clinicDbContext.SaveChangesAsync();
 
@@ -68,8 +65,7 @@ public class UserEFCoreRepository : IUserRepository
         if(image != null)
         {
             newUser.AvatarUrl = $"Assets/UsersImg/{newUser.Id}.{Path.GetExtension(image.FileName)}";
-        }
-        
+        } 
 
         var res = await this._clinicDbContext.Users.AddAsync(entity: newUser);
         await this._clinicDbContext.SaveChangesAsync();

@@ -2,13 +2,35 @@
 @{
     Layout = "~/Views/Shared/_LayoutAuth.cshtml";
     ViewData["Title"] = "Create Appointment Page";
+
+}
+@functions {
+    public List<SelectListItem> GetTimeSpanOptions()
+    {
+        var options = new List<SelectListItem>();
+
+        for (int hour = 9; hour <= 23; hour++)
+        {
+            options.Add(new SelectListItem
+                {
+                    Value = new TimeSpan(hour, 0, 0).ToString(),
+                    Text = new TimeSpan(hour, 0, 0).ToString(@"hh\:mm")
+                });
+        }
+
+        return options;
+    }
 }
 
 <form asp-route="CreateAppointmentApi" method="post" class="mt-5">
-    <div>
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <div>
         <label asp-for="Appointment.DoctorId">Doctor:</label>
         <select asp-for="Appointment.DoctorId">
-            <option value="">Select Doctor</option>
+            @if (Model.Doctors.Count() != 1)
+            {
+                <option value="">Select Doctor</option>
+            }
 
             @foreach (Doctor doctor in Model.Doctors)
             {
@@ -20,8 +42,10 @@
     <div>
         <label asp-for="Appointment.PatientId">Patient:</label>
         <select asp-for="Appointment.PatientId">
-            <option value="">Select Patient</option>
-
+            @if (Model.Patients.Count() != 1)
+            {
+                <option value="">Select Patient</option>
+            }
             @foreach (Patient patient in Model.Patients)
             {
                 <option value="@patient.Id">@patient.FirstName @patient.LastName</option>
@@ -43,15 +67,20 @@
     </div>
     <div>
         <label asp-for="Appointment.Date">Date:</label>
-        <input asp-for="Appointment.Date" type="date"  max ="@DateTime.Today.ToString("yyyy-MM-dd")" required>
-
+        <input asp-for="Appointment.Date" type="date" value="@DateTime.Today.AddDays(1).ToString("yyyy-MM-dd")"
+            min="@DateTime.Today.AddDays(1).ToString("yyyy-MM-dd")" required>
         <span class="text-danger" asp-validation-for="Appointment.Date"></span>
     </div>
     <div>
-        <label asp-for="Appointment.Time">Time:</label>
-        <input asp-for="Appointment.Time" type="datetime" min="09:00" max="11:00" />
-        <span class="text-danger" asp-validation-for="Appointment.Time"></span>
+        <div>
+            <label asp-for="Appointment.Time">Time:</label>
+            <select asp-for="Appointment.Time" asp-items="@GetTimeSpanOptions()" class="form-control" required>
+            </select>
+            <span class="text-danger" asp-validation-for="Appointment.Time"></span>
+        </div>
     </div>
+
+
     <div>
         <label asp-for="Appointment.Reason">Reason:</label>
         <input asp-for="Appointment.Reason" type="text" />
@@ -108,9 +137,10 @@
     button:hover {
         background-color: #4cae4c;
     }
+    }
 </style>
 
 @section Scripts {
-<script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
-<script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
 }

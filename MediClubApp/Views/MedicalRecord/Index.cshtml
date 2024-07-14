@@ -1,145 +1,125 @@
-﻿@model MedicalRecordViewModel;
+﻿@model MedicalRecordViewModel
 @{
     Layout = "~/Views/Shared/_LayoutAuth.cshtml";
-    ViewData["Title"] = "MedicalRecord Page";
-    var IsAdmin = base.User.IsInRole("Admin");
-    var IsPatient = base.User.IsInRole("Patient");
-
+    ViewData["Title"] = "Medical Record Page";
+    var IsAdmin = User.IsInRole("Admin");
+    var IsPatient = User.IsInRole("Patient");
 }
 
-
-
-<h1>Medical Records Calendar</h1>
+<h1 class="text-center my-4">Medical Records Calendar</h1>
 <div id="calendar"></div>
-<br>
-<br>
-<br>
 <hr />
-<h1>Medical Records List</h1>
-<hr />
-<div class="col mb-3">
-    @if (IsPatient)
+<h1 class="text-center my-4">Medical Records List</h1>
+<div class="container">
+    @if (!IsPatient)
     {
-        <div class="row-cols-auto mb-3">
-            <a asp-route="CreateMedicalRecordPage" class="btn btn-success">Create new Medical Record</a>
+        <div class="row mb-3">
+            <div class="col">
+                <a asp-route="CreateMedicalRecordPage" class="btn btn-success">Create New Medical Record</a>
+            </div>
         </div>
     }
-</div>
 
-<div class="row-cols-auto">
-    <div class="input-group">
-        <input type="text" class="form-control" placeholder="Search by name" id="searchString"
-            onkeypress="handleKeyPress(event)">
-        <button type="button" class="btn btn-outline-primary" onclick="searchMedicalRecord()">Search</button>
-    </div>
-</div>
-
-<br />
-<br />
-
-@if (!Model.MedicalRecords.Any())
-{
-    <div class="no-medicalRecords">
-        <img src="/images/sad-star.png" alt="No medical records" class="sad-face" />
-        <p>No medical records available at the moment.</p>
-    </div>
-}
-else
-{
-    <ol class="card-list" style="list-style: none;">
-        @foreach (var medicalRecord in Model.MedicalRecords)
-        {
-            var today = DateTime.Today;
-            var recordDate = medicalRecord.Date.Date;
-            string itemClass = "";
-
-            if (recordDate < today)
-            {
-                itemClass = "past";
-            }
-            else if (recordDate == today)
-            {
-                itemClass = "today";
-            }
-            else
-            {
-                itemClass = "future";
-            }
-            <li class="medicalRecord-item @itemClass">
-                <a class="nav-link" asp-controller="MedicalRecord" asp-action="MedicalRecordInfo"
-                    asp-route-medicalRecordId="@medicalRecord?.Id">
-                    <div class="medicalRecord-details">
-                        <p><strong>Patient:</strong> @(medicalRecord?.Patient.FirstName ?? "UNKNOWN")
-                            @(medicalRecord?.Patient.LastName ?? "UNKNOWN")</p>
-                        <p><strong>Doctor:</strong> @(medicalRecord?.Doctor.FirstName ?? "UNKNOWN")
-                            @(medicalRecord?.Doctor.LastName ?? "UNKNOWN")</p>
-                        <p><strong>Date :</strong> @medicalRecord?.Date.ToString("dd.MM.yyyy")</p>
-                        <p><strong>Diagnosis:</strong> @(medicalRecord?.Diagnosis ?? "UNKNOWN")</p>
-                        <p><strong>Treatment:</strong> @(medicalRecord?.Treatment ?? "UNKNOWN")</p>
-                    </div>
-                </a>
-                <br>
-                @if (IsAdmin)
-                {
-                    <div class="medicalRecord-actions">
-                        <button class="update-btn btn btn-dark" onclick="showUpdateForm('@medicalRecord!.Id')">Update</button>
-                        <button class="delete-btn btn btn-danger"
-                            onclick="deleteMedicalRecord('@medicalRecord!.Id')">Delete</button>
-                    </div>
-                }
-            </li>
-        }
-    </ol>
-}
-
-@if (IsAdmin)
-{
-    <div id="updateForm" class="update-form" style="display:none;">
-        <div class="card">
-            <h3 class="card-header">Update Medical Record</h3>
-            <input type="hidden" id="medicalRecordId">
-            <div class="card-body">
-                <div class="mb-3">
-                    <label for="newDoctor">Doctor:</label>
-                    <select id="newDoctor" name="newDoctor" required>
-                        <option value="">Select Doctor</option>
-                        @foreach (Doctor doctor in Model.Doctors)
-                        {
-                            <option value="@doctor.Id">@doctor.FirstName @doctor.LastName</option>
-                        }
-                    </select>
-                </div>
-                <div class="mb-3">
-                    <label for="newPatient">Patient:</label>
-                    <select id="newPatient" name="newPatient" required>
-                        <option value="">Select Patient</option>
-                        @foreach (Patient patient in Model.Patients)
-                        {
-                            <option value="@patient.Id">@patient.FirstName @patient.LastName</option>
-                        }
-                    </select>
-                </div>
-                <div class="mb-3">
-                    <label for="newDate">Date:</label>
-                    <input type="date" max="@DateTime.Today.ToString("yyyy-MM-dd")" id="newDate">
-                </div>
-                <div class="mb-3">
-                    <label for="newDiagnosis">Diagnosis:</label>
-                    <input type="text" id="newDiagnosis">
-                </div>
-                <div class="mb-3">
-                    <label for="newTreatment">Treatment:</label>
-                    <input type="text" id="newTreatment">
-                </div>
-                <br>
-                <div class="mb-3">
-                    <button onclick="updateMedicalRecord()">Save</button>
-                    <button onclick="hideUpdateForm()">Cancel</button>
-                </div>
+    <div class="row mb-4">
+        <div class="col">
+            <div class="input-group">
+                <input type="text" class="form-control" placeholder="Search by name" id="searchString" onkeypress="handleKeyPress(event)">
+                <button type="button" class="btn btn-outline-primary" onclick="searchMedicalRecord()">Search</button>
             </div>
         </div>
     </div>
-}
+
+    @if (!Model.MedicalRecords.Any())
+    {
+        <div class="text-center">
+            <img src="/images/sad-star.png" alt="No medical records" class="img-fluid" style="max-width: 150px;" />
+            <p class="mt-3">No medical records available at the moment.</p>
+        </div>
+    }
+    else
+    {
+        <ol class="list-unstyled">
+            @foreach (var medicalRecord in Model.MedicalRecords)
+            {
+                var today = DateTime.Today;
+                var recordDate = medicalRecord.Date.Date;
+                string itemClass = recordDate < today ? "past" : recordDate == today ? "today" : "future";
+                
+                <li class="medicalRecord-item @itemClass mb-4 p-3 rounded shadow-sm">
+                    <a class="nav-link" asp-controller="MedicalRecord" asp-action="MedicalRecordInfo" asp-route-medicalRecordId="@medicalRecord?.Id">
+                        <div class="medicalRecord-details">
+                            <p><strong>Patient:</strong> @(medicalRecord?.Patient.FirstName ?? "UNKNOWN") @(medicalRecord?.Patient.LastName ?? "UNKNOWN")</p>
+                            <p><strong>Doctor:</strong> @(medicalRecord?.Doctor.FirstName ?? "UNKNOWN") @(medicalRecord?.Doctor.LastName ?? "UNKNOWN")</p>
+                            <p><strong>Date:</strong> @medicalRecord?.Date.ToString("dd.MM.yyyy")</p>
+                            <p><strong>Diagnosis:</strong> @(medicalRecord?.Diagnosis ?? "UNKNOWN")</p>
+                            <p><strong>Treatment:</strong> @(medicalRecord?.Treatment ?? "UNKNOWN")</p>
+                        </div>
+                    </a>
+                    <div class="medicalRecord-actions mt-3">
+                        @if (!IsPatient)
+                        {
+                            <button class="btn btn-dark me-2" onclick="showUpdateForm('@medicalRecord!.Id')">Update</button>
+                            @if (IsAdmin)
+                            {
+                                <button class="btn btn-danger" onclick="deleteMedicalRecord('@medicalRecord!.Id')">Delete</button>
+                            }
+                        }
+                    </div>
+                </li>
+            }
+        </ol>
+    }
+
+    @if (!IsPatient)
+    {
+        <div id="updateForm" class="update-form">
+            <div class="card">
+                <div class="card-header">
+                    <h3>Update Medical Record</h3>
+                </div>
+                <div class="card-body">
+                    <input type="hidden" id="medicalRecordId">
+                    <div class="mb-3">
+                        <label for="newDoctor">Doctor:</label>
+                        <select id="newDoctor" class="form-select" required>
+                            <option value="">Select Doctor</option>
+                            @foreach (Doctor doctor in Model.Doctors)
+                            {
+                                <option value="@doctor.Id">@doctor.FirstName @doctor.LastName</option>
+                            }
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="newPatient">Patient:</label>
+                        <select id="newPatient" class="form-select" required>
+                            <option value="">Select Patient</option>
+                            @foreach (Patient patient in Model.Patients)
+                            {
+                                <option value="@patient.Id">@patient.FirstName @patient.LastName</option>
+                            }
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="newDate">Date:</label>
+                        <input type="date" class="form-control" max="@DateTime.Today.ToString("yyyy-MM-dd")" id="newDate">
+                    </div>
+                    <div class="mb-3">
+                        <label for="newDiagnosis">Diagnosis:</label>
+                        <input type="text" class="form-control" id="newDiagnosis">
+                    </div>
+                    <div class="mb-3">
+                        <label for="newTreatment">Treatment:</label>
+                        <input type="text" class="form-control" id="newTreatment">
+                    </div>
+                    <div class="mb-3">
+                        <button class="btn btn-success" onclick="updateMedicalRecord()">Save</button>
+                        <button class="btn btn-secondary" onclick="hideUpdateForm()">Cancel</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</div>
 
 <script>
     function showUpdateForm(id) {
@@ -228,9 +208,7 @@ else
                 });
         }
     }
-</script>
 
-<script>
     function searchMedicalRecord() {
         const searchString = document.getElementById('searchString').value.trim().toLowerCase();
         const medicalRecordItems = document.querySelectorAll('.medicalRecord-item');
@@ -239,8 +217,7 @@ else
             const patientName = item.querySelector('.medicalRecord-details p:first-child').textContent.trim().toLowerCase();
             const doctorName = item.querySelector('.medicalRecord-details p:nth-child(2)').textContent.trim().toLowerCase();
 
-            const matchesSearch = patientName.includes(searchString) ||
-                doctorName.includes(searchString);
+            const matchesSearch = patientName.includes(searchString) || doctorName.includes(searchString);
 
             if (matchesSearch) {
                 item.style.display = '';
@@ -255,59 +232,48 @@ else
             searchMedicalRecord();
         }
     }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        var calendarEl = document.getElementById('calendar');
+        var events = [
+            @foreach (var medicalRecord in Model.MedicalRecords)
+            {
+                var recordDate = medicalRecord.Date.Date.ToString("yyyy-MM-dd");
+                <text>{
+                    title: '@(medicalRecord?.Patient.FirstName ?? "UNKNOWN") @(medicalRecord?.Patient.LastName ?? "UNKNOWN")',
+                    start: '@recordDate',
+                    url: '@Url.Action("MedicalRecordInfo", "MedicalRecord", new { medicalRecordId = medicalRecord.Id })'
+                },</text>
+            }
+        ];
+
+        var calendar = new FullCalendar.Calendar(calendarEl, {
+            initialView: 'dayGridMonth',
+            events: events,
+            eventClick: function (info) {
+                if (info.event.url) {
+                    window.location.href = info.event.url;
+                }
+            }
+        });
+
+        calendar.render();
+    });
 </script>
-
-
 
 @section Scripts {
     <link href="https://cdn.jsdelivr.net/npm/fullcalendar@5.7.2/main.min.css" rel="stylesheet" />
     <script src="https://cdn.jsdelivr.net/npm/moment@2.29.1/moment.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.7.2/main.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.7.2/daygrid/main.min.js"></script>
-
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            var calendarEl = document.getElementById('calendar');
-
-            var events = [
-        @foreach (var medicalRecord in Model.MedicalRecords)
-        {
-            var recordDate = medicalRecord.Date.Date.ToString("yyyy-MM-dd");
-            <text>{
-                        title: '@(medicalRecord?.Patient.FirstName ?? "UNKNOWN") @(medicalRecord?.Patient.LastName ?? "UNKNOWN")',
-                        start: '@recordDate',
-                        url: '@Url.Action("MedicalRecordInfo", "MedicalRecord", new { medicalRecordId = medicalRecord.Id })'
-                                },</text>
-        }
-                ];
-
-            var calendar = new FullCalendar.Calendar(calendarEl, {
-                initialView: 'dayGridMonth',
-                events: events,
-                eventClick: function (info) {
-                    if (info.event.url) {
-                        window.location.href = info.event.url;
-                    }
-                }
-            });
-
-            calendar.render();
-        });
-    </script>
-
 }
 
 <style>
     .medicalRecord-item {
         border-radius: 10px;
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        margin-bottom: 20px;
         padding: 20px;
         transition: transform 0.3s ease-in-out;
-        position: relative;
-    }
-
-    .medicalRecord-item {
         background-color: #cfe2f3;
     }
 
@@ -341,20 +307,14 @@ else
     }
 
     .medicalRecord-actions {
-        flex-shrink: 0;
-    }
-
-    .medicalRecord-item hr {
-        margin: 10px 0;
-        border: none;
-        border-top: 1px solid #e0e0e0;
+        margin-top: 10px;
     }
 
     .update-form {
-        position: absolute;
-        top: 40%;
+        position: fixed;
+        top: 50%;
         left: 50%;
-        transform: translate(-40%, -50%);
+        transform: translate(-50%, -50%);
         background-color: #fff;
         padding: 20px;
         border-radius: 10px;
@@ -372,9 +332,8 @@ else
 
     .update-form input[type="text"],
     .update-form input[type="date"],
-    .update-form input[type="email"],
     .update-form select {
-        width: calc(100% - 22px);
+        width: 100%;
         padding: 8px;
         box-sizing: border-box;
         border: 1px solid #ccc;

@@ -11,4 +11,6 @@ public interface IAppointmentService
 
     Task<IEnumerable<Appointment>> GetAppointmentsForDoctorAsync(Guid doctorId);
     Task<IEnumerable<Appointment>> GetAppointmentsForPatientAsync(Guid patientId);
+    Task<Appointment> CheckOverlappingAppointmentAsync(Appointment newAppointment);
 }
+ 

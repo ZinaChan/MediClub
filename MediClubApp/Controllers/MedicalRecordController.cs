@@ -1,3 +1,4 @@
+using System.Security.Claims;
 using FluentValidation;
 using MediClubApp.Models;
 using MediClubApp.Services.Base;
@@ -25,47 +26,22 @@ public class MedicalRecordController : Controller
     }
 
     [HttpGet]
-    [Route("/[controller]/{id:Guid?}", Name ="MRIndex")]
-    public async Task<IActionResult> Index(Guid? id = null)
+    [Route("/[controller]", Name = "MRIndex")]
+    public async Task<IActionResult> Index()
     {
-        var model = new MedicalRecordViewModel();
-        if (User.IsInRole("Admin"))
+        var model = new MedicalRecordViewModel
         {
-            model = new MedicalRecordViewModel
-            {
-                Patients = await _patientService.GetAllPatientsAsync(),
-                Doctors = await _doctorService.GetAllDoctorsAsync(),
-                MedicalRecords = await _medicalRecordService.GetAllMedicalRecordsAsync()
-            };
-        }
-        else if (User.IsInRole("Doctor"))
+            Patients = await _patientService.GetAllPatientsAsync(),
+            Doctors = await _doctorService.GetAllDoctorsAsync(),
+            MedicalRecords = await _medicalRecordService.GetAllMedicalRecordsAsync()
+        };
+        if (User.IsInRole("Doctor"))
         {
-            if (id != null)
-            {
-                model = new MedicalRecordViewModel
-                {
-                    MedicalRecords = await _medicalRecordService.GetMedicalRecordsForDoctorAsync(doctorId: id.Value),
-                };
-            }
-            else
-            {
-                return RedirectToAction("Error", "Home");
-            }
+            model.MedicalRecords = await _medicalRecordService.GetMedicalRecordsForDoctorAsync(doctorId: new Guid(User.FindFirstValue("Id")!));
         }
         else if (User.IsInRole("Patient"))
         {
-            if (id != null)
-            {
-                model = new MedicalRecordViewModel
-                {
-                    MedicalRecords = await _medicalRecordService.GetMedicalRecordsForPatientAsync(patientId: id.Value)
-
-                };
-            }
-            else
-            {
-                return RedirectToAction("Error", "Home");
-            }
+            model.MedicalRecords = await _medicalRecordService.GetMedicalRecordsForPatientAsync(patientId: new Guid(User.FindFirstValue("Id")!));
         }
 
         return View(model);
@@ -129,13 +105,14 @@ public class MedicalRecordController : Controller
     }
 
 
-    [Authorize(Roles = "Admin")]
     [HttpGet]
+    [Authorize(Policy = "MediClubPolicyWorkRoles")]
     [Route("[action]", Name = "CreateMedicalRecordPage")]
     public async Task<IActionResult> Create()
     {
         var doctors = await this._doctorService.GetAllDoctorsAsync();
         var patients = await this._patientService.GetAllPatientsAsync();
+        var Id = new Guid(User.FindFirstValue("Id")!);
 
         var model = new MedicalRecordViewModel
         {
@@ -143,11 +120,21 @@ public class MedicalRecordController : Controller
             Patients = patients,
             MedicalRecord = new MedicalRecord()
         };
+        if (User.IsInRole("Doctor"))
+        {
+            var doctor = await _doctorService.GetDoctorAsync(Id);
+            model.Doctors = new List<Doctor> { doctor! };
+        }
+        else if (User.IsInRole("Patient"))
+        {
+            var patient = await _patientService.GetPatientAsync(Id);
+            model.Patients = new List<Patient> { patient! };
+        }
 
         return base.View(model: model);
     }
 
-    [Authorize(Policy = "MediClubPolicyUserRoles")] 
+    [Authorize(Policy = "MediClubPolicyWorkRoles")]
     [HttpPost(Name = "CreateMedicalRecordApi")]
     public async Task<IActionResult> Create(MedicalRecordViewModel model)
     {
@@ -171,7 +158,7 @@ public class MedicalRecordController : Controller
                 return base.View(viewName: "Create", model: model);
             }
             await this._medicalRecordService.CreateMedicalRecordAsync(newMedicalRecord: model.MedicalRecord);
-            return base.RedirectToAction(actionName: "Index");
+            return base.RedirectToAction(actionName: "Index", routeValues: new Guid(User.FindFirstValue("Id")!));
         }
         catch (System.Exception ex)
         {

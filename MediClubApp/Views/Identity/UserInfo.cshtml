@@ -28,16 +28,16 @@
 <div class="container mt-5">
     <div class="row">
         <div class="col-md-4">
-            <div class="avatar-container">
-                <img id="avatarPreview" src="\@(Model.AvatarUrl ?? defaultAvatarUrl)"
-                    class="img-fluid rounded-circle avatar-image " alt="User Avatar">
+            <div class="avatar-container text-center">
+                <img id="avatarPreview" src="/@(Model.AvatarUrl ?? defaultAvatarUrl)"
+                    class="img-fluid rounded-circle avatar-image" alt="User Avatar">
                 <label for="avatarInput" class="change-avatar-label">
                     <i class="fas fa-camera"></i> Change Avatar
                 </label>
                 <input type="file" id="avatarInput" name="avatarInput" accept="image/*" style="display: none;">
             </div>
         </div>
-        <div class="col-md-8">
+        <div class="col-md-8 mt-5">
             <div class="card">
                 <div class="card-body">
                     <h5 class="card-title mb-3">@Model.FirstName @Model.LastName</h5>
@@ -161,14 +161,15 @@
                 })
                 .catch(error => console.error('Error updating user:', error));
         }
-
+    </script>
+    <script>
         $('#avatarInput').change(function () {
             var file = this.files[0];
             var formData = new FormData();
             formData.append('avatarFile', file);
 
             $.ajax({
-                url: '@Url.Action("ChangeAvatar", "User", new { id = Model.Id })',
+                url: '@Url.Action("ChangeAvatar", "Identity", new { id = Model.Id })',
                 type: 'POST',
                 data: formData,
                 processData: false,
@@ -176,16 +177,28 @@
                 success: function (data) {
                     var updatedUrl = '@Url.Content("~/")' + data.avatarUrl + '?timestamp=' + new Date().getTime();
                     $('#avatarPreview').attr('src', updatedUrl);
+                    localStorage.clear();
                     alert('Avatar updated successfully!');
                 },
                 error: function () {
-                    alert('Error updating avatar.');
+                    alert('Error updating avatar!.');
                 }
             });
         });
+        function clearAvatarCache(url) {
+            if ('caches' in window) {
+                caches.open('avatar-cache').then(function (cache) {
+                    cache.delete(url).then(function (response) {
+                        console.log('Cache entry deleted:', response);
+                    });
+                });
+            }
+        }
 
-
+        clearAvatarCache('@Url.Content("~/")' + data.avatarUrl);
     </script>
+
+
     <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
     <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
 }
@@ -228,5 +241,30 @@
 
     .avatar-container:hover .change-avatar-label {
         display: block;
+    }
+
+    .avatar-container {
+        position: relative;
+        width: 300px;
+        height: 300px;
+        margin: 0 auto;
+    }
+
+    .avatar-image {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .change-avatar-label {
+        position: absolute;
+        bottom: 10px;
+        left: 50%;
+        transform: translateX(-50%);
+        background-color: rgba(0, 0, 0, 0.5);
+        color: white;
+        padding: 5px 10px;
+        border-radius: 20px;
+        cursor: pointer;
     }
 </style>

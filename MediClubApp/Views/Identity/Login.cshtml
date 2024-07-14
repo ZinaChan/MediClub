@@ -6,6 +6,7 @@
 }
 
 <div class="container">
+    <a href="/" class="back-link"><i class="fas fa-arrow-left"></i></a>
     <div class="wrapper">
         <div class="title"><span>Login Form</span></div>
 
@@ -43,6 +44,19 @@
     body {
         background: #1abc9c;
         overflow: hidden;
+    }
+
+    .back-link {
+        position: absolute;
+        top: 20px;
+        left: 20px;
+        color: #16a085;
+        text-decoration: none;
+        font-size: 35px;
+    }
+
+    .back-link:hover {
+        text-decoration: underline;
     }
 
     ::selection {
