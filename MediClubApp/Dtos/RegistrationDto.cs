@@ -3,7 +3,7 @@ namespace MediClubApp.Dtos;
 
 public class RegistrationDto
 {
-    public string AvatarUrl { get; set; }
+    public IFormFile AvatarUrl { get; set; }
    public string FirstName { get; set; }
     public string LastName { get; set; } 
     public string Email { get; set; }

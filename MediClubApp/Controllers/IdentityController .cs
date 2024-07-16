@@ -102,7 +102,7 @@ public class IdentityController : Controller
 
     [HttpPost]
     [Route("[action]", Name = "RegistrationEndpoint")]
-    public async Task<IActionResult> Registration([FromForm] RegistrationDto registrationDto, IFormFile image)
+    public async Task<IActionResult> Registration([FromForm] RegistrationDto registrationDto)
     {
         try
         {
@@ -128,7 +128,7 @@ public class IdentityController : Controller
                 return View();
             }
 
-            await this._userService.CreateUserAsync(newUser: user, image: image);
+            await this._userService.CreateUserAsync(newUser: user, image: registrationDto.AvatarUrl);
         }
         catch (Exception ex)
         {
